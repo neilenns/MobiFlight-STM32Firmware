@@ -37,3 +37,5 @@
 .clang_complete
 .gcc-flags.json
 .pio
+# Auto-generated file
+.vscode/launch.json
