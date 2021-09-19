@@ -8,19 +8,19 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "C:/Users/neile/git/MobiFlight-STM32Firmware/include",
-                "C:/Users/neile/git/MobiFlight-STM32Firmware/src",
+                "D:/git/MobiFlight-STM32Firmware/include",
+                "D:/git/MobiFlight-STM32Firmware/src",
                 "C:/Users/neile/.platformio/packages/framework-mbed",
-                "C:/Users/neile/git/MobiFlight-STM32Firmware/.pio/build/nucleo_l476rg",
+                "D:/git/MobiFlight-STM32Firmware/.pio/build/nucleo_l476rg",
                 ""
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "C:/Users/neile/git/MobiFlight-STM32Firmware/include",
-                    "C:/Users/neile/git/MobiFlight-STM32Firmware/src",
+                    "D:/git/MobiFlight-STM32Firmware/include",
+                    "D:/git/MobiFlight-STM32Firmware/src",
                     "C:/Users/neile/.platformio/packages/framework-mbed",
-                    "C:/Users/neile/git/MobiFlight-STM32Firmware/.pio/build/nucleo_l476rg",
+                    "D:/git/MobiFlight-STM32Firmware/.pio/build/nucleo_l476rg",
                     ""
                 ]
             },
@@ -92,7 +92,7 @@
             "cStandard": "c11",
             "cppStandard": "c++14",
             "forcedInclude": [
-                "C:/Users/neile/git/MobiFlight-STM32Firmware/.pio/build/nucleo_l476rg/mbed_config.h",
+                "D:/git/MobiFlight-STM32Firmware/.pio/build/nucleo_l476rg/mbed_config.h",
                 ""
             ],
             "compilerPath": "C:/Users/neile/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-gcc.exe",
@@ -102,8 +102,8 @@
                 "-mfpu=fpv4-sp-d16",
                 "-mthumb",
                 "-iprefix",
-                "C:/Users/neile/.platformio/packages/framework-mbed",
-                "@\"C:/Users/neile/git/MobiFlight-STM32Firmware/.pio/build/nucleo_l476rg/longinc-85fdb38df773c1d6cdb46a9d28a581fa\"",
+                "C:/Users/neile/PLATFO~1/packages/FRAMEW~1",
+                "@D:/git/MobiFlight-STM32Firmware/.pio/build/nucleo_l476rg/longinc-f525480480d9d3efdbc172ab4854265a",
                 ""
             ]
         }

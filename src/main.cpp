@@ -15,6 +15,8 @@ int main()
 
   while (1)
   {
+    printf("Loopin'\n");
+    thread_sleep_for(500);
     // put your main code here, to run repeatedly:
   }
 }
