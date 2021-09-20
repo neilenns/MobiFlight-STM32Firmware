@@ -12,6 +12,7 @@
                 "D:/git/MobiFlight-STM32Firmware/src",
                 "C:/Users/neile/.platformio/packages/framework-mbed",
                 "D:/git/MobiFlight-STM32Firmware/.pio/build/nucleo_l476rg",
+                "D:/git/MobiFlight-STM32Firmware/.pio/libdeps/nucleo_l476rg/CmdMessenger",
                 ""
             ],
             "browse": {
@@ -21,6 +22,7 @@
                     "D:/git/MobiFlight-STM32Firmware/src",
                     "C:/Users/neile/.platformio/packages/framework-mbed",
                     "D:/git/MobiFlight-STM32Firmware/.pio/build/nucleo_l476rg",
+                    "D:/git/MobiFlight-STM32Firmware/.pio/libdeps/nucleo_l476rg/CmdMessenger",
                     ""
                 ]
             },
