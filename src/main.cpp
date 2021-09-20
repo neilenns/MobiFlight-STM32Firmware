@@ -59,4 +59,10 @@ int main()
   // Note that this is a good debug function: it will let you also know
   // if your program had a bug and the arduino restarted
   cmdMessenger.sendCmd(kStatus, "STM32 has started!");
+
+  while (1)
+  {
+    cmdMessenger.feedinSerialData();
+    ThisThread::sleep_for(500);
+  }
 }
