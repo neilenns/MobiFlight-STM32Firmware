@@ -8,19 +8,19 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "D:/git/MobiFlight-STM32Firmware/include",
-                "D:/git/MobiFlight-STM32Firmware/src",
-                "C:/Users/neile/.platformio/packages/framework-mbed",
-                "D:/git/MobiFlight-STM32Firmware/.pio/build/nucleo_l476rg",
+                "/home/vscode/Documents/PlatformIO/Projects/include",
+                "/home/vscode/Documents/PlatformIO/Projects/src",
+                "/home/vscode/.platformio/packages/framework-mbed",
+                "/home/vscode/Documents/PlatformIO/Projects/.pio/build/nucleo_l476rg",
                 ""
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "D:/git/MobiFlight-STM32Firmware/include",
-                    "D:/git/MobiFlight-STM32Firmware/src",
-                    "C:/Users/neile/.platformio/packages/framework-mbed",
-                    "D:/git/MobiFlight-STM32Firmware/.pio/build/nucleo_l476rg",
+                    "/home/vscode/Documents/PlatformIO/Projects/include",
+                    "/home/vscode/Documents/PlatformIO/Projects/src",
+                    "/home/vscode/.platformio/packages/framework-mbed",
+                    "/home/vscode/Documents/PlatformIO/Projects/.pio/build/nucleo_l476rg",
                     ""
                 ]
             },
@@ -92,18 +92,18 @@
             "cStandard": "c11",
             "cppStandard": "c++14",
             "forcedInclude": [
-                "D:/git/MobiFlight-STM32Firmware/.pio/build/nucleo_l476rg/mbed_config.h",
+                "/home/vscode/Documents/PlatformIO/Projects/.pio/build/nucleo_l476rg/mbed_config.h",
                 ""
             ],
-            "compilerPath": "C:/Users/neile/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-gcc.exe",
+            "compilerPath": "/home/vscode/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-gcc",
             "compilerArgs": [
                 "-mcpu=cortex-m4",
                 "-mfloat-abi=softfp",
                 "-mfpu=fpv4-sp-d16",
                 "-mthumb",
                 "-iprefix",
-                "C:/Users/neile/PLATFO~1/packages/FRAMEW~1",
-                "@D:/git/MobiFlight-STM32Firmware/.pio/build/nucleo_l476rg/longinc-f525480480d9d3efdbc172ab4854265a",
+                "/home/vscode/.platformio/packages/framework-mbed",
+                "@/home/vscode/Documents/PlatformIO/Projects/.pio/build/nucleo_l476rg/longinc-85fdb38df773c1d6cdb46a9d28a581fa",
                 ""
             ]
         }
