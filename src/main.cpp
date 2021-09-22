@@ -67,6 +67,10 @@ void AddOutput(ARDUINO_PIN arduinoPinName, char const *name = "Output")
 // *****************************************************************
 // MobiFlight event handlers
 // *****************************************************************
+void OnConfigActivated()
+{
+  cmdMessenger.sendCmd(kConfigActivated, "OK");
+}
 
 void OnGetConfig()
 {
@@ -121,6 +125,7 @@ void attachCommandCallbacks()
 {
   // Attach callback methods
   cmdMessenger.attach(OnUnknownCommand);
+  cmdMessenger.attach(kConfigActivated, OnConfigActivated);
   cmdMessenger.attach(kGetConfig, OnGetConfig);
   cmdMessenger.attach(kGetInfo, OnGetInfo);
   cmdMessenger.attach(kSetPin, OnSetPin);

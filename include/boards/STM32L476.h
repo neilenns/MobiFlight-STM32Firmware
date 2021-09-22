@@ -4,7 +4,7 @@
 #include <mbed.h>
 
 #define MOBIFLIGHT_TYPE "MobiFlight Mega"
-#define MOBIFLIGHT_SERIAL "0987654321"
+#define MOBIFLIGHT_SERIAL "SN-eaa-42f"
 #define MEMLEN_NAME "MobiFlight Mega"
 #define EEPROM_SIZE 1024
 #define MEMLEN_CONFIG 256
