@@ -1,13 +1,18 @@
 #include <mbed.h>
+#include <optional>
 
-#include "CmdMessenger.h"
-#include "MFCommands.h"
-#include "mobiflight.h"
+#include "CmdMessenger.hpp"
+#include "MFCommands.hpp"
+#include "mobiflight.hpp"
 #include "boards/STM32L476.h"
+#include "PinManager.hpp"
+
+// Modules
+#include "modules/MFModuleTypes.hpp"
+#include "modules/MFOutput.hpp"
 
 static BufferedSerial serial_port(USBTX, USBRX, 115200);
 static DigitalOut led(LED1);
-bool ledState = 0; // Current state of Led
 
 // Command messenger configuration
 CmdMessenger cmdMessenger = CmdMessenger(serial_port);
@@ -29,27 +34,41 @@ char serial[MEM_LEN_SERIAL] = MOBIFLIGHT_SERIAL;
 char name[MEM_LEN_NAME] = MEMLEN_NAME;
 const int MEM_LEN_CONFIG = MEMLEN_CONFIG;
 
+char configBuffer[MEM_LEN_CONFIG] = "";
+
+// Modules
+PinManager pinManager;
+map<PinName, MFOutput> outputs;
+
 FileHandle *mbed::mbed_override_console(int fd)
 {
   return &serial_port;
 }
 
-// Called when a received command has no attached function
-void OnUnknownCommand()
+// *****************************************************************
+// Module management
+// *****************************************************************
+void AddOutput(PinName pin, char const *name = "Output")
 {
-  cmdMessenger.sendCmd(kStatus, "Command without attached callback");
+  if (pinManager.IsPinRegistered(pin))
+  {
+    return;
+  }
+
+  outputs[pin] = MFOutput(pin);
+  pinManager.RegisterPin(pin, MFModuleType::kOutput);
 }
 
-// Callback function that sets led on or off
-void OnSetPin()
-{
-  // Read led state argument, interpret string as boolean
-  ledState = cmdMessenger.readBoolArg();
-  // Set led
-  led = ledState ? 1 : 0;
+// *****************************************************************
+// MobiFlight event handlers
+// *****************************************************************
 
-  // Send back status that describes the led state
-  cmdMessenger.sendCmd(kStatus, (int)ledState);
+void OnGetConfig()
+{
+  lastCommand = millis();
+  cmdMessenger.sendCmdStart(kInfo);
+  cmdMessenger.sendCmdArg(configBuffer);
+  cmdMessenger.sendCmdEnd();
 }
 
 void OnGetInfo()
@@ -63,21 +82,58 @@ void OnGetInfo()
   cmdMessenger.sendCmdEnd();
 }
 
+// Callback function that sets led on or off
+void OnSetPin()
+{
+  int arduinoPin = cmdMessenger.readInt16Arg();
+  int state = cmdMessenger.readBoolArg();
+  std::optional<PinName> stm32pin = pinManager.MapArudinoPin(arduinoPin);
+
+  if (!stm32pin)
+  {
+    cmdMessenger.sendCmd(kStatus, "The requested pin is not supported on this board.");
+    return;
+  }
+
+  outputs[*stm32pin].set(state);
+
+  // Send back status that describes the led state
+  cmdMessenger.sendCmd(kStatus, std::to_string(outputs[*stm32pin].get()));
+}
+
+// Called when a received command has no attached function
+void OnUnknownCommand()
+{
+  cmdMessenger.sendCmd(kStatus, "Command without attached callback");
+}
+
+// *****************************************************************
+// Main methods
+// *****************************************************************
+
 // Callbacks define on which received commands we take action
 void attachCommandCallbacks()
 {
   // Attach callback methods
   cmdMessenger.attach(OnUnknownCommand);
+  cmdMessenger.attach(kGetConfig, OnGetConfig);
   cmdMessenger.attach(kGetInfo, OnGetInfo);
   cmdMessenger.attach(kSetPin, OnSetPin);
 }
 
 int main()
 {
+  pinManager.ClearRegisteredPins();
+
   // Adds newline to every command
   cmdMessenger.printLfCr();
+
   // Attach my application's user-defined callback methods
   attachCommandCallbacks();
+
+  // Temporarily add an output
+  AddOutput(LED1, "Onboard LED");
+
   // Send the status to the PC that says the Arduino has booted
   // Note that this is a good debug function: it will let you also know
   // if your program had a bug and the arduino restarted

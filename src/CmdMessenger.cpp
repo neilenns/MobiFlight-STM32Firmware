@@ -43,11 +43,8 @@ extern "C"
 #include <stdarg.h>
 }
 #include <stdio.h>
-#include <CmdMessenger.h>
-
-#if __MBED__
+#include <CmdMessenger.hpp>
 #include <string.h>
-#endif
 
 #define _CMDMESSENGER_VERSION 3_6 // software version of this library
 
@@ -115,7 +112,7 @@ void CmdMessenger::attach(messengerCallbackFunction newFunction)
  */
 void CmdMessenger::attach(byte msgId, messengerCallbackFunction newFunction)
 {
-    if (msgId >= 0 && msgId < MAXCALLBACKS)
+    if (msgId < MAXCALLBACKS)
         callbackList[msgId] = newFunction;
 }
 
@@ -128,19 +125,11 @@ void CmdMessenger::feedinSerialData()
 {
     while (!pauseProcessing && BYTEAVAILLABLE(comms))
     {
-        // The Stream class has a readBytes() function that reads many bytes at once. On Teensy 2.0 and 3.0, readBytes() is optimized.
-        // Benchmarks about the incredible difference it makes: http://www.pjrc.com/teensy/benchmark_usb_serial_receive.html
-#ifdef ARDUINO
-        size_t bytesAvailable = min(comms->available(), MAXSTREAMBUFFERSIZE);
-        comms->readBytes(streamBuffer, bytesAvailable);
-#endif
-#ifdef __MBED__
         size_t bytesAvailable = 0;
         while (BYTEAVAILLABLE(comms) && bytesAvailable < MAXSTREAMBUFFERSIZE)
         {
             READONECHAR(comms, &streamBuffer[bytesAvailable++]);
         }
-#endif
         // Process the bytes in the stream buffer, and handles dispatches callbacks, if commands are received
         for (size_t byteNo = 0; byteNo < bytesAvailable; byteNo++)
         {
@@ -191,7 +180,7 @@ void CmdMessenger::handleMessage()
 {
     lastCommandId = readInt16Arg();
     // if command attached, we will call it
-    if (lastCommandId >= 0 && lastCommandId < MAXCALLBACKS && ArgOk && callbackList[lastCommandId] != NULL)
+    if (lastCommandId < MAXCALLBACKS && ArgOk && callbackList[lastCommandId] != NULL)
         (*callbackList[lastCommandId])();
     else // If command not attached, call default callback (if attached)
         if (default_callback != NULL)
@@ -225,14 +214,8 @@ bool CmdMessenger::checkForAck(byte ackCommand)
 
     while (BYTEAVAILLABLE(comms))
     {
-//Processes a byte and determines if an acknowlegde has come in
-#ifdef ARDUINO
-        int messageState = processLine(READONECHAR(comms));
-#endif
-#ifdef __MBED__
         data = READONECHAR(comms, &data);
         messageState = processLine(data);
-#endif
         if (messageState == kEndOfMessage)
         {
             int id = readInt16Arg();
@@ -544,27 +527,8 @@ char *CmdMessenger::readStringArg()
         return current;
     }
     ArgOk = false;
-    return "\0";
-}
-
-/**
- * Return next argument as a new string
- * Note that this is useful if the string needs to be persisted
- */
-void CmdMessenger::copyStringArg(char *string, uint8_t size)
-{
-    if (next())
-    {
-        dumped = true;
-        ArgOk = true;
-        strlcpy(string, current, size);
-    }
-    else
-    {
-        ArgOk = false;
-        if (size)
-            string[0] = '\0';
-    }
+    // TODO: Verify this works once OnSetConfig() is implemented
+    return new char[1](); // Return a single 0 value character string
 }
 
 /**

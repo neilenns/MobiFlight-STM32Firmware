@@ -21,34 +21,16 @@
 #pragma once
 
 #include <inttypes.h>
-#ifdef ARDUINO
-#if ARDUINO >= 100
-#include <Arduino.h>
-#else
-#include <WProgram.h>
-#endif
-#endif
-
-#ifdef __MBED__
+#include <iostream>
 #include <mbed.h>
-#endif
 
-#ifdef __MBED__
 #define __DEVICESTREAMTYPE BufferedSerial
 #define byte uint8_t
 #define BYTEAVAILLABLE(comms) comms->readable()
 #define READONECHAR(comms, buffer) comms->read(buffer, 1)
 #define PRINTONECHAR(comms, c) printf("%c", c)
-#define PRINTSTRING(comms, s) printf(s)
+#define PRINTSTRING(comms, s) std::cout << s
 #define millis() (us_ticker_read() / 1000)
-#endif
-#ifdef ARDUINO
-#define __DEVICESTREAMTYPE Stream
-#define BYTEAVAILLABLE(comms) comms->available()
-#define READONECHAR(comms) comms->read()
-#define PRINTONECHAR(comms, c) comms->print(c)
-#define PRINTSTRING(comms, s) comms->print(s)
-#endif
 
 //#include "Stream.h"
 
@@ -250,22 +232,10 @@ public:
     {
         if (startCommand)
         {
-#ifdef ARDUINO
-            comms->print(field_separator);
-#endif
-#ifdef __MBED__
             PRINTONECHAR(comms, field_separator);
-#endif
-#ifdef ARDUINO
-            comms->print(arg);
-#endif
-#ifdef __MBED__
             PRINTSTRING(comms, arg);
-#endif
         }
     }
-
-#ifdef __MBED__
     void sendCmdArg(bool arg)
     {
         PRINTONECHAR(comms, field_separator);
@@ -286,7 +256,6 @@ public:
         PRINTONECHAR(comms, field_separator);
         printf("%i", arg);
     }
-#endif
 
     /**
      * Send a single argument as string with custom accuracy
@@ -297,14 +266,8 @@ public:
     {
         if (startCommand)
         {
-#ifdef ARDUINO
-            comms->print(field_separator);
-            comms->print(arg, n);
-#endif
-#ifdef __MBED__
             printf(field_separator);
             printf("%i", arg);
-#endif
         }
     }
 
@@ -323,12 +286,7 @@ public:
     {
         if (startCommand)
         {
-#ifdef ARDUINO
-            comms->print(field_separator);
-#endif
-#ifdef __MBED__
             PRINTONECHAR(comms, field_separator);
-#endif
             writeBin(arg);
         }
     }
