@@ -53,9 +53,9 @@ void AddOutput(PinName pin, char const *name = "Output")
 {
   if (pinManager.IsPinRegistered(pin))
   {
-    #ifdef DEBUG
+#ifdef DEBUG
     cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
-    #endif
+#endif
     return;
   }
 
@@ -132,23 +132,19 @@ int main()
   // Adds newline to every command
   cmdMessenger.printLfCr();
 
-  // Attach my application's user-defined callback methods
+  // Attach all the callbacks for command messenger
   attachCommandCallbacks();
 
-  // Temporarily add an output
+  // Temporarily add two outputs
   AddOutput(LED1, "Onboard LED");
   AddOutput(PA_10, "Onboard LED - second time");
 
-  // Send the status to the PC that says the Arduino has booted
-  // Note that this is a good debug function: it will let you also know
-  // if your program had a bug and the arduino restarted
   cmdMessenger.sendCmd(kStatus, "STM32 has started!");
-
-  config.Save();
 
   while (1)
   {
     cmdMessenger.feedinSerialData();
+    // Without this sleep I wasn't able to re-flash the board
     ThisThread::sleep_for(500ms);
   }
 }
