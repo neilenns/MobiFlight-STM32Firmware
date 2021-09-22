@@ -3,6 +3,7 @@
 #include <map>
 #include <mbed.h>
 
+#include "ArduinoTypes.hpp"
 #include "modules/MFOutput.hpp"
 
 class MFConfiguration
@@ -10,7 +11,7 @@ class MFConfiguration
   friend ostream &operator<<(ostream &os, const MFConfiguration &obj);
 
 public:
-  map<PinName, MFOutput> outputs;
+  map<ARDUINO_PIN, MFOutput> outputs;
 
   void Erase();
   void Load();

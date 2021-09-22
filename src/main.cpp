@@ -1,6 +1,7 @@
 #include <mbed.h>
 #include <optional>
 
+#include "ArduinoTypes.hpp"
 #include "boards/STM32L476.h"
 #include "CmdMessenger.hpp"
 #include "MFCommands.hpp"
@@ -49,9 +50,9 @@ FileHandle *mbed::mbed_override_console(int fd)
 // *****************************************************************
 // Module management
 // *****************************************************************
-void AddOutput(PinName pin, char const *name = "Output")
+void AddOutput(ARDUINO_PIN arduinoPinName, char const *name = "Output")
 {
-  if (pinManager.IsPinRegistered(pin))
+  if (pinManager.IsPinRegistered(arduinoPinName))
   {
 #ifdef DEBUG
     cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
@@ -59,8 +60,8 @@ void AddOutput(PinName pin, char const *name = "Output")
     return;
   }
 
-  config.outputs[pin] = MFOutput(pin, name);
-  pinManager.RegisterPin(pin, MFModuleType::kOutput);
+  config.outputs[arduinoPinName] = MFOutput(arduinoPinName, name);
+  pinManager.RegisterPin(arduinoPinName, MFModuleType::kOutput);
 }
 
 // *****************************************************************
@@ -136,8 +137,10 @@ int main()
   attachCommandCallbacks();
 
   // Temporarily add two outputs
-  AddOutput(LED1, "Onboard LED");
-  AddOutput(PA_10, "Onboard LED - second time");
+  AddOutput(1, "Onboard LED");
+  AddOutput(2, "Onboard LED - second time");
+
+  std::cout << config;
 
   cmdMessenger.sendCmd(kStatus, "STM32 has started!");
 

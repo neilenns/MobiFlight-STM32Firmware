@@ -3,17 +3,19 @@
 #include <map>
 #include <mbed.h>
 #include <optional>
+
+#include "ArduinoTypes.hpp"
 #include "modules/MFModuleTypes.hpp"
 
 class PinManager
 {
 public:
-  PinManager(uint8_t numberOfPins = 10);
+  PinManager(ARDUINO_PIN numberOfPins = 10);
   void ClearRegisteredPins();
-  bool IsPinRegistered(PinName pin);
-  void RegisterPin(PinName pin, MFModuleType type);
-  std::optional<PinName> MapArudinoPin(int arduinoPin);
+  bool IsPinRegistered(ARDUINO_PIN pin);
+  void RegisterPin(ARDUINO_PIN pin, MFModuleType type);
+  static std::optional<PinName> MapArudinoPin(ARDUINO_PIN arduinoPin);
 
 private:
-  map<PinName, MFModuleType> *_registeredPins;
+  map<ARDUINO_PIN, MFModuleType> *_registeredPins;
 };

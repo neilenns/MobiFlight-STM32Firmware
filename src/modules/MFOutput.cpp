@@ -3,12 +3,24 @@
 // Copyright (C) 2013-2014
 
 #include <mbed.h>
-#include "modules/MFOutput.hpp"
 
-MFOutput::MFOutput(PinName pinName, std::string name)
+#include "ArduinoTypes.hpp"
+#include "modules/MFOutput.hpp"
+#include "PinManager.hpp"
+
+MFOutput::MFOutput(ARDUINO_PIN arduinoPinName, std::string name)
 {
-  _pin = new DigitalOut(pinName);
-  _pinName = pinName;
+  _arduinoPinName = arduinoPinName;
+
+  // TODO: Handle the case where an invalid pin is specified
+  std::optional<PinName> stm32pin = PinManager::MapArudinoPin(arduinoPinName);
+  if (!stm32pin)
+  {
+    // This should do something smarter
+    return;
+  }
+  _pin = new DigitalOut(*stm32pin);
+
   _name = name;
   _value = false;
   set(_value);
@@ -34,6 +46,6 @@ void MFOutput::set(uint8_t value)
 // 10,8.16.15.0.Encoder:1.14.Button:;
 std::ostream &operator<<(std::ostream &os, const MFOutput &obj)
 {
-  os << as_integer(MFModuleType::kOutput) << "." << obj._pinName << "." << obj._name;
+  os << as_integer(MFModuleType::kOutput) << "." << +obj._arduinoPinName << "." << obj._name;
   return os;
 }

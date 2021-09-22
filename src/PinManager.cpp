@@ -8,7 +8,7 @@
 
 PinManager::PinManager(uint8_t numberOfPins)
 {
-  _registeredPins = new map<PinName, MFModuleType>;
+  _registeredPins = new map<uint8_t, MFModuleType>;
 }
 
 // Sets all pins to kNotSet
@@ -18,19 +18,19 @@ void PinManager::ClearRegisteredPins()
 }
 
 // Returns true if the specified pin is registered
-bool PinManager::IsPinRegistered(PinName pin)
+bool PinManager::IsPinRegistered(ARDUINO_PIN arduinoPinName)
 {
-  return _registeredPins->count(pin) > 0;
+  return _registeredPins->count(arduinoPinName) > 0;
 }
 
 // Registers a pin as the specified type
-void PinManager::RegisterPin(PinName pin, MFModuleType type)
+void PinManager::RegisterPin(ARDUINO_PIN arduinoPinName, MFModuleType type)
 {
-  (*_registeredPins)[pin] = type;
+  (*_registeredPins)[arduinoPinName] = type;
 }
 
 // Returns the equivalent STM32 pin for a given Arduino pin
-std::optional<PinName> PinManager::MapArudinoPin(int arduinoPin)
+std::optional<PinName> PinManager::MapArudinoPin(ARDUINO_PIN arduinoPin)
 {
   std::map<int, PinName>::const_iterator stm32pin = PinMappings.find(arduinoPin);
 
