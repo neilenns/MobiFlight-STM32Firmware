@@ -34,6 +34,6 @@ void MFOutput::set(uint8_t value)
 // 10,8.16.15.0.Encoder:1.14.Button:;
 std::ostream &operator<<(std::ostream &os, const MFOutput &obj)
 {
-  os << as_integer(MFModuleType::kOutput) << "." << obj._pinName << "." << obj._name << ":";
+  os << as_integer(MFModuleType::kOutput) << "." << obj._pinName << "." << obj._name;
   return os;
 }
