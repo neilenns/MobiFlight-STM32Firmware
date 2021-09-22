@@ -1,10 +1,11 @@
 #include <mbed.h>
 #include <optional>
 
+#include "boards/STM32L476.h"
 #include "CmdMessenger.hpp"
 #include "MFCommands.hpp"
+#include "MFConfiguration.hpp"
 #include "mobiflight.hpp"
-#include "boards/STM32L476.h"
 #include "PinManager.hpp"
 
 // Modules
@@ -12,7 +13,6 @@
 #include "modules/MFOutput.hpp"
 
 static BufferedSerial serial_port(USBTX, USBRX, 115200);
-static DigitalOut led(LED1);
 
 // Command messenger configuration
 CmdMessenger cmdMessenger = CmdMessenger(serial_port);
@@ -36,9 +36,10 @@ const int MEM_LEN_CONFIG = MEMLEN_CONFIG;
 
 char configBuffer[MEM_LEN_CONFIG] = "";
 
-// Modules
+// Pins and configuration
+InterruptIn irq(BUTTON1);
 PinManager pinManager;
-map<PinName, MFOutput> outputs;
+MFConfiguration config;
 
 FileHandle *mbed::mbed_override_console(int fd)
 {
@@ -55,7 +56,7 @@ void AddOutput(PinName pin, char const *name = "Output")
     return;
   }
 
-  outputs[pin] = MFOutput(pin);
+  config.outputs[pin] = MFOutput(pin);
   pinManager.RegisterPin(pin, MFModuleType::kOutput);
 }
 
@@ -95,10 +96,10 @@ void OnSetPin()
     return;
   }
 
-  outputs[*stm32pin].set(state);
+  config.outputs[*stm32pin].set(state);
 
   // Send back status that describes the led state
-  cmdMessenger.sendCmd(kStatus, std::to_string(outputs[*stm32pin].get()));
+  cmdMessenger.sendCmd(kStatus, std::to_string(config.outputs[*stm32pin].get()));
 }
 
 // Called when a received command has no attached function
@@ -138,6 +139,8 @@ int main()
   // Note that this is a good debug function: it will let you also know
   // if your program had a bug and the arduino restarted
   cmdMessenger.sendCmd(kStatus, "STM32 has started!");
+
+  config.Save();
 
   while (1)
   {
