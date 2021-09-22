@@ -18,8 +18,7 @@
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   */
 
-#ifndef CmdMessenger_h
-#define CmdMessenger_h
+#pragma once
 
 #include <inttypes.h>
 #ifdef ARDUINO
@@ -367,4 +366,3 @@ public:
     void unescape(char *fromChar);
     void printSci(double f, unsigned int digits);
 };
-#endif

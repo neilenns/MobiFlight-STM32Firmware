@@ -1,7 +1,9 @@
 #include <mbed.h>
-#include <CmdMessenger.h>
 
-#define MAXIMUM_BUFFER_SIZE 32
+#include "CmdMessenger.h"
+#include "MFCommands.h"
+#include "mobiflight.h"
+#include "boards/STM32L476.h"
 
 static BufferedSerial serial_port(USBTX, USBRX, 115200);
 static DigitalOut led(LED1);
@@ -9,14 +11,23 @@ bool ledState = 0; // Current state of Led
 
 // Command messenger configuration
 CmdMessenger cmdMessenger = CmdMessenger(serial_port);
+unsigned long lastCommand;
 
-// This is the list of recognized commands. These can be commands that can either be sent or received.
-// In order to receive, attach a callback function to these events
-enum
-{
-  kSetLed, // Command to request led to be set in specific state
-  kStatus, // Command to report status
-};
+// Board configuration
+#define STRINGIZER(arg) #arg
+#define STR_VALUE(arg) STRINGIZER(arg)
+#define VERSION STR_VALUE(BUILD_VERSION)
+
+const uint8_t MEM_OFFSET_NAME = 0;
+const uint8_t MEM_LEN_NAME = 48;
+const uint8_t MEM_OFFSET_SERIAL = MEM_OFFSET_NAME + MEM_LEN_NAME;
+const uint8_t MEM_LEN_SERIAL = 11;
+const uint8_t MEM_OFFSET_CONFIG = MEM_OFFSET_NAME + MEM_LEN_NAME + MEM_LEN_SERIAL;
+
+char type[20] = MOBIFLIGHT_TYPE;
+char serial[MEM_LEN_SERIAL] = MOBIFLIGHT_SERIAL;
+char name[MEM_LEN_NAME] = MEMLEN_NAME;
+const int MEM_LEN_CONFIG = MEMLEN_CONFIG;
 
 FileHandle *mbed::mbed_override_console(int fd)
 {
@@ -30,7 +41,7 @@ void OnUnknownCommand()
 }
 
 // Callback function that sets led on or off
-void OnSetLed()
+void OnSetPin()
 {
   // Read led state argument, interpret string as boolean
   ledState = cmdMessenger.readBoolArg();
@@ -41,12 +52,24 @@ void OnSetLed()
   cmdMessenger.sendCmd(kStatus, (int)ledState);
 }
 
+void OnGetInfo()
+{
+  lastCommand = millis();
+  cmdMessenger.sendCmdStart(kInfo);
+  cmdMessenger.sendCmdArg(type);
+  cmdMessenger.sendCmdArg(name);
+  cmdMessenger.sendCmdArg(serial);
+  cmdMessenger.sendCmdArg(VERSION);
+  cmdMessenger.sendCmdEnd();
+}
+
 // Callbacks define on which received commands we take action
 void attachCommandCallbacks()
 {
   // Attach callback methods
   cmdMessenger.attach(OnUnknownCommand);
-  cmdMessenger.attach(kSetLed, OnSetLed);
+  cmdMessenger.attach(kGetInfo, OnGetInfo);
+  cmdMessenger.attach(kSetPin, OnSetPin);
 }
 
 int main()
@@ -63,6 +86,6 @@ int main()
   while (1)
   {
     cmdMessenger.feedinSerialData();
-    ThisThread::sleep_for(500);
+    ThisThread::sleep_for(500ms);
   }
 }
