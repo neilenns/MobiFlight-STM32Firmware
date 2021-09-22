@@ -17,6 +17,7 @@ unsigned long lastCommand;
 #define STRINGIZER(arg) #arg
 #define STR_VALUE(arg) STRINGIZER(arg)
 #define VERSION STR_VALUE(BUILD_VERSION)
+
 const uint8_t MEM_OFFSET_NAME = 0;
 const uint8_t MEM_LEN_NAME = 48;
 const uint8_t MEM_OFFSET_SERIAL = MEM_OFFSET_NAME + MEM_LEN_NAME;
