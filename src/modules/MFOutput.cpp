@@ -46,6 +46,9 @@ void MFOutput::set(uint8_t value)
 // 10,8.16.15.0.Encoder:1.14.Button:;
 std::ostream &operator<<(std::ostream &os, const MFOutput &obj)
 {
+  // The + on _arduinoPinName converts it from a "uint8_t" (which << sees as an unsigned char)
+  // to a signed number that gets printed out as an actual number. Otherwise it spits out the
+  // ASCII character for that value which is... not right.
   os << as_integer(MFModuleType::kOutput) << "." << +obj._arduinoPinName << "." << obj._name;
   return os;
 }

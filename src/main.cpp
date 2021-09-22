@@ -137,8 +137,8 @@ int main()
   attachCommandCallbacks();
 
   // Temporarily add two outputs
-  AddOutput(1, "Onboard LED");
-  AddOutput(2, "Onboard LED - second time");
+  AddOutput(2, "Onboard LED1");
+  AddOutput(3, "Onboard LED2");
 
   std::cout << config;
 
