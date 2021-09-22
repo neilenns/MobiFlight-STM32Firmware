@@ -24,6 +24,8 @@
 #include <iostream>
 #include <mbed.h>
 
+#include "MFConfiguration.hpp"
+
 #define __DEVICESTREAMTYPE BufferedSerial
 #define byte uint8_t
 #define BYTEAVAILLABLE(comms) comms->readable()
@@ -236,6 +238,12 @@ public:
             PRINTSTRING(comms, arg);
         }
     }
+    void sendCmdArg(MFConfiguration config)
+    {
+        PRINTONECHAR(comms, field_separator);
+        std::cout << config;
+    }
+
     void sendCmdArg(bool arg)
     {
         PRINTONECHAR(comms, field_separator);

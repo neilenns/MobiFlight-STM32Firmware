@@ -15,3 +15,10 @@ enum class MFModuleType
   kShiftRegister,       // 10 Shift register support (example: 74HC595, TLC592X)
   kAnalogInput          // 11 Analog Device with 1 pin
 };
+
+template <typename MFModuleType>
+auto as_integer(MFModuleType const value)
+    -> typename std::underlying_type<MFModuleType>::type
+{
+    return static_cast<typename std::underlying_type<MFModuleType>::type>(value);
+}

@@ -7,6 +7,8 @@
 
 class MFConfiguration
 {
+  friend ostream &operator<<(ostream &os, const MFConfiguration &obj);
+
 public:
   map<PinName, MFOutput> outputs;
 
@@ -14,3 +16,5 @@ public:
   void Load();
   void Save();
 };
+
+std::ostream &operator<<(std::ostream &os, const MFConfiguration &obj);

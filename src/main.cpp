@@ -53,10 +53,13 @@ void AddOutput(PinName pin, char const *name = "Output")
 {
   if (pinManager.IsPinRegistered(pin))
   {
+    #ifdef DEBUG
+    cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
+    #endif
     return;
   }
 
-  config.outputs[pin] = MFOutput(pin);
+  config.outputs[pin] = MFOutput(pin, name);
   pinManager.RegisterPin(pin, MFModuleType::kOutput);
 }
 
@@ -68,7 +71,7 @@ void OnGetConfig()
 {
   lastCommand = millis();
   cmdMessenger.sendCmdStart(kInfo);
-  cmdMessenger.sendCmdArg(configBuffer);
+  cmdMessenger.sendCmdArg(config);
   cmdMessenger.sendCmdEnd();
 }
 
@@ -134,6 +137,7 @@ int main()
 
   // Temporarily add an output
   AddOutput(LED1, "Onboard LED");
+  AddOutput(PA_10, "Onboard LED - second time");
 
   // Send the status to the PC that says the Arduino has booted
   // Note that this is a good debug function: it will let you also know

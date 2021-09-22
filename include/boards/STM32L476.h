@@ -23,4 +23,5 @@
 // https://github.com/ARMmbed/mbed-os/blob/master/targets/TARGET_STM/TARGET_STM32L4/TARGET_STM32L476xG/TARGET_NUCLEO_L476RG/PinNames.h
 // Maps Arduino pin names to STM32 pins
 const map<int, PinName> PinMappings = {
-    {1, LED1}};
+    {1, LED1},
+    {2, PA_10}};
