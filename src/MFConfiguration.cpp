@@ -22,4 +22,11 @@ void MFConfiguration::Serialize()
     printf(buffer);
     printf(":");
   }
+
+  for (auto &[key, value] : buttons)
+  {
+    value.Serialize(buffer, sizeof(buffer));
+    printf(buffer);
+    printf(":");
+  }
 }

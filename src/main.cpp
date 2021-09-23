@@ -14,6 +14,7 @@
 #include "modules/MFOutput.hpp"
 
 static BufferedSerial serial_port(USBTX, USBRX, 115200);
+EventQueue queue;
 
 // Command messenger configuration
 CmdMessenger cmdMessenger = CmdMessenger(serial_port);
@@ -50,6 +51,20 @@ FileHandle *mbed::mbed_override_console(int fd)
 // *****************************************************************
 // Module management
 // *****************************************************************
+void AddButton(ARDUINO_PIN arduinoPinName, char const *name = "Button")
+{
+  if (pinManager.IsPinRegistered(arduinoPinName))
+  {
+#ifdef DEBUG
+    cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
+#endif
+    return;
+  }
+
+  config.buttons[arduinoPinName] = MFButton(arduinoPinName, name);
+  pinManager.RegisterPin(arduinoPinName, MFModuleType::kButton);
+}
+
 void AddOutput(ARDUINO_PIN arduinoPinName, char const *name = "Output")
 {
   if (pinManager.IsPinRegistered(arduinoPinName))
@@ -133,6 +148,7 @@ void attachCommandCallbacks()
 
 int main()
 {
+  EventQueue *queue = mbed_event_queue();
   pinManager.ClearRegisteredPins();
 
   // Adds newline to every command
@@ -143,14 +159,15 @@ int main()
 
   // Temporarily add two outputs
   AddOutput(2, "Onboard LED1");
-  AddOutput(3, "Onboard LED2");
+  AddButton(3, "Onboard button");
+  AddOutput(4, "Onboard LED2");
 
   cmdMessenger.sendCmd(kStatus, "STM32 has started!");
 
   while (1)
   {
     cmdMessenger.feedinSerialData();
+    queue->dispatch_once();
     // Without this sleep I wasn't able to re-flash the board
-    ThisThread::sleep_for(500ms);
   }
 }

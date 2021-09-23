@@ -1,0 +1,44 @@
+#include <mbed.h>
+
+#include "ArduinoTypes.hpp"
+#include "DebounceIn.h"
+#include "modules/MFButton.hpp"
+#include "PinManager.hpp"
+
+MFButton::MFButton(ARDUINO_PIN arduinoPinName, std::string name)
+{
+  EventQueue *queue = mbed_event_queue();
+  _arduinoPinName = arduinoPinName;
+
+  // TODO: Handle the case where an invalid pin is specified
+  std::optional<PinName> stm32pin = PinManager::MapArudinoPin(arduinoPinName);
+  if (!stm32pin)
+  {
+    // This should do something smarter
+    return;
+  }
+
+  _pin = new DebounceIn(*stm32pin);
+  _led = new DigitalOut(LED1);
+  // _pin->fall(queue->event(this, &MFButton::OnPress));
+  // _pin->rise(queue->event(this, &MFButton::OnRelease));
+  _name = name;
+}
+
+// Example of what good output looks like:
+// 10,8.16.15.0.Encoder:1.14.Button:;
+void MFButton::Serialize(char *str, size_t len)
+{
+  snprintf(str, len, "%i.%i.%s", as_integer(MFModuleType::kButton), _arduinoPinName, _name.c_str());
+  str[len - 1] = '\0';
+}
+
+void MFButton::OnPress()
+{
+  _led->write(1);
+}
+
+void MFButton::OnRelease()
+{
+  _led->write(0);
+}
