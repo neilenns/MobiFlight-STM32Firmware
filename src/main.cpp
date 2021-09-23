@@ -15,6 +15,7 @@
 
 static BufferedSerial serial_port(USBTX, USBRX, 115200);
 Thread t;
+EventQueue queue(32 * EVENTS_EVENT_SIZE);
 
 // Command messenger configuration
 CmdMessenger cmdMessenger = CmdMessenger(serial_port);
@@ -39,7 +40,6 @@ const int MEM_LEN_CONFIG = MEMLEN_CONFIG;
 char configBuffer[MEM_LEN_CONFIG] = "";
 
 // Pins and configuration
-InterruptIn irq(BUTTON1);
 PinManager pinManager;
 
 MFConfiguration config;
@@ -144,8 +144,7 @@ void attachCommandCallbacks()
 
 int main()
 {
-  EventQueue *queue = mbed_event_queue();
-  t.start(callback(queue, &EventQueue::dispatch_forever));
+  t.start(callback(&queue, &EventQueue::dispatch_forever));
 
   pinManager.ClearRegisteredPins();
 
