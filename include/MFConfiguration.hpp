@@ -8,14 +8,11 @@
 
 class MFConfiguration
 {
-  friend ostream &operator<<(ostream &os, const MFConfiguration &obj);
-
 public:
   map<ARDUINO_PIN, MFOutput> outputs;
 
   void Erase();
   void Load();
   void Save();
+  void Serialize();
 };
-
-std::ostream &operator<<(std::ostream &os, const MFConfiguration &obj);

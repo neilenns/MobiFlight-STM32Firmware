@@ -3,6 +3,9 @@
 
 #include "MFConfiguration.hpp"
 
+#define MAX_BUFFER_SIZE 40
+char buffer[40];
+
 void MFConfiguration::Load()
 {
 }
@@ -11,11 +14,12 @@ void MFConfiguration::Erase()
 {
 }
 
-std::ostream &operator<<(std::ostream &os, const MFConfiguration &obj)
+void MFConfiguration::Serialize()
 {
-  for (const auto &[key, value] : obj.outputs)
+  for (auto &[key, value] : outputs)
   {
-    os << value << ":";
+    value.Serialize(buffer, sizeof(buffer));
+    printf(buffer);
+    printf(":");
   }
-  return os;
 }

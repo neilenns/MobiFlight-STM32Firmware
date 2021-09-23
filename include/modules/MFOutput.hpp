@@ -14,9 +14,9 @@ public:
   // with MobiFlight desktop app.
   MFOutput(ARDUINO_PIN pin = 0, std::string name = "LED");
   uint8_t get();
-  void powerSavingMode(bool state);
+  void PowerSavingMode(bool state);
+  void Serialize(char *str, size_t len);
   void set(uint8_t value);
-  friend ostream &operator<<(ostream &os, const MFOutput &obj);
 
 private:
   uint8_t _arduinoPinName;
@@ -24,5 +24,3 @@ private:
   uint8_t _value;
   std::string _name;
 };
-
-std::ostream &operator<<(std::ostream &os, const MFOutput &obj);

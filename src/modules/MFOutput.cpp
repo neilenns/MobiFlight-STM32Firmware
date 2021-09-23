@@ -31,7 +31,7 @@ uint8_t MFOutput::get()
   return _value;
 }
 
-void MFOutput::powerSavingMode(bool state)
+void MFOutput::PowerSavingMode(bool state)
 {
   state ? set(0) : set(_value);
 }
@@ -44,11 +44,8 @@ void MFOutput::set(uint8_t value)
 
 // Example of what good output looks like:
 // 10,8.16.15.0.Encoder:1.14.Button:;
-std::ostream &operator<<(std::ostream &os, const MFOutput &obj)
+void MFOutput::Serialize(char *str, size_t len)
 {
-  // The + on _arduinoPinName converts it from a "uint8_t" (which << sees as an unsigned char)
-  // to a signed number that gets printed out as an actual number. Otherwise it spits out the
-  // ASCII character for that value which is... not right.
-  os << as_integer(MFModuleType::kOutput) << "." << +obj._arduinoPinName << "." << obj._name;
-  return os;
+  snprintf(str, len, "%i.%i.%s", as_integer(MFModuleType::kOutput), _arduinoPinName, _name.c_str());
+  str[len - 1] = '\0';
 }

@@ -145,8 +145,6 @@ int main()
   AddOutput(2, "Onboard LED1");
   AddOutput(3, "Onboard LED2");
 
-  std::cout << config;
-
   cmdMessenger.sendCmd(kStatus, "STM32 has started!");
 
   while (1)

@@ -237,10 +237,11 @@ public:
             PRINTSTRING(comms, arg);
         }
     }
+
     void sendCmdArg(MFConfiguration config)
     {
         sendFieldSeparator();
-        std::cout << config;
+        config.Serialize();
     }
 
     void sendCmdArg(bool arg)
