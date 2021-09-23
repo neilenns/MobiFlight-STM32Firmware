@@ -1,7 +1,6 @@
 #include <mbed.h>
 
 #include "ArduinoTypes.hpp"
-#include "DebounceIn.h"
 #include "modules/MFButton.hpp"
 #include "PinManager.hpp"
 
@@ -18,15 +17,15 @@ MFButton::MFButton(ARDUINO_PIN arduinoPinName, std::string name)
     return;
   }
 
-  _pin = new DebounceIn(*stm32pin);
-  _led = new DigitalOut(LED1);
-  // _pin->fall(queue->event(this, &MFButton::OnPress));
-  // _pin->rise(queue->event(this, &MFButton::OnRelease));
+  _pin = new InterruptIn(*stm32pin);
+  _led = new DigitalOut(LED2);
+  _pin->fall(queue->event(callback(this, &MFButton::OnPress)));
+  _pin->rise(queue->event(callback(this, &MFButton::OnRelease)));
   _name = name;
 }
 
 // Example of what good output looks like:
-// 10,8.16.15.0.Encoder:1.14.Button:;
+// 1.14.Button:
 void MFButton::Serialize(char *str, size_t len)
 {
   snprintf(str, len, "%i.%i.%s", as_integer(MFModuleType::kButton), _arduinoPinName, _name.c_str());
@@ -40,5 +39,5 @@ void MFButton::OnPress()
 
 void MFButton::OnRelease()
 {
-  _led->write(0);
+  printf("Testing OnRelease!!!");
 }

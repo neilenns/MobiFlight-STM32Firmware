@@ -14,7 +14,7 @@
 #include "modules/MFOutput.hpp"
 
 static BufferedSerial serial_port(USBTX, USBRX, 115200);
-EventQueue queue;
+Thread t;
 
 // Command messenger configuration
 CmdMessenger cmdMessenger = CmdMessenger(serial_port);
@@ -41,12 +41,8 @@ char configBuffer[MEM_LEN_CONFIG] = "";
 // Pins and configuration
 InterruptIn irq(BUTTON1);
 PinManager pinManager;
-MFConfiguration config;
 
-FileHandle *mbed::mbed_override_console(int fd)
-{
-  return &serial_port;
-}
+MFConfiguration config;
 
 // *****************************************************************
 // Module management
@@ -149,6 +145,8 @@ void attachCommandCallbacks()
 int main()
 {
   EventQueue *queue = mbed_event_queue();
+  t.start(callback(queue, &EventQueue::dispatch_forever));
+
   pinManager.ClearRegisteredPins();
 
   // Adds newline to every command
@@ -167,7 +165,6 @@ int main()
   while (1)
   {
     cmdMessenger.feedinSerialData();
-    queue->dispatch_once();
     // Without this sleep I wasn't able to re-flash the board
   }
 }
