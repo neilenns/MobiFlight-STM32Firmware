@@ -165,6 +165,5 @@ int main()
   while (1)
   {
     cmdMessenger.feedinSerialData();
-    // Without this sleep I wasn't able to re-flash the board
   }
 }
