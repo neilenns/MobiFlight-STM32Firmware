@@ -27,8 +27,6 @@
 #include "MFConfiguration.hpp"
 
 #define byte uint8_t
-#define BYTEAVAILLABLE(comms) comms->readable()
-#define READONECHAR(comms, buffer) comms->read(buffer, 1)
 #define PRINTSTRING(comms, s) std::cout << s
 #define millis() (us_ticker_read() / 1000)
 

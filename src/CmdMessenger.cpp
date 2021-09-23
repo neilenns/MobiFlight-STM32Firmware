@@ -123,12 +123,12 @@ void CmdMessenger::attach(byte msgId, messengerCallbackFunction newFunction)
  */
 void CmdMessenger::feedinSerialData()
 {
-    while (!pauseProcessing && BYTEAVAILLABLE(comms))
+    while (!pauseProcessing && comms->readable())
     {
         size_t bytesAvailable = 0;
-        while (BYTEAVAILLABLE(comms) && bytesAvailable < MAXSTREAMBUFFERSIZE)
+        while (comms->readable() && bytesAvailable < MAXSTREAMBUFFERSIZE)
         {
-            READONECHAR(comms, &streamBuffer[bytesAvailable++]);
+            comms->read(&streamBuffer[bytesAvailable++], 1);
         }
         // Process the bytes in the stream buffer, and handles dispatches callbacks, if commands are received
         for (size_t byteNo = 0; byteNo < bytesAvailable; byteNo++)
@@ -208,14 +208,12 @@ bool CmdMessenger::blockedTillReply(unsigned int timeout, byte ackCmdId)
  */
 bool CmdMessenger::checkForAck(byte ackCommand)
 {
-#ifdef __MBED__
     byte data;
-#endif
 
-    while (BYTEAVAILLABLE(comms))
+    while (comms->readable())
     {
-        data = READONECHAR(comms, &data);
-        messageState = processLine(data);
+        comms->read(&data, 1);
+        int messageState = processLine(data);
         if (messageState == kEndOfMessage)
         {
             int id = readInt16Arg();
