@@ -42,7 +42,7 @@ extern "C"
 #include <stdlib.h>
 #include <stdarg.h>
 }
-#include <stdio.h>
+
 #include <CmdMessenger.hpp>
 #include <string.h>
 
@@ -53,7 +53,7 @@ extern "C"
 /**
  * CmdMessenger constructor
  */
-CmdMessenger::CmdMessenger(__DEVICESTREAMTYPE &ccomms, const char fld_separator, const char cmd_separator, const char esc_character)
+CmdMessenger::CmdMessenger(BufferedSerial &ccomms, const char fld_separator, const char cmd_separator, const char esc_character)
 {
     init(ccomms, fld_separator, cmd_separator, esc_character);
 }
@@ -61,7 +61,7 @@ CmdMessenger::CmdMessenger(__DEVICESTREAMTYPE &ccomms, const char fld_separator,
 /**
  * Enables printing newline after a sent command
  */
-void CmdMessenger::init(__DEVICESTREAMTYPE &ccomms, const char fld_separator, const char cmd_separator, const char esc_character)
+void CmdMessenger::init(BufferedSerial &ccomms, const char fld_separator, const char cmd_separator, const char esc_character)
 {
     default_callback = NULL;
     comms = &ccomms;

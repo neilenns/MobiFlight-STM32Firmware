@@ -26,7 +26,6 @@
 
 #include "MFConfiguration.hpp"
 
-#define __DEVICESTREAMTYPE BufferedSerial
 #define byte uint8_t
 #define BYTEAVAILLABLE(comms) comms->readable()
 #define READONECHAR(comms, buffer) comms->read(buffer, 1)
@@ -80,7 +79,7 @@ private:
     char *current;                           // Pointer to current buffer position
     char *last;                              // Pointer to previous buffer position
     char prevChar;                           // Previous char (needed for unescaping)
-    __DEVICESTREAMTYPE *comms;               // Serial data stream
+    BufferedSerial *comms;                   // Serial data stream
 
     char command_separator; // Character indicating end of command (default: ';')
     char field_separator;   // Character indicating end of argument (default: ',')
@@ -91,7 +90,7 @@ private:
 
     // **** Initialize ****
 
-    void init(__DEVICESTREAMTYPE &comms, const char fld_separator, const char cmd_separator, const char esc_character);
+    void init(BufferedSerial &comms, const char fld_separator, const char cmd_separator, const char esc_character);
     void reset();
 
     // **** Command processing ****
@@ -164,7 +163,7 @@ public:
 
     // **** Initialization ****
 
-    CmdMessenger(__DEVICESTREAMTYPE &comms, const char fld_separator = ',',
+    CmdMessenger(BufferedSerial &comms, const char fld_separator = ',',
                  const char cmd_separator = ';',
                  const char esc_character = '/');
 
