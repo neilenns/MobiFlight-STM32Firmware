@@ -29,7 +29,6 @@
 #define byte uint8_t
 #define BYTEAVAILLABLE(comms) comms->readable()
 #define READONECHAR(comms, buffer) comms->read(buffer, 1)
-#define PRINTONECHAR(comms, c) printf("%c", c)
 #define PRINTSTRING(comms, s) std::cout << s
 #define millis() (us_ticker_read() / 1000)
 
@@ -220,6 +219,9 @@ public:
     // **** Command sending with multiple arguments ****
 
     void sendCmdStart(byte cmdId);
+    void sendCommandSeparator();
+    void sendFieldSeparator();
+    void sendEscapeCharacter();
     void sendCmdEscArg(char *arg);
     void sendCmdfArg(char *fmt, ...);
     bool sendCmdEnd(bool reqAc = false, byte ackCmdId = 1, unsigned int timeout = DEFAULT_TIMEOUT);
@@ -233,34 +235,37 @@ public:
     {
         if (startCommand)
         {
-            PRINTONECHAR(comms, field_separator);
+            sendFieldSeparator();
             PRINTSTRING(comms, arg);
         }
     }
     void sendCmdArg(MFConfiguration config)
     {
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         std::cout << config;
     }
 
     void sendCmdArg(bool arg)
     {
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         printf("%i", arg);
     }
+
     void sendCmdArg(float arg)
     {
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         printf("%f", arg);
     }
+
     void sendCmdArg(long arg)
     {
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         printf("%li", arg);
     }
+
     void sendCmdArg(int arg)
     {
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         printf("%i", arg);
     }
 
@@ -273,7 +278,7 @@ public:
     {
         if (startCommand)
         {
-            printf(field_separator);
+            sendFieldSeparator();
             printf("%i", arg);
         }
     }
@@ -293,7 +298,7 @@ public:
     {
         if (startCommand)
         {
-            PRINTONECHAR(comms, field_separator);
+            sendFieldSeparator();
             writeBin(arg);
         }
     }

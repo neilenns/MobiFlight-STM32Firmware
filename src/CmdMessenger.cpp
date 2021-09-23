@@ -303,13 +303,31 @@ void CmdMessenger::sendCmdStart(byte cmdId)
 }
 
 /**
+ * Sends the field separator
+ */
+void CmdMessenger::sendFieldSeparator()
+{
+    printf("%c", field_separator);
+}
+
+void CmdMessenger::sendEscapeCharacter()
+{
+    printf("%c", escape_character);
+}
+
+void CmdMessenger::sendCommandSeparator()
+{
+    printf("%c", command_separator);
+}
+
+/**
  * Send an escaped command argument
  */
 void CmdMessenger::sendCmdEscArg(char *arg)
 {
     if (startCommand)
     {
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         printEsc(arg);
     }
 }
@@ -329,7 +347,7 @@ void CmdMessenger::sendCmdfArg(char *fmt, ...)
         vsnprintf(msg, maxMessageSize, fmt, args);
         va_end(args);
 
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         PRINTSTRING(comms, msg);
     }
 }
@@ -342,7 +360,7 @@ void CmdMessenger::sendCmdSciArg(double arg, unsigned int n)
 {
     if (startCommand)
     {
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         printSci(arg, n);
     }
 }
@@ -355,13 +373,11 @@ bool CmdMessenger::sendCmdEnd(bool reqAc, byte ackCmdId, unsigned int timeout)
     bool ackReply = false;
     if (startCommand)
     {
-        PRINTONECHAR(comms, command_separator);
+        sendCommandSeparator();
         if (print_newlines)
-#ifdef __MBED__
+        {
             printf("\r\n");
-#else
-            comms->println(); // should append BOTH \r\n
-#endif
+        }
         if (reqAc)
         {
             ackReply = blockedTillReply(timeout, ackCmdId);
@@ -650,9 +666,9 @@ void CmdMessenger::printEsc(char str)
 {
     if (str == field_separator || str == command_separator || str == escape_character || str == '\0')
     {
-        PRINTONECHAR(comms, escape_character);
+        sendEscapeCharacter();
     }
-    PRINTONECHAR(comms, str);
+    printf("%c", str);
 }
 
 /**
@@ -663,7 +679,7 @@ void CmdMessenger::printSci(double f, unsigned int digits)
     // handle sign
     if (f < 0.0)
     {
-        PRINTONECHAR(comms, '-');
+        printf("%c", '-');
         f = -f;
     }
 
