@@ -44,7 +44,6 @@ extern "C"
 }
 
 #include <CmdMessenger.hpp>
-#include <string.h>
 
 #define _CMDMESSENGER_VERSION 3_6 // software version of this library
 

@@ -107,7 +107,7 @@ void OnSetPin()
   config.outputs[*stm32pin].set(state);
 
   // Send back status that describes the led state
-  cmdMessenger.sendCmd(kStatus, std::to_string(config.outputs[*stm32pin].get()));
+  cmdMessenger.sendCmd(kStatus, std::to_string(config.outputs[*stm32pin].get()).c_str());
 }
 
 // Called when a received command has no attached function

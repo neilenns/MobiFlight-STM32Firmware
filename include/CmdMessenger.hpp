@@ -177,7 +177,6 @@ public:
     uint8_t commandID();
 
     // ****  Command sending ****
-
     /**
      * Send a command with a single argument of any type
      * Note that the argument is sent as string
@@ -234,7 +233,7 @@ public:
         if (startCommand)
         {
             sendFieldSeparator();
-            PRINTSTRING(comms, arg);
+            printf(arg);
         }
     }
 
