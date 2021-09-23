@@ -32,7 +32,7 @@ void PinManager::RegisterPin(ARDUINO_PIN arduinoPinName, MFModuleType type)
 // Returns the equivalent STM32 pin for a given Arduino pin
 std::optional<PinName> PinManager::MapArudinoPin(ARDUINO_PIN arduinoPin)
 {
-  std::map<int, PinName>::const_iterator stm32pin = PinMappings.find(arduinoPin);
+  const auto stm32pin = PinMappings.find(arduinoPin);
 
   if (stm32pin == PinMappings.end())
   {
