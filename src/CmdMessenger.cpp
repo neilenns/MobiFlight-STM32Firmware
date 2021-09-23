@@ -42,12 +42,8 @@ extern "C"
 #include <stdlib.h>
 #include <stdarg.h>
 }
-#include <stdio.h>
-#include <CmdMessenger.h>
 
-#if __MBED__
-#include <string.h>
-#endif
+#include <CmdMessenger.hpp>
 
 #define _CMDMESSENGER_VERSION 3_6 // software version of this library
 
@@ -56,7 +52,7 @@ extern "C"
 /**
  * CmdMessenger constructor
  */
-CmdMessenger::CmdMessenger(__DEVICESTREAMTYPE &ccomms, const char fld_separator, const char cmd_separator, const char esc_character)
+CmdMessenger::CmdMessenger(BufferedSerial &ccomms, const char fld_separator, const char cmd_separator, const char esc_character)
 {
     init(ccomms, fld_separator, cmd_separator, esc_character);
 }
@@ -64,7 +60,7 @@ CmdMessenger::CmdMessenger(__DEVICESTREAMTYPE &ccomms, const char fld_separator,
 /**
  * Enables printing newline after a sent command
  */
-void CmdMessenger::init(__DEVICESTREAMTYPE &ccomms, const char fld_separator, const char cmd_separator, const char esc_character)
+void CmdMessenger::init(BufferedSerial &ccomms, const char fld_separator, const char cmd_separator, const char esc_character)
 {
     default_callback = NULL;
     comms = &ccomms;
@@ -115,7 +111,7 @@ void CmdMessenger::attach(messengerCallbackFunction newFunction)
  */
 void CmdMessenger::attach(byte msgId, messengerCallbackFunction newFunction)
 {
-    if (msgId >= 0 && msgId < MAXCALLBACKS)
+    if (msgId < MAXCALLBACKS)
         callbackList[msgId] = newFunction;
 }
 
@@ -126,21 +122,13 @@ void CmdMessenger::attach(byte msgId, messengerCallbackFunction newFunction)
  */
 void CmdMessenger::feedinSerialData()
 {
-    while (!pauseProcessing && BYTEAVAILLABLE(comms))
+    while (!pauseProcessing && comms->readable())
     {
-        // The Stream class has a readBytes() function that reads many bytes at once. On Teensy 2.0 and 3.0, readBytes() is optimized.
-        // Benchmarks about the incredible difference it makes: http://www.pjrc.com/teensy/benchmark_usb_serial_receive.html
-#ifdef ARDUINO
-        size_t bytesAvailable = min(comms->available(), MAXSTREAMBUFFERSIZE);
-        comms->readBytes(streamBuffer, bytesAvailable);
-#endif
-#ifdef __MBED__
         size_t bytesAvailable = 0;
-        while (BYTEAVAILLABLE(comms) && bytesAvailable < MAXSTREAMBUFFERSIZE)
+        while (comms->readable() && bytesAvailable < MAXSTREAMBUFFERSIZE)
         {
-            READONECHAR(comms, &streamBuffer[bytesAvailable++]);
+            comms->read(&streamBuffer[bytesAvailable++], 1);
         }
-#endif
         // Process the bytes in the stream buffer, and handles dispatches callbacks, if commands are received
         for (size_t byteNo = 0; byteNo < bytesAvailable; byteNo++)
         {
@@ -191,7 +179,7 @@ void CmdMessenger::handleMessage()
 {
     lastCommandId = readInt16Arg();
     // if command attached, we will call it
-    if (lastCommandId >= 0 && lastCommandId < MAXCALLBACKS && ArgOk && callbackList[lastCommandId] != NULL)
+    if (lastCommandId < MAXCALLBACKS && ArgOk && callbackList[lastCommandId] != NULL)
         (*callbackList[lastCommandId])();
     else // If command not attached, call default callback (if attached)
         if (default_callback != NULL)
@@ -219,20 +207,12 @@ bool CmdMessenger::blockedTillReply(unsigned int timeout, byte ackCmdId)
  */
 bool CmdMessenger::checkForAck(byte ackCommand)
 {
-#ifdef __MBED__
     byte data;
-#endif
 
-    while (BYTEAVAILLABLE(comms))
+    while (comms->readable())
     {
-//Processes a byte and determines if an acknowlegde has come in
-#ifdef ARDUINO
-        int messageState = processLine(READONECHAR(comms));
-#endif
-#ifdef __MBED__
-        data = READONECHAR(comms, &data);
-        messageState = processLine(data);
-#endif
+        comms->read(&data, 1);
+        int messageState = processLine(data);
         if (messageState == kEndOfMessage)
         {
             int id = readInt16Arg();
@@ -320,13 +300,31 @@ void CmdMessenger::sendCmdStart(byte cmdId)
 }
 
 /**
+ * Sends the field separator
+ */
+void CmdMessenger::sendFieldSeparator()
+{
+    printf("%c", field_separator);
+}
+
+void CmdMessenger::sendEscapeCharacter()
+{
+    printf("%c", escape_character);
+}
+
+void CmdMessenger::sendCommandSeparator()
+{
+    printf("%c", command_separator);
+}
+
+/**
  * Send an escaped command argument
  */
 void CmdMessenger::sendCmdEscArg(char *arg)
 {
     if (startCommand)
     {
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         printEsc(arg);
     }
 }
@@ -346,7 +344,7 @@ void CmdMessenger::sendCmdfArg(char *fmt, ...)
         vsnprintf(msg, maxMessageSize, fmt, args);
         va_end(args);
 
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         PRINTSTRING(comms, msg);
     }
 }
@@ -359,7 +357,7 @@ void CmdMessenger::sendCmdSciArg(double arg, unsigned int n)
 {
     if (startCommand)
     {
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         printSci(arg, n);
     }
 }
@@ -372,13 +370,11 @@ bool CmdMessenger::sendCmdEnd(bool reqAc, byte ackCmdId, unsigned int timeout)
     bool ackReply = false;
     if (startCommand)
     {
-        PRINTONECHAR(comms, command_separator);
+        sendCommandSeparator();
         if (print_newlines)
-#ifdef __MBED__
+        {
             printf("\r\n");
-#else
-            comms->println(); // should append BOTH \r\n
-#endif
+        }
         if (reqAc)
         {
             ackReply = blockedTillReply(timeout, ackCmdId);
@@ -544,27 +540,8 @@ char *CmdMessenger::readStringArg()
         return current;
     }
     ArgOk = false;
-    return "\0";
-}
-
-/**
- * Return next argument as a new string
- * Note that this is useful if the string needs to be persisted
- */
-void CmdMessenger::copyStringArg(char *string, uint8_t size)
-{
-    if (next())
-    {
-        dumped = true;
-        ArgOk = true;
-        strlcpy(string, current, size);
-    }
-    else
-    {
-        ArgOk = false;
-        if (size)
-            string[0] = '\0';
-    }
+    // TODO: Verify this works once OnSetConfig() is implemented
+    return new char[1](); // Return a single 0 value character string
 }
 
 /**
@@ -686,9 +663,9 @@ void CmdMessenger::printEsc(char str)
 {
     if (str == field_separator || str == command_separator || str == escape_character || str == '\0')
     {
-        PRINTONECHAR(comms, escape_character);
+        sendEscapeCharacter();
     }
-    PRINTONECHAR(comms, str);
+    printf("%c", str);
 }
 
 /**
@@ -699,7 +676,7 @@ void CmdMessenger::printSci(double f, unsigned int digits)
     // handle sign
     if (f < 0.0)
     {
-        PRINTONECHAR(comms, '-');
+        printf("%c", '-');
         f = -f;
     }
 

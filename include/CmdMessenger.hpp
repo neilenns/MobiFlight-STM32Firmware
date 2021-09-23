@@ -21,34 +21,14 @@
 #pragma once
 
 #include <inttypes.h>
-#ifdef ARDUINO
-#if ARDUINO >= 100
-#include <Arduino.h>
-#else
-#include <WProgram.h>
-#endif
-#endif
-
-#ifdef __MBED__
+#include <iostream>
 #include <mbed.h>
-#endif
 
-#ifdef __MBED__
-#define __DEVICESTREAMTYPE BufferedSerial
+#include "MFConfiguration.hpp"
+
 #define byte uint8_t
-#define BYTEAVAILLABLE(comms) comms->readable()
-#define READONECHAR(comms, buffer) comms->read(buffer, 1)
-#define PRINTONECHAR(comms, c) printf("%c", c)
-#define PRINTSTRING(comms, s) printf(s)
+#define PRINTSTRING(comms, s) std::cout << s
 #define millis() (us_ticker_read() / 1000)
-#endif
-#ifdef ARDUINO
-#define __DEVICESTREAMTYPE Stream
-#define BYTEAVAILLABLE(comms) comms->available()
-#define READONECHAR(comms) comms->read()
-#define PRINTONECHAR(comms, c) comms->print(c)
-#define PRINTSTRING(comms, s) comms->print(s)
-#endif
 
 //#include "Stream.h"
 
@@ -96,7 +76,7 @@ private:
     char *current;                           // Pointer to current buffer position
     char *last;                              // Pointer to previous buffer position
     char prevChar;                           // Previous char (needed for unescaping)
-    __DEVICESTREAMTYPE *comms;               // Serial data stream
+    BufferedSerial *comms;                   // Serial data stream
 
     char command_separator; // Character indicating end of command (default: ';')
     char field_separator;   // Character indicating end of argument (default: ',')
@@ -107,7 +87,7 @@ private:
 
     // **** Initialize ****
 
-    void init(__DEVICESTREAMTYPE &comms, const char fld_separator, const char cmd_separator, const char esc_character);
+    void init(BufferedSerial &comms, const char fld_separator, const char cmd_separator, const char esc_character);
     void reset();
 
     // **** Command processing ****
@@ -180,7 +160,7 @@ public:
 
     // **** Initialization ****
 
-    CmdMessenger(__DEVICESTREAMTYPE &comms, const char fld_separator = ',',
+    CmdMessenger(BufferedSerial &comms, const char fld_separator = ',',
                  const char cmd_separator = ';',
                  const char esc_character = '/');
 
@@ -197,7 +177,6 @@ public:
     uint8_t commandID();
 
     // ****  Command sending ****
-
     /**
      * Send a command with a single argument of any type
      * Note that the argument is sent as string
@@ -237,6 +216,9 @@ public:
     // **** Command sending with multiple arguments ****
 
     void sendCmdStart(byte cmdId);
+    void sendCommandSeparator();
+    void sendFieldSeparator();
+    void sendEscapeCharacter();
     void sendCmdEscArg(char *arg);
     void sendCmdfArg(char *fmt, ...);
     bool sendCmdEnd(bool reqAc = false, byte ackCmdId = 1, unsigned int timeout = DEFAULT_TIMEOUT);
@@ -250,43 +232,40 @@ public:
     {
         if (startCommand)
         {
-#ifdef ARDUINO
-            comms->print(field_separator);
-#endif
-#ifdef __MBED__
-            PRINTONECHAR(comms, field_separator);
-#endif
-#ifdef ARDUINO
-            comms->print(arg);
-#endif
-#ifdef __MBED__
-            PRINTSTRING(comms, arg);
-#endif
+            sendFieldSeparator();
+            printf(arg);
         }
     }
 
-#ifdef __MBED__
+    void sendCmdArg(MFConfiguration config)
+    {
+        sendFieldSeparator();
+        config.Serialize();
+    }
+
     void sendCmdArg(bool arg)
     {
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         printf("%i", arg);
     }
+
     void sendCmdArg(float arg)
     {
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         printf("%f", arg);
     }
+
     void sendCmdArg(long arg)
     {
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         printf("%li", arg);
     }
+
     void sendCmdArg(int arg)
     {
-        PRINTONECHAR(comms, field_separator);
+        sendFieldSeparator();
         printf("%i", arg);
     }
-#endif
 
     /**
      * Send a single argument as string with custom accuracy
@@ -297,14 +276,8 @@ public:
     {
         if (startCommand)
         {
-#ifdef ARDUINO
-            comms->print(field_separator);
-            comms->print(arg, n);
-#endif
-#ifdef __MBED__
-            printf(field_separator);
+            sendFieldSeparator();
             printf("%i", arg);
-#endif
         }
     }
 
@@ -323,12 +296,7 @@ public:
     {
         if (startCommand)
         {
-#ifdef ARDUINO
-            comms->print(field_separator);
-#endif
-#ifdef __MBED__
-            PRINTONECHAR(comms, field_separator);
-#endif
+            sendFieldSeparator();
             writeBin(arg);
         }
     }
