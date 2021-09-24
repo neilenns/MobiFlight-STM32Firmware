@@ -32,11 +32,8 @@ MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, std::st
 
 void MFMAX7219::Display(uint8_t submodule, char *value, uint8_t points, uint8_t mask)
 {
-  printf("%s\n", value);
 }
 
-// Example of what good output looks like:
-// 10,8.16.15.0.Encoder:1.14.Button:;
 void MFMAX7219::Serialize(char *str, size_t len)
 {
   snprintf(str, len, "%i.%i.%i.%i.%s", as_integer(MFModuleType::kLedSegment), _mosiArduino, _sclkArduino, _csArduino, _name.c_str());
