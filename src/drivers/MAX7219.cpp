@@ -33,6 +33,8 @@ MAX7219::MAX7219(PinName mosi, PinName sclk, PinName cs)
 {
   _spi = new SPI(mosi, NC, sclk);
   _cs = new DigitalOut(cs);
+
+  Begin();
 }
 
 void MAX7219::MAX7219_ShutdownStart(void)
