@@ -32,6 +32,16 @@ MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, std::st
 
 void MFMAX7219::Display(uint8_t submodule, char *value, uint8_t points, uint8_t mask)
 {
+  uint8_t digit = 8;
+  uint8_t pos = 0;
+  for (int i = 0; i != 8; i++)
+  {
+    digit--;
+    if (((1 << digit) & mask) == 0)
+      continue;
+    _display->DisplayChar(digit, value[pos], ((1 << digit) & points));
+    pos++;
+  }
 }
 
 void MFMAX7219::Serialize(char *str, size_t len)
