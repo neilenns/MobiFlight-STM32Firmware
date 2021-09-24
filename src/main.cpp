@@ -61,6 +61,25 @@ void OnGetInfo()
   cmdMessenger.sendCmdEnd();
 }
 
+// Displays text on the connected module
+void OnSetModule()
+{
+  int module = cmdMessenger.readInt16Arg();
+  int subModule = cmdMessenger.readInt16Arg();
+  char *value = cmdMessenger.readStringArg();
+  uint8_t points = (uint8_t)cmdMessenger.readInt16Arg();
+  uint8_t mask = (uint8_t)cmdMessenger.readInt16Arg();
+
+  auto display = config.ledDisplays[module];
+  if (!display)
+  {
+    cmdMessenger.sendCmd(kStatus, "Not a valid module");
+    return;
+  }
+
+  display->Display(subModule, value, points, mask);
+}
+
 // Callback function that sets led on or off
 void OnSetPin()
 {
@@ -110,6 +129,7 @@ void attachCommandCallbacks()
   cmdMessenger.attach(kGetConfig, OnGetConfig);
   cmdMessenger.attach(kGetInfo, OnGetInfo);
   cmdMessenger.attach(kSetPin, OnSetPin);
+  cmdMessenger.attach(kSetModule, OnSetModule);
   cmdMessenger.attach(kTest, OnTest);
 }
 

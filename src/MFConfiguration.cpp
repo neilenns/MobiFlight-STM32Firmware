@@ -31,6 +31,8 @@ void MFConfiguration::AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_
     return;
   }
 
+  // MOSI a.k.a. the data pin is used as the identifier for the connected module
+  // by MobiFlight.
   ledDisplays.insert({mosi, new MFMAX7219(mosi, sclk, cs, name)});
   pinManager.RegisterPin(mosi, MFModuleType::kLedSegment);
   pinManager.RegisterPin(sclk, MFModuleType::kLedSegment);
@@ -69,6 +71,13 @@ void MFConfiguration::Serialize()
   }
 
   for (auto &[key, value] : buttons)
+  {
+    value->Serialize(buffer, sizeof(buffer));
+    printf(buffer);
+    printf(":");
+  }
+
+  for (auto &[key, value] : ledDisplays)
   {
     value->Serialize(buffer, sizeof(buffer));
     printf(buffer);
