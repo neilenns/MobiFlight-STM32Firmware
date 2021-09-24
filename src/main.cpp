@@ -65,7 +65,7 @@ void OnGetInfo()
 void OnSetModule()
 {
   // command, module, submodule, value, points, mask;
-  // 1,7,0,87654321,0,255;
+  // 1,7,1,12345678,0,255;
   int module = cmdMessenger.readInt16Arg();
   int subModule = cmdMessenger.readInt16Arg();
   char *value = cmdMessenger.readStringArg();
@@ -150,7 +150,7 @@ int main()
   config.AddOutput(2, "Onboard LED1");
   config.AddButton(3, "Onboard button");
   config.AddOutput(4, "Onboard LED2");
-  config.AddLedDisplay(7, 5, 10, "LED display 1");
+  config.AddLedDisplay(7, 5, 10, 2, "LED display 1");
 
   cmdMessenger.sendCmd(kStatus, "STM32 has started!");
 
