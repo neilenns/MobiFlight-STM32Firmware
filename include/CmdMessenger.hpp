@@ -237,6 +237,11 @@ public:
         }
     }
 
+    void sendCmdArg(std::string str)
+    {
+        sendCmdArg(str.c_str());
+    }
+
     void sendCmdArg(MFConfiguration config)
     {
         sendFieldSeparator();

@@ -13,7 +13,7 @@
 #include "modules/MFModuleTypes.hpp"
 #include "modules/MFOutput.hpp"
 
-static BufferedSerial serial_port(USBTX, USBRX, 115200);
+BufferedSerial serial_port(USBTX, USBRX, 115200);
 Thread t;
 
 // Command messenger configuration

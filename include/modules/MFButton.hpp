@@ -2,9 +2,9 @@
 
 #include <mbed.h>
 #include <iostream>
-#include "DebounceIn.h"
 
 #include "ArduinoTypes.hpp"
+#include "DebounceIn.hpp"
 #include "MFModuleTypes.hpp"
 
 class MFButton final
@@ -20,7 +20,13 @@ public:
 
 private:
   uint8_t _arduinoPinName;
-  InterruptIn *_pin;
+  DebounceIn *_pin;
   DigitalOut *_led;
   std::string _name;
+};
+
+enum MFButtonState
+{
+  Pressed,
+  Released,
 };
