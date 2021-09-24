@@ -64,6 +64,8 @@ void OnGetInfo()
 // Displays text on the connected module
 void OnSetModule()
 {
+  // command, module, submodule, value, points, mask;
+  // 1,7,0,87654321,0,255;
   int module = cmdMessenger.readInt16Arg();
   int subModule = cmdMessenger.readInt16Arg();
   char *value = cmdMessenger.readStringArg();
