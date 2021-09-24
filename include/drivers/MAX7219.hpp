@@ -28,6 +28,7 @@
 #include <mbed.h>
 #include "ArduinoTypes.hpp"
 
+#define REG_NOOP 0x00
 #define REG_DECODE 0x09
 #define REG_INTENSITY 0x0a
 #define REG_SCAN_LIMIT 0x0b
@@ -135,20 +136,21 @@ class MAX7219
 private:
   SPI *_spi;
   DigitalOut *_cs;
+  int _submoduleCount;
 
 public:
-  MAX7219(PinName mosi, PinName sclk, PinName cs);
-  void Begin(void);
+  MAX7219(PinName mosi, PinName sclk, PinName cs, int submoduleCount = 1);
+  void Begin(int submodule = 0);
   void DisplayChar(char digit, char character, unsigned int dp);
-  void MAX7219_DisplayTestStart(void);
-  void DisplayChar(int digit, char value, bool dp);
-  void clearDisplay();
-  void MAX7219_Write(volatile int opcode, volatile int data);
-  void MAX7219_ShutdownStop(void);
+  void MAX7219_DisplayTestStart(int submodule);
+  void DisplayChar(int digit, char value, bool dp, int submodule);
+  void clearDisplay(int submodule);
+  void MAX7219_Write(volatile int opcode, volatile int data, volatile int submodule);
+  void MAX7219_ShutdownStop(int submodule);
   unsigned char MAX7219_LookupCode(char character, unsigned int dp);
-  void MAX7219_ShutdownStart(void);
-  void Clear(void);
-  void MAX7219_DisplayTestStop(void);
-  void MAX7219_SetBrightness(char brightness);
+  void MAX7219_ShutdownStart(int submodule);
+  void Clear(int submodule);
+  void MAX7219_DisplayTestStop(int submodule);
+  void MAX7219_SetBrightness(char brightness, int submodule);
   void DisplayText(char *text, int justify);
 };

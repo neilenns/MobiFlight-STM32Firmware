@@ -20,7 +20,7 @@ public:
   map<ARDUINO_PIN, MFOutput *> outputs;
 
   void AddButton(ARDUINO_PIN arduinoPinName, char const *name = "Output");
-  void AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, char const *name = "LED Display");
+  void AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount, char const *name = "LED Display");
   void AddOutput(ARDUINO_PIN arduinoPinName, char const *name = "Output");
   void Erase();
   void Load();

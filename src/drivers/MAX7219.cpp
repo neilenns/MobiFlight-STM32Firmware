@@ -29,42 +29,45 @@
 
 #include "drivers/max7219.hpp"
 
-MAX7219::MAX7219(PinName mosi, PinName sclk, PinName cs)
+MAX7219::MAX7219(PinName mosi, PinName sclk, PinName cs, int submoduleCount)
 {
   _spi = new SPI(mosi, NC, sclk);
   _cs = new DigitalOut(cs);
+  _submoduleCount = submoduleCount;
 
-  Begin();
-}
-
-void MAX7219::MAX7219_ShutdownStart(void)
-{
-  MAX7219_Write(REG_SHUTDOWN, 0);
-}
-
-void MAX7219::MAX7219_DisplayTestStart(void)
-{
-  MAX7219_Write(REG_DISPLAY_TEST, 1);
-}
-
-void MAX7219::Clear(void)
-{
-
-  for (int i = 0; i < 8; i++)
+  for (int i = 0; i < _submoduleCount; i++)
   {
-    MAX7219_Write(i + 1, 0x00);
+    Begin(i);
   }
 }
 
-void MAX7219::MAX7219_DisplayTestStop(void)
+void MAX7219::MAX7219_ShutdownStart(int submodule)
 {
-  MAX7219_Write(REG_DISPLAY_TEST, 0);
+  MAX7219_Write(REG_SHUTDOWN, 0, submodule);
 }
 
-void MAX7219::MAX7219_SetBrightness(char brightness)
+void MAX7219::MAX7219_DisplayTestStart(int submodule)
+{
+  MAX7219_Write(REG_DISPLAY_TEST, 1, submodule);
+}
+
+void MAX7219::MAX7219_DisplayTestStop(int submodule)
+{
+  MAX7219_Write(REG_DISPLAY_TEST, 0, submodule);
+}
+
+void MAX7219::Clear(int submodule)
+{
+  for (int i = 0; i < 8; i++)
+  {
+    MAX7219_Write(i + 1, 0x00, submodule);
+  }
+}
+
+void MAX7219::MAX7219_SetBrightness(char brightness, int submodule)
 {
   brightness &= 0x0f;
-  MAX7219_Write(REG_INTENSITY, brightness);
+  MAX7219_Write(REG_INTENSITY, brightness, submodule);
 }
 
 unsigned char MAX7219::MAX7219_LookupCode(char character, unsigned int dp)
@@ -132,32 +135,57 @@ void MAX7219::DisplayText(char *text, int justify)
   }
 }
 
-void MAX7219::MAX7219_Write(volatile int opcode, volatile int data)
+void MAX7219::MAX7219_Write(volatile int opcode, volatile int data, volatile int submodule)
 {
+  // A chained set of modules is basically just chained shift registers.
+  // When sending data out to a specific module it's important to make sure
+  // all the other submodules, both before and after the target submodule,
+  // receive no-op commands. This tracks how many modules got written to.
+  int modulesWrittenTo = 0;
+
   _cs->write(0);
   _spi->lock();
+
+  // Send no-op commands to the submodules before the requested momdule
+  for (int i = 0; i < submodule; i++)
+  {
+    _spi->write(REG_NOOP);
+    _spi->write(0);
+    modulesWrittenTo++;
+  }
+
+  // Send the command to the requested module
   _spi->write(opcode);
   _spi->write(data);
+  modulesWrittenTo++;
+
+  // Send noop commands to the remaining modules
+  for (int i = modulesWrittenTo; i < _submoduleCount; i++)
+  {
+    _spi->write(REG_NOOP);
+    _spi->write(0);
+  }
+
   _spi->unlock();
   _cs->write(1);
 }
 
-void MAX7219::DisplayChar(int digit, char value, bool dp)
+void MAX7219::DisplayChar(int digit, char value, bool dp, int submodule)
 {
-  MAX7219_Write(digit + 1, MAX7219_LookupCode(value, dp));
+  MAX7219_Write(digit + 1, MAX7219_LookupCode(value, dp), submodule);
 }
 
-void MAX7219::MAX7219_ShutdownStop(void)
+void MAX7219::MAX7219_ShutdownStop(int submodule)
 {
-  MAX7219::MAX7219_Write(REG_SHUTDOWN, 1);
+  MAX7219::MAX7219_Write(REG_SHUTDOWN, 1, submodule);
 }
 
-void MAX7219::Begin()
+void MAX7219::Begin(int submodule)
 {
-  MAX7219_Write(REG_SCAN_LIMIT, 7);
-  MAX7219_Write(REG_DECODE, 0x00);
-  MAX7219_ShutdownStop();
-  MAX7219_DisplayTestStop();
-  Clear();
-  MAX7219_SetBrightness(INTENSITY_MAX);
+  MAX7219_Write(REG_SCAN_LIMIT, 7, submodule);
+  MAX7219_Write(REG_DECODE, 0x00, submodule);
+  MAX7219_ShutdownStop(submodule);
+  MAX7219_DisplayTestStop(submodule);
+  Clear(submodule);
+  MAX7219_SetBrightness(INTENSITY_MAX, submodule);
 }
