@@ -18,14 +18,14 @@ void MFConfiguration::Serialize()
 {
   for (auto &[key, value] : outputs)
   {
-    value.Serialize(buffer, sizeof(buffer));
+    value->Serialize(buffer, sizeof(buffer));
     printf(buffer);
     printf(":");
   }
 
   for (auto &[key, value] : buttons)
   {
-    value.Serialize(buffer, sizeof(buffer));
+    value->Serialize(buffer, sizeof(buffer));
     printf(buffer);
     printf(":");
   }

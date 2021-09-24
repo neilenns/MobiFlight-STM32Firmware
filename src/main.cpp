@@ -57,7 +57,7 @@ void AddButton(ARDUINO_PIN arduinoPinName, char const *name = "Button")
     return;
   }
 
-  config.buttons[arduinoPinName] = MFButton(arduinoPinName, name);
+  config.buttons.insert({arduinoPinName, new MFButton(arduinoPinName, name)});
   pinManager.RegisterPin(arduinoPinName, MFModuleType::kButton);
 }
 
@@ -71,7 +71,7 @@ void AddOutput(ARDUINO_PIN arduinoPinName, char const *name = "Output")
     return;
   }
 
-  config.outputs[arduinoPinName] = MFOutput(arduinoPinName, name);
+  config.outputs.insert({arduinoPinName, new MFOutput(arduinoPinName, name)});
   pinManager.RegisterPin(arduinoPinName, MFModuleType::kOutput);
 }
 
@@ -107,18 +107,12 @@ void OnSetPin()
 {
   int arduinoPin = cmdMessenger.readInt16Arg();
   int state = cmdMessenger.readBoolArg();
-  std::optional<PinName> stm32pin = pinManager.MapArudinoPin(arduinoPin);
 
-  if (!stm32pin)
-  {
-    cmdMessenger.sendCmd(kStatus, "The requested pin is not supported on this board.");
-    return;
-  }
-
-  config.outputs[*stm32pin].set(state);
+  auto LED = config.outputs[arduinoPin];
+  LED->set(state);
 
   // Send back status that describes the led state
-  cmdMessenger.sendCmd(kStatus, std::to_string(config.outputs[*stm32pin].get()).c_str());
+  cmdMessenger.sendCmd(kStatus, std::to_string(LED->get()).c_str());
 }
 
 // Called when a received command has no attached function

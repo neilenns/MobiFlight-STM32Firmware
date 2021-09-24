@@ -10,8 +10,8 @@
 class MFConfiguration
 {
 public:
-  map<ARDUINO_PIN, MFOutput> outputs;
-  map<ARDUINO_PIN, MFButton> buttons;
+  map<ARDUINO_PIN, MFOutput *> outputs;
+  map<ARDUINO_PIN, MFButton *> buttons;
 
   void Erase();
   void Load();

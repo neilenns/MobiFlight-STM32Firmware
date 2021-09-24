@@ -6,7 +6,7 @@
 #include "ArduinoTypes.hpp"
 #include "MFModuleTypes.hpp"
 
-class MFOutput
+class MFOutput final
 {
 public:
   // The provided pin should be an Arduino pin number. This will get mapped

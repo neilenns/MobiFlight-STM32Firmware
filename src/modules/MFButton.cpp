@@ -19,7 +19,6 @@ MFButton::MFButton(ARDUINO_PIN arduinoPinName, std::string name)
   }
 
   _pin = new InterruptIn(*stm32pin);
-  _led = new DigitalOut(LED2);
   _pin->fall(queue.event(callback(this, &MFButton::OnPress)));
   _pin->rise(queue.event(callback(this, &MFButton::OnRelease)));
   _name = name;
@@ -35,10 +34,8 @@ void MFButton::Serialize(char *str, size_t len)
 
 void MFButton::OnPress()
 {
-  _led->write(1);
 }
 
 void MFButton::OnRelease()
 {
-  printf("Testing OnRelease!!!");
 }
