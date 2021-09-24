@@ -21,6 +21,22 @@ void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
   pinManager.RegisterPin(arduinoPinName, MFModuleType::kButton);
 }
 
+void MFConfiguration::AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, char const *name)
+{
+  if (pinManager.IsPinRegistered(mosi) || pinManager.IsPinRegistered(sclk) || pinManager.IsPinRegistered(cs))
+  {
+#ifdef DEBUG
+    cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
+#endif
+    return;
+  }
+
+  ledDisplays.insert({mosi, new MFMAX7219(mosi, sclk, cs, name)});
+  pinManager.RegisterPin(mosi, MFModuleType::kLedSegment);
+  pinManager.RegisterPin(sclk, MFModuleType::kLedSegment);
+  pinManager.RegisterPin(cs, MFModuleType::kLedSegment);
+}
+
 void MFConfiguration::AddOutput(ARDUINO_PIN arduinoPinName, char const *name)
 {
   if (pinManager.IsPinRegistered(arduinoPinName))
@@ -57,5 +73,21 @@ void MFConfiguration::Serialize()
     value->Serialize(buffer, sizeof(buffer));
     printf(buffer);
     printf(":");
+  }
+}
+
+void MFConfiguration::StartTest()
+{
+  for (auto &[key, value] : ledDisplays)
+  {
+    value->StartTest();
+  }
+}
+
+void MFConfiguration::StopTest()
+{
+  for (auto &[key, value] : ledDisplays)
+  {
+    value->StopTest();
   }
 }
