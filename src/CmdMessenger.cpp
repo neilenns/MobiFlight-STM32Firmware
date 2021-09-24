@@ -330,39 +330,6 @@ void CmdMessenger::sendCmdEscArg(char *arg)
 }
 
 /**
- * Send formatted argument.
- *  Note that floating points are not supported and resulting string is limited to 128 chars
- */
-void CmdMessenger::sendCmdfArg(char *fmt, ...)
-{
-    const int maxMessageSize = 128;
-    if (startCommand)
-    {
-        char msg[maxMessageSize];
-        va_list args;
-        va_start(args, fmt);
-        vsnprintf(msg, maxMessageSize, fmt, args);
-        va_end(args);
-
-        sendFieldSeparator();
-        PRINTSTRING(comms, msg);
-    }
-}
-
-/**
- * Send double argument in scientific format.
- *  This will overcome the boundary of normal float sending which is limited to abs(f) <= MAXLONG
- */
-void CmdMessenger::sendCmdSciArg(double arg, unsigned int n)
-{
-    if (startCommand)
-    {
-        sendFieldSeparator();
-        printSci(arg, n);
-    }
-}
-
-/**
  * Send end of command
  */
 bool CmdMessenger::sendCmdEnd(bool reqAc, byte ackCmdId, unsigned int timeout)
@@ -666,65 +633,4 @@ void CmdMessenger::printEsc(char str)
         sendEscapeCharacter();
     }
     printf("%c", str);
-}
-
-/**
- * Print float and double in scientific format
- */
-void CmdMessenger::printSci(double f, unsigned int digits)
-{
-    // handle sign
-    if (f < 0.0)
-    {
-        printf("%c", '-');
-        f = -f;
-    }
-
-    // handle infinite values
-    if (isinf(f))
-    {
-        PRINTSTRING(comms, "INF");
-        return;
-    }
-    // handle Not a Number
-    if (isnan(f))
-    {
-        PRINTSTRING(comms, "NaN");
-        return;
-    }
-
-    // max digits
-    if (digits > 6)
-        digits = 6;
-    long multiplier = pow(10.0, double(digits)); // fix int => long
-
-    int exponent;
-    if (abs(f) < 10.0)
-    {
-        exponent = 0;
-    }
-    else
-    {
-        exponent = int(log10(f));
-    }
-    float g = f / pow(10, double(exponent));
-    if ((g < 1.0) && (g != 0.0))
-    {
-        g *= 10;
-        exponent--;
-    }
-
-    long whole = long(g);                             // single digit
-    long part = long((g - whole) * multiplier + 0.5); // # digits
-    // Check for rounding above .99:
-    if (part == 100)
-    {
-        whole++;
-        part = 0;
-    }
-    char format[16];
-    sprintf(format, "%%ld.%%0%dldE%%+d", digits);
-    char output[16];
-    sprintf(output, format, whole, part, exponent);
-    PRINTSTRING(comms, output);
 }
