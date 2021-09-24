@@ -97,7 +97,8 @@ void attachCommandCallbacks()
 
 int main()
 {
-  t.start(callback(mbed_event_queue(), &EventQueue::dispatch_forever));
+  EventQueue *queue = mbed_event_queue();
+  t.start(callback(queue, &EventQueue::dispatch_forever));
 
   // Adds newline to every command
   cmdMessenger.printLfCr();
@@ -112,8 +113,5 @@ int main()
 
   cmdMessenger.sendCmd(kStatus, "STM32 has started!");
 
-  while (1)
-  {
-    cmdMessenger.feedinSerialData();
-  }
+  serial_port.sigio(queue->event(callback(&cmdMessenger, &CmdMessenger::feedinSerialData)));
 }
