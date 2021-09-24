@@ -74,6 +74,23 @@ void OnSetPin()
   cmdMessenger.sendCmd(kStatus, std::to_string(LED->get()).c_str());
 }
 
+// Starts/stops a test of all attached output displays
+void OnTest()
+{
+  int state = cmdMessenger.readBoolArg();
+
+  if (state)
+  {
+    config.StartTest();
+    cmdMessenger.sendCmd(kStatus, "Test started");
+  }
+  else
+  {
+    config.StopTest();
+    cmdMessenger.sendCmd(kStatus, "Test stopped");
+  }
+}
+
 // Called when a received command has no attached function
 void OnUnknownCommand()
 {
@@ -93,6 +110,7 @@ void attachCommandCallbacks()
   cmdMessenger.attach(kGetConfig, OnGetConfig);
   cmdMessenger.attach(kGetInfo, OnGetInfo);
   cmdMessenger.attach(kSetPin, OnSetPin);
+  cmdMessenger.attach(kTest, OnTest);
 }
 
 int main()
@@ -110,6 +128,7 @@ int main()
   config.AddOutput(2, "Onboard LED1");
   config.AddButton(3, "Onboard button");
   config.AddOutput(4, "Onboard LED2");
+  config.AddLedDisplay(7, 5, 10, "LED display 1");
 
   cmdMessenger.sendCmd(kStatus, "STM32 has started!");
 

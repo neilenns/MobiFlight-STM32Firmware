@@ -25,11 +25,10 @@
 const map<int, PinName> PinMappings = {
     {2, LED1},
     {3, BUTTON1},
-    {4, PA_1},
-    {5, PA_2},
-    {6, PA_3},
-    {7, PA_4},
-    {8, PA_5},
-    {9, PA_6},
-    {10, PA_7},
-};
+    {4, PA_4},
+    {5, PA_5},
+    {6, PA_6},
+    {7, PA_7},
+    {8, PA_8},
+    {9, PA_9},
+    {10, PB_6}};
