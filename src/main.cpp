@@ -65,7 +65,7 @@ void OnGetInfo()
 void OnSetModule()
 {
   // command, module, submodule, value, points, mask;
-  // 1,7,1,12345678,0,255;
+  // 1,7,1,22222222,64,255;
   int module = cmdMessenger.readInt16Arg();
   int subModule = cmdMessenger.readInt16Arg();
   char *value = cmdMessenger.readStringArg();

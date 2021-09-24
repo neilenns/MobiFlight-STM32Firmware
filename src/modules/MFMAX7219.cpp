@@ -8,7 +8,7 @@
 #include "modules/MFMAX7219.hpp"
 #include "PinManager.hpp"
 
-MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, std::string name)
+MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount, std::string name)
 {
   // TODO: Handle the case where an invalid pin is specified
   std::optional<PinName> stm32mosi = PinManager::MapArudinoPin(mosi);
@@ -21,13 +21,13 @@ MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, std::st
     return;
   }
 
-  _display = new MAX7219(*stm32mosi, *stm32sclk, *stm32cs);
-
   _mosiArduino = mosi;
   _sclkArduino = sclk;
   _csArduino = cs;
-
+  _submoduleCount = submoduleCount;
   _name = name;
+
+  _display = new MAX7219(*stm32mosi, *stm32sclk, *stm32cs, _submoduleCount);
 }
 
 void MFMAX7219::Display(uint8_t submodule, char *value, uint8_t points, uint8_t mask)
@@ -39,7 +39,7 @@ void MFMAX7219::Display(uint8_t submodule, char *value, uint8_t points, uint8_t 
     digit--;
     if (((1 << digit) & mask) == 0)
       continue;
-    _display->DisplayChar(digit, value[pos], ((1 << digit) & points));
+    _display->DisplayChar(digit, value[pos], ((1 << digit) & points), submodule);
     pos++;
   }
 }
@@ -52,10 +52,10 @@ void MFMAX7219::Serialize(char *str, size_t len)
 
 void MFMAX7219::StartTest()
 {
-  _display->MAX7219_DisplayTestStart();
+  _display->MAX7219_DisplayTestStart(1);
 }
 
 void MFMAX7219::StopTest()
 {
-  _display->MAX7219_DisplayTestStop();
+  _display->MAX7219_DisplayTestStop(1);
 }
