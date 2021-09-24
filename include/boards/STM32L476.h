@@ -24,7 +24,7 @@
 // Maps Arduino pin names to STM32 pins
 const map<int, PinName> PinMappings = {
     {2, LED1},
-    {3, PA_0},
+    {3, BUTTON1},
     {4, PA_1},
     {5, PA_2},
     {6, PA_3},

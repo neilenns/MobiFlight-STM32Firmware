@@ -27,10 +27,7 @@
 #include "MFConfiguration.hpp"
 
 #define byte uint8_t
-#define PRINTSTRING(comms, s) std::cout << s
 #define millis() (us_ticker_read() / 1000)
-
-//#include "Stream.h"
 
 extern "C"
 {
@@ -235,6 +232,11 @@ public:
             sendFieldSeparator();
             printf(arg);
         }
+    }
+
+    void sendCmdArg(std::string str)
+    {
+        sendCmdArg(str.c_str());
     }
 
     void sendCmdArg(MFConfiguration config)

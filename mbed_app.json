@@ -1,0 +1,8 @@
+{
+  "target_overrides": {
+    "*": {
+      "platform.callback-nontrivial": true,
+      "events.shared-dispatch-from-application": true
+    }
+  }
+}
