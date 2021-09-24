@@ -15,7 +15,6 @@
 
 static BufferedSerial serial_port(USBTX, USBRX, 115200);
 Thread t;
-EventQueue queue(32 * EVENTS_EVENT_SIZE);
 
 // Command messenger configuration
 CmdMessenger cmdMessenger = CmdMessenger(serial_port);
@@ -138,7 +137,7 @@ void attachCommandCallbacks()
 
 int main()
 {
-  t.start(callback(&queue, &EventQueue::dispatch_forever));
+  t.start(callback(mbed_event_queue(), &EventQueue::dispatch_forever));
 
   pinManager.ClearRegisteredPins();
 

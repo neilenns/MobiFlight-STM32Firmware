@@ -4,10 +4,9 @@
 #include "modules/MFButton.hpp"
 #include "PinManager.hpp"
 
-extern EventQueue queue;
-
 MFButton::MFButton(ARDUINO_PIN arduinoPinName, std::string name)
 {
+  EventQueue *queue = mbed_event_queue();
   _arduinoPinName = arduinoPinName;
 
   // TODO: Handle the case where an invalid pin is specified
@@ -19,8 +18,8 @@ MFButton::MFButton(ARDUINO_PIN arduinoPinName, std::string name)
   }
 
   _pin = new InterruptIn(*stm32pin);
-  _pin->fall(queue.event(callback(this, &MFButton::OnPress)));
-  _pin->rise(queue.event(callback(this, &MFButton::OnRelease)));
+  _pin->fall(queue->event(callback(this, &MFButton::OnPress)));
+  _pin->rise(queue->event(callback(this, &MFButton::OnRelease)));
   _name = name;
 }
 
