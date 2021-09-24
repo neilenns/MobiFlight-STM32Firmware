@@ -16,9 +16,9 @@
 BufferedSerial serial_port(USBTX, USBRX, 115200);
 Thread t;
 
-// Command messenger configuration
+// Globals
 CmdMessenger cmdMessenger = CmdMessenger(serial_port);
-unsigned long lastCommand;
+MFConfiguration config;
 
 // Board configuration
 #define STRINGIZER(arg) #arg
@@ -36,44 +36,6 @@ char serial[MEM_LEN_SERIAL] = MOBIFLIGHT_SERIAL;
 char name[MEM_LEN_NAME] = MEMLEN_NAME;
 const int MEM_LEN_CONFIG = MEMLEN_CONFIG;
 
-char configBuffer[MEM_LEN_CONFIG] = "";
-
-// Pins and configuration
-PinManager pinManager;
-
-MFConfiguration config;
-
-// *****************************************************************
-// Module management
-// *****************************************************************
-void AddButton(ARDUINO_PIN arduinoPinName, char const *name = "Button")
-{
-  if (pinManager.IsPinRegistered(arduinoPinName))
-  {
-#ifdef DEBUG
-    cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
-#endif
-    return;
-  }
-
-  config.buttons.insert({arduinoPinName, new MFButton(arduinoPinName, name)});
-  pinManager.RegisterPin(arduinoPinName, MFModuleType::kButton);
-}
-
-void AddOutput(ARDUINO_PIN arduinoPinName, char const *name = "Output")
-{
-  if (pinManager.IsPinRegistered(arduinoPinName))
-  {
-#ifdef DEBUG
-    cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
-#endif
-    return;
-  }
-
-  config.outputs.insert({arduinoPinName, new MFOutput(arduinoPinName, name)});
-  pinManager.RegisterPin(arduinoPinName, MFModuleType::kOutput);
-}
-
 // *****************************************************************
 // MobiFlight event handlers
 // *****************************************************************
@@ -84,7 +46,6 @@ void OnConfigActivated()
 
 void OnGetConfig()
 {
-  lastCommand = millis();
   cmdMessenger.sendCmdStart(kInfo);
   cmdMessenger.sendCmdArg(config);
   cmdMessenger.sendCmdEnd();
@@ -92,7 +53,6 @@ void OnGetConfig()
 
 void OnGetInfo()
 {
-  lastCommand = millis();
   cmdMessenger.sendCmdStart(kInfo);
   cmdMessenger.sendCmdArg(type);
   cmdMessenger.sendCmdArg(name);
@@ -139,8 +99,6 @@ int main()
 {
   t.start(callback(mbed_event_queue(), &EventQueue::dispatch_forever));
 
-  pinManager.ClearRegisteredPins();
-
   // Adds newline to every command
   cmdMessenger.printLfCr();
 
@@ -148,9 +106,9 @@ int main()
   attachCommandCallbacks();
 
   // Temporarily add two outputs
-  AddOutput(2, "Onboard LED1");
-  AddButton(3, "Onboard button");
-  AddOutput(4, "Onboard LED2");
+  config.AddOutput(2, "Onboard LED1");
+  config.AddButton(3, "Onboard button");
+  config.AddOutput(4, "Onboard LED2");
 
   cmdMessenger.sendCmd(kStatus, "STM32 has started!");
 
