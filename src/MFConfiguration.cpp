@@ -11,7 +11,7 @@
 #define MAX_BUFFER_SIZE 2048
 char buffer[MAX_BUFFER_SIZE];
 
-static uint8_t userConfig[64] __attribute__((__section__(".user_data")));
+volatile static uint8_t userConfig[64] __attribute__((__section__(".user_data")));
 
 void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
 {
@@ -59,7 +59,7 @@ void MFConfiguration::Erase()
 
   flash->init();
   // volatile auto sectorSize = flash->get_sector_size(FLASH_USER_DATA_START);
-  auto status = flash->erase(FLASH_USER_DATA_START, FLASH_USER_DATA_SIZE);
+  auto status = flash->erase(FLASH_USER_DATA_START, MAX_BUFFER_SIZE);
   flash->program(buffer, FLASH_USER_DATA_START, MAX_BUFFER_SIZE);
   flash->deinit();
 }
