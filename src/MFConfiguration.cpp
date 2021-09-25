@@ -93,8 +93,6 @@ void MFConfiguration::Load()
 {
 }
 
-// Another example https://tronche.com/blog/2020/03/mbed-flashiap-tdbstore-and-stm32f4-internal-flash/
-// another exmple https://github.com/ARMmbed/mbed-os/issues/6380
 void MFConfiguration::Erase()
 {
   auto flash = new FlashIAP();
