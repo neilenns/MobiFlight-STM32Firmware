@@ -35,5 +35,6 @@ enum MFCommands
   kSetLcdDisplayI2C,     // 25
   kSetModuleBrightness,  // 26
   kSetShiftRegisterPins, // 27
-  kAnalogChange          // 28
+  kAnalogChange,         // 28
+  kTest                  // 29
 };

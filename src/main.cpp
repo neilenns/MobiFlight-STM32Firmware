@@ -80,6 +80,11 @@ void OnUnknownCommand()
   cmdMessenger.sendCmd(kStatus, "Command without attached callback");
 }
 
+void OnTest()
+{
+  config.Erase();
+}
+
 // *****************************************************************
 // Main methods
 // *****************************************************************
@@ -93,6 +98,7 @@ void attachCommandCallbacks()
   cmdMessenger.attach(kGetConfig, OnGetConfig);
   cmdMessenger.attach(kGetInfo, OnGetInfo);
   cmdMessenger.attach(kSetPin, OnSetPin);
+  cmdMessenger.attach(kTest, OnTest);
 }
 
 int main()

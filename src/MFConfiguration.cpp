@@ -8,11 +8,10 @@
 #define FLASH_USER_DATA_START 0x080E0000
 #define FLASH_USER_DATA_SIZE 0x20000 // 128k
 
-#define MAX_BUFFER_SIZE 40
-char buffer[40];
+#define MAX_BUFFER_SIZE 2048
+char buffer[MAX_BUFFER_SIZE];
 
 static uint8_t userConfig[64] __attribute__((__section__(".user_data")));
-static const char *testBuffer = "Hello";
 
 void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
 {
@@ -46,15 +45,22 @@ void MFConfiguration::Load()
 {
 }
 
+// Another example https://tronche.com/blog/2020/03/mbed-flashiap-tdbstore-and-stm32f4-internal-flash/
+// another exmple https://github.com/ARMmbed/mbed-os/issues/6380
 void MFConfiguration::Erase()
 {
   auto flash = new FlashIAP();
 
+  buffer[0] = 'H';
+  buffer[1] = 'e';
+  buffer[2] = 'l';
+  buffer[3] = 'l';
+  buffer[4] = 'o';
+
   flash->init();
-  printf("%lu", flash->get_flash_size());
-  flash->erase(FLASH_USER_DATA_START, FLASH_USER_DATA_SIZE);
-  flash->program(testBuffer, FLASH_USER_DATA_START, sizeof(testBuffer));
-  printf("%u", (unsigned int)userConfig);
+  // volatile auto sectorSize = flash->get_sector_size(FLASH_USER_DATA_START);
+  auto status = flash->erase(FLASH_USER_DATA_START, FLASH_USER_DATA_SIZE);
+  flash->program(buffer, FLASH_USER_DATA_START, MAX_BUFFER_SIZE);
   flash->deinit();
 }
 
