@@ -147,6 +147,11 @@ void OnUnknownCommand()
   cmdMessenger.sendCmd(MFCommand::kStatus, "Command without attached callback");
 }
 
+void OnTest()
+{
+  config.Erase();
+}
+
 // *****************************************************************
 // Main methods
 // *****************************************************************
