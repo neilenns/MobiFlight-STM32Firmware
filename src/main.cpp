@@ -46,6 +46,8 @@ void OnConfigActivated()
 
 void OnGetConfig()
 {
+  config.Load();
+  // Temporary code to send the hardcoded config made in main();
   cmdMessenger.sendCmdStart(kInfo);
   cmdMessenger.sendCmdArg(config);
   cmdMessenger.sendCmdEnd();
@@ -80,11 +82,6 @@ void OnUnknownCommand()
   cmdMessenger.sendCmd(kStatus, "Command without attached callback");
 }
 
-void OnGetConfig()
-{
-  config.Load();
-}
-
 void OnSaveConfig()
 {
   config.Save();
@@ -100,7 +97,6 @@ void attachCommandCallbacks()
   // Attach callback methods
   cmdMessenger.attach(OnUnknownCommand);
   cmdMessenger.attach(kConfigActivated, OnConfigActivated);
-  cmdMessenger.attach(kGetConfig, OnGetConfig);
   cmdMessenger.attach(kGetInfo, OnGetInfo);
   cmdMessenger.attach(kSetPin, OnSetPin);
   cmdMessenger.attach(kSaveConfig, OnSaveConfig);

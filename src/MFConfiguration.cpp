@@ -66,6 +66,8 @@ void MFConfiguration::Save()
   auto status = flash->erase(FLASH_USER_DATA_START, MAX_BUFFER_SIZE);
   flash->program(buffer, FLASH_USER_DATA_START, MAX_BUFFER_SIZE);
   flash->deinit();
+
+  cmdMessenger.sendCmd(kStatus, "Configuration saved");
 }
 
 void MFConfiguration::Serialize()
