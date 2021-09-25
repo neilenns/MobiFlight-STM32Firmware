@@ -3,15 +3,15 @@
 #include <mbed.h>
 
 #include "Globals.hpp"
+#include "MFCommands.hpp"
 #include "MFConfiguration.hpp"
 
 #define FLASH_USER_DATA_START 0x080E0000
-#define FLASH_USER_DATA_SIZE 0x20000 // 128k
 
 #define MAX_BUFFER_SIZE 2048
 char buffer[MAX_BUFFER_SIZE];
 
-volatile static uint8_t userConfig[64] __attribute__((__section__(".user_data")));
+static char userConfig[64] __attribute__((__section__(".user_data")));
 
 void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
 {
@@ -41,11 +41,16 @@ void MFConfiguration::AddOutput(ARDUINO_PIN arduinoPinName, char const *name)
   pinManager.RegisterPin(arduinoPinName, MFModuleType::kOutput);
 }
 
-void MFConfiguration::Load()
+void MFConfiguration::Erase()
 {
 }
 
-void MFConfiguration::Erase()
+void MFConfiguration::Load()
+{
+  cmdMessenger.sendCmd(kStatus, userConfig);
+}
+
+void MFConfiguration::Save()
 {
   auto flash = new FlashIAP();
 
@@ -54,6 +59,7 @@ void MFConfiguration::Erase()
   buffer[2] = 'l';
   buffer[3] = 'l';
   buffer[4] = 'o';
+  buffer[5] = '\0';
 
   flash->init();
   // volatile auto sectorSize = flash->get_sector_size(FLASH_USER_DATA_START);

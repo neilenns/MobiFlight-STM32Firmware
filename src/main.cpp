@@ -80,9 +80,14 @@ void OnUnknownCommand()
   cmdMessenger.sendCmd(kStatus, "Command without attached callback");
 }
 
-void OnTest()
+void OnGetConfig()
 {
-  config.Erase();
+  config.Load();
+}
+
+void OnSaveConfig()
+{
+  config.Save();
 }
 
 // *****************************************************************
@@ -98,7 +103,8 @@ void attachCommandCallbacks()
   cmdMessenger.attach(kGetConfig, OnGetConfig);
   cmdMessenger.attach(kGetInfo, OnGetInfo);
   cmdMessenger.attach(kSetPin, OnSetPin);
-  cmdMessenger.attach(kTest, OnTest);
+  cmdMessenger.attach(kSaveConfig, OnSaveConfig);
+  cmdMessenger.attach(kGetConfig, OnGetConfig);
 }
 
 int main()
