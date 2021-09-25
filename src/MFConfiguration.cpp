@@ -107,7 +107,7 @@ void MFConfiguration::Erase()
 
   flash->init();
   // volatile auto sectorSize = flash->get_sector_size(FLASH_USER_DATA_START);
-  auto status = flash->erase(FLASH_USER_DATA_START, FLASH_USER_DATA_SIZE);
+  auto status = flash->erase(FLASH_USER_DATA_START, MAX_BUFFER_SIZE);
   flash->program(buffer, FLASH_USER_DATA_START, MAX_BUFFER_SIZE);
   flash->deinit();
 }
