@@ -147,9 +147,14 @@ void OnUnknownCommand()
   cmdMessenger.sendCmd(MFCommand::kStatus, "Command without attached callback");
 }
 
-void OnTest()
+void OnGetConfig()
 {
-  config.Erase();
+  config.Load();
+}
+
+void OnSaveConfig()
+{
+  config.Save();
 }
 
 // *****************************************************************
