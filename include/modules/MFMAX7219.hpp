@@ -16,7 +16,9 @@ public:
   void Display(uint8_t submodule, char *value, uint8_t points, uint8_t mask);
   void Serialize(char *str, size_t len);
   void StartTest();
+  void StartTest(uint8_t submodule);
   void StopTest();
+  void StopTest(uint8_t submodule);
 
 private:
   MAX7219 *_display;
