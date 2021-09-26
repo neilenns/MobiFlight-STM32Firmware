@@ -8,14 +8,17 @@
 #include "modules/MFMAX7219.hpp"
 #include "PinManager.hpp"
 
+// Even though this takes an Arduino pin value for mosi, sclk, and cs, the only one
+// used interally is cs. mosi and sclk are always the SPI_MOSI and SPI_SCK
+// pins on the STM32. All three are still accepted as parameters though as that's
+// how MobiFlight saves/loads them. If all three weren't kept then the config wouldn't
+// make sense when MobiFlight talks to the STM32.
 MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount, std::string name)
 {
   // TODO: Handle the case where an invalid pin is specified
-  std::optional<PinName> stm32mosi = PinManager::MapArudinoPin(mosi);
-  std::optional<PinName> stm32sclk = PinManager::MapArudinoPin(sclk);
   std::optional<PinName> stm32cs = PinManager::MapArudinoPin(cs);
 
-  if (!stm32mosi || !stm32sclk || !stm32cs)
+  if (!stm32cs)
   {
     // This should do something smarter
     return;
@@ -27,7 +30,7 @@ MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int sub
   _submoduleCount = submoduleCount;
   _name = name;
 
-  _display = new MAX7219(*stm32mosi, *stm32sclk, *stm32cs, _submoduleCount);
+  _display = new MAX7219(SPI_MOSI, SPI_SCK, *stm32cs, _submoduleCount);
 }
 
 void MFMAX7219::Display(uint8_t submodule, char *value, uint8_t points, uint8_t mask)
