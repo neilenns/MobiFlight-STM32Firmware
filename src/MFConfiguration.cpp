@@ -1,6 +1,7 @@
 #include <map>
 #include <mbed.h>
 
+#include "drivers/TextLCD.h"
 #include "Globals.hpp"
 #include "MFConfiguration.hpp"
 
@@ -19,6 +20,21 @@ void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
 
   buttons.insert({arduinoPinName, new MFButton(arduinoPinName, name)});
   pinManager.RegisterPin(arduinoPinName, MFModuleType::kButton);
+}
+
+void MFConfiguration::AddLcdDisplay(ARDUINO_PIN pin, char address, char const *name)
+{
+  if (pinManager.IsPinRegistered(pin))
+  {
+#ifdef DEBUG
+    cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
+#endif
+    return;
+  }
+
+  lcdDisplays.insert({pin, new MFLcdDisplay(address, TextLCD_Base::LCDType::LCD20x4, "Sample LCD display")});
+
+  pinManager.RegisterPin(pin, MFModuleType::kLcdDisplayI2C);
 }
 
 void MFConfiguration::AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount, char const *name)
@@ -83,11 +99,18 @@ void MFConfiguration::Serialize()
     printf(buffer);
     printf(":");
   }
+
+  for (auto &[key, value] : lcdDisplays)
+  {
+    value->Serialize(buffer, sizeof(buffer));
+    printf(buffer);
+    printf(":");
+  }
 }
 
 void MFConfiguration::StartTest()
 {
-  for (auto &[key, value] : ledDisplays)
+  for (auto &[key, value] : lcdDisplays)
   {
     value->StartTest();
   }
@@ -95,7 +118,7 @@ void MFConfiguration::StartTest()
 
 void MFConfiguration::StopTest()
 {
-  for (auto &[key, value] : ledDisplays)
+  for (auto &[key, value] : lcdDisplays)
   {
     value->StopTest();
   }
