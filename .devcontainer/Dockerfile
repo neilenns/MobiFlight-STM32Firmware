@@ -20,9 +20,10 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
   python3-distutils \
   python3-setuptools \
   python3-pip \
+  libssl-dev \
   simavr \
   srecord \
   xz-utils \
   && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install -U platformio
+RUN pip3 install -U platformio && pip3 install --upgrade snowflake-connector-python
