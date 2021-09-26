@@ -10,7 +10,6 @@
 
 MFLcdDisplay::MFLcdDisplay(char deviceAddress, TextLCD_Base::LCDType deviceType, std::string name)
 {
-  _deviceType = TextLCD_Base::LCDType::LCD20x4;
   _name = name;
   // mbed os uses 8-bit addressing, but MobiFlight uses 7-bit.
   // Shift left once to convert the Arduino address to mbed os address.
