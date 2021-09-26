@@ -43,6 +43,7 @@ void MFLcdDisplay::StartTest()
 {
   _display->setBacklight(TextLCD_Base::LCDBacklight::LightOn);
   _display->setCursor(TextLCD::CurOff_BlkOn);
+  _display->printf("Mobiflight rocks!!!");
 }
 
 /**
