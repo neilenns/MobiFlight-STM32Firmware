@@ -17,7 +17,7 @@ MFLcdDisplay::MFLcdDisplay(char deviceAddress, TextLCD_Base::LCDType deviceType,
   _deviceAddress = deviceAddress << 1;
 
   _i2c_lcd = new I2C(I2C_SDA, I2C_SCL);
-  _display = new TextLCD_I2C(_i2c_lcd, _deviceAddress, _deviceType, TextLCD_Base::LCDCtrl::HD44780);
+  _display = new TextLCD_I2C(_i2c_lcd, _deviceAddress, _deviceType);
 }
 
 void MFLcdDisplay::Display(uint8_t submodule, char *value, uint8_t points, uint8_t mask)
