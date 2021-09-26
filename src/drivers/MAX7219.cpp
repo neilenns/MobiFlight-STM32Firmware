@@ -27,7 +27,7 @@
 * https://github.com/JemRF/max7219
 */
 
-#include "drivers/max7219.hpp"
+#include "drivers/MAX7219.hpp"
 
 MAX7219::MAX7219(PinName mosi, PinName sclk, PinName cs, int submoduleCount)
 {
