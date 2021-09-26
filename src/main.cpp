@@ -61,6 +61,27 @@ void OnGetInfo()
   cmdMessenger.sendCmdEnd();
 }
 
+// Displays text on the connected module
+void OnSetModule()
+{
+  // command, module, submodule, value, points, mask;
+  // 1,7,1,22222222,64,255;
+  int module = cmdMessenger.readInt16Arg();
+  int subModule = cmdMessenger.readInt16Arg();
+  char *value = cmdMessenger.readStringArg();
+  uint8_t points = (uint8_t)cmdMessenger.readInt16Arg();
+  uint8_t mask = (uint8_t)cmdMessenger.readInt16Arg();
+
+  auto display = config.ledDisplays[module];
+  if (!display)
+  {
+    cmdMessenger.sendCmd(kStatus, "Not a valid module");
+    return;
+  }
+
+  display->Display(subModule, value, points, mask);
+}
+
 // Callback function that sets led on or off
 void OnSetPin()
 {
@@ -72,6 +93,23 @@ void OnSetPin()
 
   // Send back status that describes the led state
   cmdMessenger.sendCmd(kStatus, std::to_string(LED->get()).c_str());
+}
+
+// Starts/stops a test of all attached output displays
+void OnTest()
+{
+  int state = cmdMessenger.readBoolArg();
+
+  if (state)
+  {
+    config.StartTest();
+    cmdMessenger.sendCmd(kStatus, "Test started");
+  }
+  else
+  {
+    config.StopTest();
+    cmdMessenger.sendCmd(kStatus, "Test stopped");
+  }
 }
 
 // Called when a received command has no attached function
@@ -93,6 +131,8 @@ void attachCommandCallbacks()
   cmdMessenger.attach(kGetConfig, OnGetConfig);
   cmdMessenger.attach(kGetInfo, OnGetInfo);
   cmdMessenger.attach(kSetPin, OnSetPin);
+  cmdMessenger.attach(kSetModule, OnSetModule);
+  cmdMessenger.attach(kTest, OnTest);
 }
 
 int main()
@@ -110,6 +150,7 @@ int main()
   config.AddOutput(2, "Onboard LED1");
   config.AddButton(3, "Onboard button");
   config.AddOutput(4, "Onboard LED2");
+  config.AddLedDisplay(7, 5, 10, 2, "LED display 1");
 
   cmdMessenger.sendCmd(kStatus, "STM32 has started!");
 

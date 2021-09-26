@@ -124,13 +124,15 @@ void CmdMessenger::feedinSerialData()
 {
     while (!pauseProcessing && comms->readable())
     {
-        size_t bytesAvailable = 0;
-        while (comms->readable() && bytesAvailable < MAXSTREAMBUFFERSIZE)
+        if (!comms->readable())
         {
-            comms->read(&streamBuffer[bytesAvailable++], 1);
+            return;
         }
+
+        auto bytesRead = comms->read(streamBuffer, sizeof(streamBuffer));
+
         // Process the bytes in the stream buffer, and handles dispatches callbacks, if commands are received
-        for (size_t byteNo = 0; byteNo < bytesAvailable; byteNo++)
+        for (ssize_t byteNo = 0; byteNo < bytesRead; byteNo++)
         {
             int messageState = processLine(streamBuffer[byteNo]);
 
