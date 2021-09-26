@@ -13,7 +13,7 @@ public:
   // internally to STM32 pins when needed. This is to provide compatibility
   // with MobiFlight desktop app.
   MFLcdDisplay(char deviceAddress, TextLCD_Base::LCDType deviceType, std::string name = "LCD Display");
-  void Display(uint8_t submodule, char *value, uint8_t points, uint8_t mask);
+  void Display(char *text);
   void Serialize(char *str, size_t len);
   void StartTest();
   void StopTest();

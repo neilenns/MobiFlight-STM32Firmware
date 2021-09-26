@@ -1921,10 +1921,13 @@ int TextLCD_Base::getAddress(int column, int row)
     {
     case 0:
       return 0x20 + column;
+      break;
     case 1:
       return 0x40 + column;
+      break;
     case 2:
       return 0x60 + column;
+      break;
       // Should never get here.
       //            default:
       //              return 0x00;
@@ -1977,13 +1980,16 @@ int TextLCD_Base::getAddress(int column, int row)
     {
     case 0:
       return 0x00 + column;
+      break;
     case 1:
       return 0x40 + column;
+      break;
     case 2:
       if (column < (_nr_cols >> 1)) // check first or second half of line
         return (0x00 + _nr_cols + column);
       else
         return (0x40 + _nr_cols + (column - (_nr_cols >> 1)));
+      break;
       // Should never get here.
       //            default:
       //              return 0x00;
@@ -1995,10 +2001,13 @@ int TextLCD_Base::getAddress(int column, int row)
     {
     case 0:
       return 0x00 + column;
+      break;
     case 1:
       return 0x10 + column;
+      break;
     case 2:
       return 0x20 + column;
+      break;
       // Should never get here.
       //            default:
       //              return 0x00;

@@ -18,10 +18,13 @@ MFLcdDisplay::MFLcdDisplay(char deviceAddress, TextLCD_Base::LCDType deviceType,
 
   _i2c_lcd = new I2C(I2C_SDA, I2C_SCL);
   _display = new TextLCD_I2C(_i2c_lcd, _deviceAddress, _deviceType);
+  _display->setBacklight(TextLCD_Base::LCDBacklight::LightOn);
+  _display->setCursor(TextLCD::CurOff_BlkOff);
 }
 
-void MFLcdDisplay::Display(uint8_t submodule, char *value, uint8_t points, uint8_t mask)
+void MFLcdDisplay::Display(char *text)
 {
+  _display->printf(text);
 }
 
 /**
@@ -41,9 +44,10 @@ void MFLcdDisplay::Serialize(char *str, size_t len)
  */
 void MFLcdDisplay::StartTest()
 {
-  _display->setBacklight(TextLCD_Base::LCDBacklight::LightOn);
-  _display->setCursor(TextLCD::CurOff_BlkOn);
-  _display->printf("Mobiflight rocks!!!");
+  char line1[] = "Mobiflight rocks!!!\n";
+  char line2[] = "Aw yeah!\n";
+  Display(line1);
+  Display(line2);
 }
 
 /**
@@ -51,5 +55,9 @@ void MFLcdDisplay::StartTest()
  */
 void MFLcdDisplay::StopTest()
 {
-  _display->setCursor(TextLCD::CurOff_BlkOff);
+  char blank[] = "                    \n";
+  for (int i = 0; i < 4; i++)
+  {
+    Display(blank);
+  }
 }
