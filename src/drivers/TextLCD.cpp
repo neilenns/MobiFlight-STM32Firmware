@@ -1,3 +1,4 @@
+/* From https://os.mbed.com/users/kenjiArai/code/TextLCD/ */
 /* mbed TextLCD Library, for LCDs based on HD44780 controllers
  * Copyright (c) 2007-2010, sford, http://mbed.org
  *               2013, v01: WH, Added LCD types, fixed LCD address issues, added Cursor and UDCs 
@@ -140,8 +141,8 @@ void TextLCD_Base::_initCtrl(_LCDDatalength dl)
 
     // Controller is now in 8 bit mode
 
-    _writeNibble(0x2);          // Change to 4-bit mode (MSN), the LSN is undefined dummy
-    ThisThread::sleep_for(1ms); // most instructions take 40us
+    _writeNibble(0x2); // Change to 4-bit mode (MSN), the LSN is undefined dummy
+    wait_us(40);       // most instructions take 40us
 
     // Controller is now in 4-bit mode
     // Note: 4/8 bit mode is ignored for most native SPI and I2C devices. They dont use the parallel bus.
@@ -891,7 +892,7 @@ void TextLCD_Base::_initCtrl(_LCDDatalength dl)
       //            case LCD24x1:
       //              _writeCommand(0x20);    //FUNCTION SET 0 0 1 DL=0 4-bit, N=0/M=0 1-line/24 chars display mode, G=0 no Vgen, 0
       //Note: 4 bit mode is ignored for I2C mode
-      //              wait_ms(10);            // Wait 10ms to ensure powered up
+      //              ThisThread::sleep_for(10ms);            // Wait 10ms to ensure powered up
       //              break;
 
     case LCD12x3D:                 // Special mode for KS0078 and PCF21XX
@@ -907,7 +908,7 @@ void TextLCD_Base::_initCtrl(_LCDDatalength dl)
       //            case LCD24x2:
       //              _writeCommand(0x28);    //FUNCTION SET 4 bit, N=1/M=0 2-line/24 chars display mode
       //Note: 4 bit mode is ignored for I2C mode
-      //              wait_ms(10);            // Wait 10ms to ensure powered up
+      //              ThisThread::sleep_for(10ms);            // Wait 10ms to ensure powered up
       //              break;
 
     default:
@@ -999,7 +1000,7 @@ void TextLCD_Base::_initCtrl(_LCDDatalength dl)
 
     //@Todo: This may be needed to enable a warm reboot
     //_writeCommand(0x13);   // Char mode, DC/DC off
-    //wait_ms(10);           // Wait 10ms to ensure powered down
+    //ThisThread::sleep_for(10ms);           // Wait 10ms to ensure powered down
     _writeCommand(0x17);         // Char mode, DC/DC on
     ThisThread::sleep_for(10ms); // Wait 10ms to ensure powered up
 
@@ -1469,7 +1470,7 @@ void TextLCD_Base::_initCtrl(_LCDDatalength dl)
 
   // Controller general initialisations
   //    _writeCommand(0x01); // Clear Display and set cursor to 0
-  //    wait_ms(10);         // The CLS command takes 1.64 ms.
+  //    ThisThread::sleep_for(10ms);         // The CLS command takes 1.64 ms.
   //                         // Since we are not using the Busy flag, Lets be safe and take 10 ms
 
   _writeCommand(0x02);         // Cursor Home, DDRAM Address to Origin
@@ -1531,9 +1532,9 @@ void TextLCD_Base::cls()
 
 #else
   // Support only one LCD controller
-  _writeCommand(0x01); // cls, and set cursor to 0
-  wait_ms(20);         // The CLS command takes 1.64 ms.
-                       // Since we are not using the Busy flag, Lets be safe and take 10 ms
+  _writeCommand(0x01);         // cls, and set cursor to 0
+  ThisThread::sleep_for(20ms); // The CLS command takes 1.64 ms.
+                               // Since we are not using the Busy flag, Lets be safe and take 10 ms
 #endif
 
   setAddress(0, 0); // Reset Cursor location
@@ -1770,10 +1771,10 @@ void TextLCD_Base::_writeNibble(int value)
 
   // Enable is Low
   this->_setEnable(true);
-  this->_setData(value);      // Low nibble of value on D4..D7
-  ThisThread::sleep_for(1ms); // Data setup time
+  this->_setData(value); // Low nibble of value on D4..D7
+  wait_us(1);            // Data setup time
   this->_setEnable(false);
-  ThisThread::sleep_for(1ms); // Datahold time
+  wait_us(1); // Datahold time
   // Enable is Low
 }
 
@@ -1784,15 +1785,15 @@ void TextLCD_Base::_writeByte(int value)
   // Enable is Low
   this->_setEnable(true);
   this->_setData(value >> 4); // High nibble
-  ThisThread::sleep_for(1ms); // Data setup time
+  wait_us(1);                 // Data setup time
   this->_setEnable(false);
-  ThisThread::sleep_for(1ms); // Data hold time
+  wait_us(1); // Data hold time
 
   this->_setEnable(true);
-  this->_setData(value);      // Low nibble
-  ThisThread::sleep_for(1ms); // Data setup time
+  this->_setData(value); // Low nibble
+  wait_us(1);            // Data setup time
   this->_setEnable(false);
-  ThisThread::sleep_for(1ms); // Datahold time
+  wait_us(1); // Datahold time
 
   // Enable is Low
 }
@@ -1872,7 +1873,7 @@ int TextLCD_Base::getAddress(int column, int row)
     else
       //            return _nr_cols + column;
       return 0x08 + column;
-
+    break;
   case LCD_T_C:
     // LCD16x1C is a special layout of LCD8x2
     // LCD32x1C is a special layout of LCD16x2
@@ -1888,7 +1889,7 @@ int TextLCD_Base::getAddress(int column, int row)
     else
       return 0x40 + (column - (_nr_cols >> 1));
 #endif
-
+    break;
   case LCD_T_D:
     //Alternate addressing mode for 3 and 4 row displays (except 40x4). Used by PCF21XX, KS0073, KS0078, SSD1803
     //The 4 available rows start at a hardcoded address.
@@ -1897,12 +1898,16 @@ int TextLCD_Base::getAddress(int column, int row)
     {
     case 0:
       return 0x00 + column;
+      break;
     case 1:
       return 0x20 + column;
+      break;
     case 2:
       return 0x40 + column;
+      break;
     case 3:
       return 0x60 + column;
+      break;
       // Should never get here.
       //            default:
       //              return 0x00;
@@ -1990,13 +1995,10 @@ int TextLCD_Base::getAddress(int column, int row)
     {
     case 0:
       return 0x00 + column;
-      break;
     case 1:
       return 0x10 + column;
-      break;
     case 2:
       return 0x20 + column;
-      break;
       // Should never get here.
       //            default:
       //              return 0x00;
@@ -3630,9 +3632,9 @@ void TextLCD_I2C::_setData(int value)
 
 // Write data to MCP23008 I2C portexpander
 // Used for mbed I2C bus expander
-void TextLCD_I2C::_writeRegister(uint8_t reg, uint8_t value)
+void TextLCD_I2C::_writeRegister(int reg, int value)
 {
-  char data[] = {reg, value};
+  char data[] = {(char)reg, (char)value}; // modified by by JH1PJL
 
   _i2c->write(_slaveAddress, data, 2);
 }
@@ -3962,7 +3964,7 @@ void TextLCD_I2C_N::_writeByte(int value)
   //   RW=0 means write to controller. RW=1 means that controller will be read from after the next command.
   //        Many native I2C controllers dont support this option and it is not used by this lib.
   //
-  char data[] = {_controlbyte, value};
+  char data[] = {_controlbyte, (char)value}; // modified by by JH1PJL
 
 #if (LCD_I2C_ACK == 1)
   //Controllers that support ACK

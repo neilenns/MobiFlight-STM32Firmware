@@ -814,7 +814,7 @@ private:
   *  @param value data to write
   *  @return none     
   */
-  void _writeRegister(uint8_t reg, uint8_t value);
+  void _writeRegister(int reg, int value);
 
   //I2C bus
   I2C *_i2c;
