@@ -13,9 +13,6 @@ char buffer[MAX_BUFFER_SIZE];
 
 static char userConfig[64] __attribute__((__section__(".user_data")));
 
-static uint8_t userConfig[64] __attribute__((__section__(".user_data")));
-static const char *testBuffer = "Hello";
-
 void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
 {
   if (pinManager.IsPinRegistered(arduinoPinName))
