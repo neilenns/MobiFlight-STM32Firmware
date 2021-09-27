@@ -9,7 +9,6 @@
 
 #include "ArduinoTypes.hpp"
 #include "MFModule.hpp"
-#include "MFModuleTypes.hpp"
 
 class MFOutput : MFModule
 {
