@@ -1,10 +1,10 @@
 #pragma once
 
-#include <mbed.h>
 #include <iostream>
+#include <TextLCD.h>
+#include <mbed.h>
 
 #include "ArduinoTypes.hpp"
-#include "drivers/TextLCD.h"
 
 class MFLcdDisplay final
 {

@@ -1,7 +1,7 @@
 #include <map>
 #include <mbed.h>
+#include <TextLCD.h>
 
-#include "drivers/TextLCD.h"
 #include "Globals.hpp"
 #include "MFConfiguration.hpp"
 
