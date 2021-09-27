@@ -37,7 +37,7 @@ void MFButton::Serialize(char *str, size_t len)
 
 void MFButton::OnPress()
 {
-  cmdMessenger.sendCmdStart(as_integer(MFCommands::kButtonChange));
+  cmdMessenger.sendCmdStart(as_integer(MFCommand::kButtonChange));
   cmdMessenger.sendCmdArg(_name);
   cmdMessenger.sendCmdArg(1);
   cmdMessenger.sendCmdEnd();
@@ -45,7 +45,7 @@ void MFButton::OnPress()
 
 void MFButton::OnRelease()
 {
-  cmdMessenger.sendCmdStart(as_integer(MFCommands::kButtonChange));
+  cmdMessenger.sendCmdStart(as_integer(MFCommand::kButtonChange));
   cmdMessenger.sendCmdArg(_name);
   cmdMessenger.sendCmdArg(0);
   cmdMessenger.sendCmdEnd();

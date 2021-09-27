@@ -5,7 +5,7 @@
 //
 // If you increase this list, make sure to check that the MAXCALLBACKS value
 // in CmdMessenger.h is set apropriately
-enum MFCommands
+enum MFCommand
 {
   kInitModule,           // 0
   kSetModule,            // 1

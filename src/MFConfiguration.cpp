@@ -14,7 +14,7 @@ void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
   if (pinManager.IsPinRegistered(arduinoPinName))
   {
 #ifdef DEBUG
-    cmdMessenger.sendCmd(MFCommands::kStatus, "Duplicate pin.");
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Duplicate pin.");
 #endif
     return;
   }
@@ -25,6 +25,14 @@ void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
 
 void MFConfiguration::AddLcdDisplay(int address, int rows, int columns, char const *name)
 {
+  if (lcdDisplays.count(address))
+  {
+#ifdef DEBUG
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Duplicate LCD display address.");
+#endif
+    return;
+  }
+
   lcdDisplays.insert({address, new MFLcdDisplay(address, rows, columns, name)});
 }
 
@@ -33,7 +41,7 @@ void MFConfiguration::AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_
   if (pinManager.IsPinRegistered(mosi) || pinManager.IsPinRegistered(sclk) || pinManager.IsPinRegistered(cs))
   {
 #ifdef DEBUG
-    cmdMessenger.sendCmd(MFCommands::kStatus, "Duplicate pin.");
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Duplicate pin.");
 #endif
     return;
   }
@@ -51,7 +59,7 @@ void MFConfiguration::AddOutput(ARDUINO_PIN arduinoPinName, char const *name)
   if (pinManager.IsPinRegistered(arduinoPinName))
   {
 #ifdef DEBUG
-    cmdMessenger.sendCmd(MFCommands::kStatus, "Duplicate pin.");
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Duplicate pin.");
 #endif
     return;
   }

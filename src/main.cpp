@@ -41,7 +41,7 @@ const int MEM_LEN_CONFIG = MEMLEN_CONFIG;
 // *****************************************************************
 void OnConfigActivated()
 {
-  cmdMessenger.sendCmd(kConfigActivated, "OK");
+  cmdMessenger.sendCmd(MFCommand::kConfigActivated, "OK");
 }
 
 void OnGetConfig()
@@ -53,7 +53,7 @@ void OnGetConfig()
 
 void OnGetInfo()
 {
-  cmdMessenger.sendCmdStart(kInfo);
+  cmdMessenger.sendCmdStart(MFCommand::kInfo);
   cmdMessenger.sendCmdArg(type);
   cmdMessenger.sendCmdArg(name);
   cmdMessenger.sendCmdArg(serial);
@@ -71,7 +71,7 @@ void OnSetLcdText()
 
   if (!display)
   {
-    cmdMessenger.sendCmd(kStatus, "Not a valid module.");
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Not a valid module.");
     return;
   }
 
@@ -92,7 +92,7 @@ void OnSetModule()
   auto display = config.ledDisplays[module];
   if (!display)
   {
-    cmdMessenger.sendCmd(kStatus, "Not a valid module");
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Not a valid module");
     return;
   }
 
@@ -109,7 +109,7 @@ void OnSetPin()
   LED->set(state);
 
   // Send back status that describes the led state
-  cmdMessenger.sendCmd(kStatus, std::to_string(LED->get()).c_str());
+  cmdMessenger.sendCmd(MFCommand::kStatus, std::to_string(LED->get()).c_str());
 }
 
 // Starts/stops a test of all attached output displays
@@ -120,19 +120,19 @@ void OnTest()
   if (state)
   {
     config.StartTest();
-    cmdMessenger.sendCmd(kStatus, "Test started");
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Test started");
   }
   else
   {
     config.StopTest();
-    cmdMessenger.sendCmd(kStatus, "Test stopped");
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Test stopped");
   }
 }
 
 // Called when a received command has no attached function
 void OnUnknownCommand()
 {
-  cmdMessenger.sendCmd(kStatus, "Command without attached callback");
+  cmdMessenger.sendCmd(MFCommand::kStatus, "Command without attached callback");
 }
 
 // *****************************************************************
@@ -143,14 +143,14 @@ void OnUnknownCommand()
 void attachCommandCallbacks()
 {
   // Attach callback methods
+  cmdMessenger.attach(MFCommand::kConfigActivated, OnConfigActivated);
+  cmdMessenger.attach(MFCommand::kGetConfig, OnGetConfig);
+  cmdMessenger.attach(MFCommand::kGetInfo, OnGetInfo);
+  cmdMessenger.attach(MFCommand::kSetLcdDisplayI2C, OnSetLcdText);
+  cmdMessenger.attach(MFCommand::kSetModule, OnSetModule);
+  cmdMessenger.attach(MFCommand::kSetPin, OnSetPin);
+  cmdMessenger.attach(MFCommand::kTest, OnTest);
   cmdMessenger.attach(OnUnknownCommand);
-  cmdMessenger.attach(kConfigActivated, OnConfigActivated);
-  cmdMessenger.attach(kGetConfig, OnGetConfig);
-  cmdMessenger.attach(kGetInfo, OnGetInfo);
-  cmdMessenger.attach(kSetPin, OnSetPin);
-  cmdMessenger.attach(kSetModule, OnSetModule);
-  cmdMessenger.attach(kSetLcdDisplayI2C, OnSetLcdText);
-  cmdMessenger.attach(kTest, OnTest);
 }
 
 int main()
@@ -170,8 +170,9 @@ int main()
   config.AddOutput(4, "Onboard LED2");
   config.AddLedDisplay(7, 5, 10, 2, "LED display 1");
   config.AddLcdDisplay(0x27, 4, 20, "LCD display 1");
+  config.AddLcdDisplay(0x27, 4, 20, "LCD display 1");
 
-  cmdMessenger.sendCmd(kStatus, "STM32 has started!");
+  cmdMessenger.sendCmd(MFCommand::kStatus, "STM32 has started!");
 
   serial_port.sigio(queue->event(callback(&cmdMessenger, &CmdMessenger::feedinSerialData)));
 }
