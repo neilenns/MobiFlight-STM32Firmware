@@ -8,14 +8,6 @@
 #include "modules/MFLcdDisplay.hpp"
 #include "PinManager.hpp"
 
-/**
- * @brief Construct a new MFLcdDisplay::MFLcdDisplay object
- * 
- * @param deviceAddress The 7-bit I2C address of the display
- * @param rows The number of rows on the display. Valid values are 1, 2, and 4.
- * @param columns The number of columns on the display. Valid values are 16 and 20.
- * @param name The name of the display.
- */
 MFLcdDisplay::MFLcdDisplay(char deviceAddress, int rows, int columns, std::string name)
 {
   // TODO: Handle this bounds checking better better.
@@ -52,12 +44,6 @@ MFLcdDisplay::MFLcdDisplay(char deviceAddress, int rows, int columns, std::strin
   StartTest();
 }
 
-/**
- * @brief Displays a string of text on the display, wrapping it to the number
- * of available rows on the display.
- * 
- * @param text The text to display.
- */
 void MFLcdDisplay::Display(const std::string text)
 {
   // Keeps track of the current position in the string when splitting it into
@@ -75,13 +61,6 @@ void MFLcdDisplay::Display(const std::string text)
   }
 }
 
-/**
- * @brief Returns the LCDType for a display given a row and column count.
- * 
- * @param rows The number of rows on the display.
- * @param columns The number of columns on the display.
- * @return std::optional<TextLCD_Base::LCDType> The matching LCDType, or null if not supported.
- */
 std::optional<TextLCD_Base::LCDType> MFLcdDisplay::LookupDeviceType(int rows, int columns)
 {
   // This is really dumb. There has to be a better way to do this.
@@ -136,11 +115,6 @@ std::optional<TextLCD_Base::LCDType> MFLcdDisplay::LookupDeviceType(int rows, in
   }
 }
 
-/**
- * @brief Enables or disables power saving mode.
- * 
- * @param state True to enable power saving mode, false to disable it.
- */
 void MFLcdDisplay::PowerSavingMode(bool state)
 {
   if (state)
@@ -155,12 +129,6 @@ void MFLcdDisplay::PowerSavingMode(bool state)
   }
 }
 
-/**
- * @brief Prints text centered horizontally on the display.
- * 
- * @param text The text to display.
- * @param row The row to display the text on (origin 0).
- */
 void MFLcdDisplay::PrintCentered(const char *text, int row)
 {
   if (row < 0 || row > _rows)
@@ -183,12 +151,6 @@ void MFLcdDisplay::PrintCentered(const char *text, int row)
   }
 }
 
-/**
- * @brief Writes the configuraton to a string.
- * 
- * @param str Buffer to write the configuration to.
- * @param len Length of the buffer.
- */
 void MFLcdDisplay::Serialize(char *str, size_t len)
 {
   // MobiFlight expects the number of columns before the number of rows.
@@ -196,9 +158,6 @@ void MFLcdDisplay::Serialize(char *str, size_t len)
   str[len - 1] = '\0';
 }
 
-/**
- * @brief Turns on test mode for the LCD display.
- */
 void MFLcdDisplay::StartTest()
 {
   int preLines = 0;
@@ -218,9 +177,6 @@ void MFLcdDisplay::StartTest()
   _display->locate(0, 0);
 }
 
-/**
- * @brief Turns off test mode for the LCD display.
- */
 void MFLcdDisplay::StopTest()
 {
   _display->cls();
