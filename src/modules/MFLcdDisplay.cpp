@@ -8,8 +8,27 @@
 #include "modules/MFLcdDisplay.hpp"
 #include "PinManager.hpp"
 
+/**
+ * @brief Construct a new MFLcdDisplay::MFLcdDisplay object
+ * 
+ * @param deviceAddress The 7-bit I2C address of the display
+ * @param rows The number of rows on the display. Valid values are 1, 2, and 4.
+ * @param columns The number of columns on the display. Valid values are 16 and 20.
+ * @param name The name of the display.
+ */
 MFLcdDisplay::MFLcdDisplay(char deviceAddress, int rows, int columns, std::string name)
 {
+  // TODO: Handle this bounds checking better better.
+  if (rows != 1 && rows != 2 && rows != 4)
+  {
+    return;
+  }
+
+  if (columns != 16 && columns != 20)
+  {
+    return;
+  }
+
   auto displayType = MFLcdDisplay::LookupDeviceType(rows, columns);
 
   // TODO: Handle this better.
@@ -33,9 +52,27 @@ MFLcdDisplay::MFLcdDisplay(char deviceAddress, int rows, int columns, std::strin
   StartTest();
 }
 
-void MFLcdDisplay::Display(const char *text)
+/**
+ * @brief Displays a string of text on the display, wrapping it to the number
+ * of available rows on the display.
+ * 
+ * @param text The text to display.
+ */
+void MFLcdDisplay::Display(const std::string text)
 {
-  _display->printf(text);
+  // Keeps track of the current position in the string when splitting it into
+  // multiple lines for display. This is used to ensure that substr() isn't
+  // called with a position beyond the length of the string being displayed.
+  size_t currentPosition = 0;
+
+  // The text comes in as a long string and needs to get split up into rows
+  // of text the length of each row.
+  for (auto row = 0; row < _rows && currentPosition < text.length(); row++)
+  {
+    _display->locate(0, row);
+    _display->printf((text.substr(currentPosition, _columns)).c_str());
+    currentPosition += _columns;
+  }
 }
 
 /**
@@ -154,7 +191,8 @@ void MFLcdDisplay::PrintCentered(const char *text, int row)
  */
 void MFLcdDisplay::Serialize(char *str, size_t len)
 {
-  snprintf(str, len, "%i.%i.%i.%i.%s", as_integer(MFModuleType::kLcdDisplayI2C), _deviceAddress, _rows, _columns, _name.c_str());
+  // MobiFlight expects the number of columns before the number of rows.
+  snprintf(str, len, "%i.%i.%i.%i.%s", as_integer(MFModuleType::kLcdDisplayI2C), _deviceAddress, _columns, _rows, _name.c_str());
   str[len - 1] = '\0';
 }
 

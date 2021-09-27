@@ -61,16 +61,33 @@ void OnGetInfo()
   cmdMessenger.sendCmdEnd();
 }
 
-// Displays text on the connected module
+// Displays text on the connected LCD display
+void OnSetLcdText()
+{
+  auto address = cmdMessenger.readInt16Arg();
+  auto text = cmdMessenger.readStringArg();
+
+  auto display = config.lcdDisplays[address];
+
+  if (!display)
+  {
+    cmdMessenger.sendCmd(kStatus, "Not a valid module.");
+    return;
+  }
+
+  config.lcdDisplays[address]->Display(text);
+}
+
+// Displays numbers on the connected LED display
 void OnSetModule()
 {
   // command, module, submodule, value, points, mask;
   // 1,7,1,22222222,64,255;
-  int module = cmdMessenger.readInt16Arg();
-  int subModule = cmdMessenger.readInt16Arg();
-  char *value = cmdMessenger.readStringArg();
-  uint8_t points = (uint8_t)cmdMessenger.readInt16Arg();
-  uint8_t mask = (uint8_t)cmdMessenger.readInt16Arg();
+  auto module = cmdMessenger.readInt16Arg();
+  auto subModule = cmdMessenger.readInt16Arg();
+  auto value = cmdMessenger.readStringArg();
+  auto points = (uint8_t)cmdMessenger.readInt16Arg();
+  auto mask = (uint8_t)cmdMessenger.readInt16Arg();
 
   auto display = config.ledDisplays[module];
   if (!display)
@@ -85,8 +102,8 @@ void OnSetModule()
 // Callback function that sets led on or off
 void OnSetPin()
 {
-  int arduinoPin = cmdMessenger.readInt16Arg();
-  int state = cmdMessenger.readBoolArg();
+  auto arduinoPin = cmdMessenger.readInt16Arg();
+  auto state = cmdMessenger.readBoolArg();
 
   auto LED = config.outputs[arduinoPin];
   LED->set(state);
@@ -98,7 +115,7 @@ void OnSetPin()
 // Starts/stops a test of all attached output displays
 void OnTest()
 {
-  int state = cmdMessenger.readBoolArg();
+  auto state = cmdMessenger.readBoolArg();
 
   if (state)
   {
@@ -132,12 +149,13 @@ void attachCommandCallbacks()
   cmdMessenger.attach(kGetInfo, OnGetInfo);
   cmdMessenger.attach(kSetPin, OnSetPin);
   cmdMessenger.attach(kSetModule, OnSetModule);
+  cmdMessenger.attach(kSetLcdDisplayI2C, OnSetLcdText);
   cmdMessenger.attach(kTest, OnTest);
 }
 
 int main()
 {
-  EventQueue *queue = mbed_event_queue();
+  auto *queue = mbed_event_queue();
   t.start(callback(queue, &EventQueue::dispatch_forever));
 
   // Adds newline to every command
@@ -146,7 +164,7 @@ int main()
   // Attach all the callbacks for command messenger
   attachCommandCallbacks();
 
-  // Temporarily add two outputs
+  // Temporarily add outputs
   config.AddOutput(2, "Onboard LED1");
   config.AddButton(3, "Onboard button");
   config.AddOutput(4, "Onboard LED2");

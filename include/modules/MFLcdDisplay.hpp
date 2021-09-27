@@ -10,7 +10,7 @@ class MFLcdDisplay final
 {
 public:
   MFLcdDisplay(char deviceAddress, int rows, int columns, std::string name = "LCD Display");
-  void Display(const char *text);
+  void Display(const std::string text);
   void PowerSavingMode(bool state);
   void Serialize(char *str, size_t len);
   void StartTest();
