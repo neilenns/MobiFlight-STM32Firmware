@@ -1,5 +1,5 @@
-#include <mbed.h>
 #include <fmt/core.h>
+#include <mbed.h>
 
 #include "ArduinoTypes.hpp"
 #include "Globals.hpp"
