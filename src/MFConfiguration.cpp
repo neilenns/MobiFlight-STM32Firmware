@@ -1,7 +1,9 @@
 #include <map>
 #include <mbed.h>
+#include <TextLCD.h>
 
 #include "Globals.hpp"
+#include "MFCommands.hpp"
 #include "MFConfiguration.hpp"
 
 #define MAX_BUFFER_SIZE 40
@@ -12,7 +14,7 @@ void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
   if (pinManager.IsPinRegistered(arduinoPinName))
   {
 #ifdef DEBUG
-    cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Duplicate pin.");
 #endif
     return;
   }
@@ -21,12 +23,25 @@ void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
   pinManager.RegisterPin(arduinoPinName, MFModuleType::kButton);
 }
 
+void MFConfiguration::AddLcdDisplay(int address, int rows, int columns, char const *name)
+{
+  if (lcdDisplays.count(address))
+  {
+#ifdef DEBUG
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Duplicate LCD display address.");
+#endif
+    return;
+  }
+
+  lcdDisplays.insert({address, new MFLcdDisplay(address, rows, columns, name)});
+}
+
 void MFConfiguration::AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount, char const *name)
 {
   if (pinManager.IsPinRegistered(mosi) || pinManager.IsPinRegistered(sclk) || pinManager.IsPinRegistered(cs))
   {
 #ifdef DEBUG
-    cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Duplicate pin.");
 #endif
     return;
   }
@@ -44,7 +59,7 @@ void MFConfiguration::AddOutput(ARDUINO_PIN arduinoPinName, char const *name)
   if (pinManager.IsPinRegistered(arduinoPinName))
   {
 #ifdef DEBUG
-    cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Duplicate pin.");
 #endif
     return;
   }
@@ -83,11 +98,18 @@ void MFConfiguration::Serialize()
     printf(buffer);
     printf(":");
   }
+
+  for (auto &[key, value] : lcdDisplays)
+  {
+    value->Serialize(buffer, sizeof(buffer));
+    printf(buffer);
+    printf(":");
+  }
 }
 
 void MFConfiguration::StartTest()
 {
-  for (auto &[key, value] : ledDisplays)
+  for (auto &[key, value] : lcdDisplays)
   {
     value->StartTest();
   }
@@ -95,7 +117,7 @@ void MFConfiguration::StartTest()
 
 void MFConfiguration::StopTest()
 {
-  for (auto &[key, value] : ledDisplays)
+  for (auto &[key, value] : lcdDisplays)
   {
     value->StopTest();
   }
