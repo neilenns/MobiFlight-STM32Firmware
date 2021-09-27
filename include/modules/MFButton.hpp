@@ -9,18 +9,20 @@
 
 #include "ArduinoTypes.hpp"
 #include "DebounceIn.hpp"
+#include "MFModule.hpp"
 #include "MFModuleTypes.hpp"
 
-class MFButton final
+class MFButton : MFModule
 {
 public:
   // The provided pin should be an Arduino pin number. This will get mapped
   // internally to STM32 pins when needed. This is to provide compatibility
   // with MobiFlight desktop app.
   MFButton(ARDUINO_PIN pin = 0, std::string name = "Button");
-  void Serialize(std::string *buffer);
   void OnPress();
   void OnRelease();
+  void PowerSavingMode(bool state) override;
+  void Serialize(std::string *buffer) override;
 
 private:
   uint8_t _arduinoPinName;

@@ -9,8 +9,9 @@
 #include <mbed.h>
 
 #include "ArduinoTypes.hpp"
+#include "MFModule.hpp"
 
-class MFLcdDisplay final
+class MFLcdDisplay : MFModule
 {
 public:
   /**
@@ -31,20 +32,9 @@ public:
  */
   void Display(const std::string text);
 
-  /**
- * @brief Enables or disables power saving mode.
- * 
- * @param state True to enable power saving mode, false to disable it.
- */
-  void PowerSavingMode(bool state);
+  void PowerSavingMode(bool state) override;
 
-  /**
- * @brief Writes the configuraton to a string.
- * 
- * @param str Buffer to write the configuration to.
- * @param len Length of the buffer.
- */
-  void Serialize(std::string *buffer);
+  void Serialize(std::string *buffer) override;
 
   /**
  * @brief Turns on test mode for the LCD display.

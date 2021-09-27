@@ -65,11 +65,10 @@ void MFMAX7219::Display(uint8_t submodule, char *value, uint8_t points, uint8_t 
   }
 }
 
-/**
- * @brief Writes the configuraton to a string.
- * 
- * @param buffer Buffer to write the configuration to.
- */
+void MFMAX7219::PowerSavingMode(bool state)
+{
+}
+
 void MFMAX7219::Serialize(std::string *buffer)
 {
   // MobiFlight expects a trailing : at the end of every serialized module.

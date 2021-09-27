@@ -8,9 +8,10 @@
 #include <iostream>
 
 #include "ArduinoTypes.hpp"
+#include "MFModule.hpp"
 #include "MFModuleTypes.hpp"
 
-class MFOutput final
+class MFOutput : MFModule
 {
 public:
   // The provided pin should be an Arduino pin number. This will get mapped
@@ -18,8 +19,8 @@ public:
   // with MobiFlight desktop app.
   MFOutput(ARDUINO_PIN pin = 0, std::string name = "LED");
   uint8_t get();
-  void PowerSavingMode(bool state);
-  void Serialize(std::string *buffer);
+  void PowerSavingMode(bool state) override;
+  void Serialize(std::string *buffer) override;
   void set(uint8_t value);
 
 private:
