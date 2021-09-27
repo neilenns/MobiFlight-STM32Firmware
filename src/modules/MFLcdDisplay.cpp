@@ -1,7 +1,7 @@
 // MFOutput.cpp
 //
 // Copyright (C) 2013-2014
-
+#include <fmt/core.h>
 #include <mbed.h>
 
 #include "ArduinoTypes.hpp"
@@ -151,11 +151,11 @@ void MFLcdDisplay::PrintCentered(const char *text, int row)
   }
 }
 
-void MFLcdDisplay::Serialize(char *str, size_t len)
+void MFLcdDisplay::Serialize(std::string *buffer)
 {
+  // MobiFlight expects a trailing : at the end of every serialized module.
   // MobiFlight expects the number of columns before the number of rows.
-  snprintf(str, len, "%i.%i.%i.%i.%s", as_integer(MFModuleType::kLcdDisplayI2C), _deviceAddress, _columns, _rows, _name.c_str());
-  str[len - 1] = '\0';
+  buffer->append(fmt::format("{}.{:d}.{}.{}.{}:", MFModuleType::kLcdDisplayI2C, _deviceAddress, _columns, _rows, _name));
 }
 
 void MFLcdDisplay::StartTest()

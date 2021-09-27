@@ -1,7 +1,7 @@
 // MFOutput.cpp
 //
 // Copyright (C) 2013-2014
-
+#include <fmt/core.h>
 #include <mbed.h>
 
 #include "ArduinoTypes.hpp"
@@ -67,13 +67,12 @@ void MFMAX7219::Display(uint8_t submodule, char *value, uint8_t points, uint8_t 
 /**
  * @brief Writes the configuraton to a string.
  * 
- * @param str Buffer to write the configuration to.
- * @param len Length of the buffer.
+ * @param buffer Buffer to write the configuration to.
  */
-void MFMAX7219::Serialize(char *str, size_t len)
+void MFMAX7219::Serialize(std::string *buffer)
 {
-  snprintf(str, len, "%i.%i.%i.%i.%s", as_integer(MFModuleType::kLedSegment), _mosiArduino, _sclkArduino, _csArduino, _name.c_str());
-  str[len - 1] = '\0';
+  // MobiFlight expects a trailing : at the end of every serialized module.
+  buffer->append(fmt::format("{}.{}.{}.{}.{}:", MFModuleType::kLedSegment, _mosiArduino, _sclkArduino, _csArduino, _name));
 }
 
 /**

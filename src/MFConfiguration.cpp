@@ -6,9 +6,6 @@
 #include "MFCommands.hpp"
 #include "MFConfiguration.hpp"
 
-#define MAX_BUFFER_SIZE 40
-char buffer[40];
-
 void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
 {
   if (pinManager.IsPinRegistered(arduinoPinName))
@@ -78,33 +75,29 @@ void MFConfiguration::Erase()
 
 void MFConfiguration::Serialize()
 {
-  for (auto &[key, value] : outputs)
+  std::string buffer;
+
+  for (auto &[key, output] : outputs)
   {
-    value->Serialize(buffer, sizeof(buffer));
-    printf(buffer);
-    printf(":");
+    output->Serialize(&buffer);
   }
 
-  for (auto &[key, value] : buttons)
+  for (auto &[key, button] : buttons)
   {
-    value->Serialize(buffer, sizeof(buffer));
-    printf(buffer);
-    printf(":");
+    button->Serialize(&buffer);
   }
 
-  for (auto &[key, value] : ledDisplays)
+  for (auto &[key, ledDisplay] : ledDisplays)
   {
-    value->Serialize(buffer, sizeof(buffer));
-    printf(buffer);
-    printf(":");
+    ledDisplay->Serialize(&buffer);
   }
 
-  for (auto &[key, value] : lcdDisplays)
+  for (auto &[key, lcdDisplay] : lcdDisplays)
   {
-    value->Serialize(buffer, sizeof(buffer));
-    printf(buffer);
-    printf(":");
+    lcdDisplay->Serialize(&buffer);
   }
+
+  printf(buffer.c_str());
 }
 
 void MFConfiguration::StartTest()
