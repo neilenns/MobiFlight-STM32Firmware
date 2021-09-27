@@ -14,7 +14,7 @@ public:
   // with MobiFlight desktop app.
   MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN, int submoduleCount = 1, std::string name = "7 Segment Display");
   void Display(uint8_t submodule, char *value, uint8_t points, uint8_t mask);
-  void Serialize(char *str, size_t len);
+  void Serialize(std::string *buffer);
   void StartTest();
   void StartTest(uint8_t submodule);
   void StopTest();

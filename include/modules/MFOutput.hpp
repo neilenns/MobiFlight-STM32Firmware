@@ -15,7 +15,7 @@ public:
   MFOutput(ARDUINO_PIN pin = 0, std::string name = "LED");
   uint8_t get();
   void PowerSavingMode(bool state);
-  void Serialize(char *str, size_t len);
+  void Serialize(std::string *buffer);
   void set(uint8_t value);
 
 private:

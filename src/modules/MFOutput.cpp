@@ -1,7 +1,7 @@
 // MFOutput.cpp
 //
 // Copyright (C) 2013-2014
-
+#include <fmt/core.h>
 #include <mbed.h>
 
 #include "ArduinoTypes.hpp"
@@ -42,10 +42,8 @@ void MFOutput::set(uint8_t value)
   _pin->write(value);
 }
 
-// Example of what good output looks like:
-// 10,8.16.15.0.Encoder:1.14.Button:;
-void MFOutput::Serialize(char *str, size_t len)
+void MFOutput::Serialize(std::string *buffer)
 {
-  snprintf(str, len, "%i.%i.%s", as_integer(MFModuleType::kOutput), _arduinoPinName, _name.c_str());
-  str[len - 1] = '\0';
+  // MobiFlight expects a trailing : at the end of every serialized module.
+  buffer->append(fmt::format("{}.{}.{}:", MFModuleType::kOutput, _arduinoPinName, _name));
 }

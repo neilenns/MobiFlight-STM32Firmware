@@ -1,3 +1,4 @@
+#include <fmt/core.h>
 #include <mbed.h>
 
 #include "ArduinoTypes.hpp"
@@ -29,10 +30,10 @@ MFButton::MFButton(ARDUINO_PIN arduinoPinName, std::string name)
 
 // Example of what good output looks like:
 // 1.14.Button:
-void MFButton::Serialize(char *str, size_t len)
+void MFButton::Serialize(std::string *buffer)
 {
-  snprintf(str, len, "%i.%i.%s", as_integer(MFModuleType::kButton), _arduinoPinName, _name.c_str());
-  str[len - 1] = '\0';
+  // MobiFlight expects a trailing : at the end of every serialized module.
+  buffer->append(fmt::format("{}.{}.{}:", as_integer(MFModuleType::kButton), _arduinoPinName, _name));
 }
 
 void MFButton::OnPress()

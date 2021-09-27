@@ -40,7 +40,7 @@ public:
  * @param str Buffer to write the configuration to.
  * @param len Length of the buffer.
  */
-  void Serialize(char *str, size_t len);
+  void Serialize(std::string *buffer);
 
   /**
  * @brief Turns on test mode for the LCD display.
