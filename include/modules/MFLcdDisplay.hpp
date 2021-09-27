@@ -9,11 +9,9 @@
 class MFLcdDisplay final
 {
 public:
-  // The provided pins should be an Arduino pin number. This will get mapped
-  // internally to STM32 pins when needed. This is to provide compatibility
-  // with MobiFlight desktop app.
-  MFLcdDisplay(char deviceAddress, TextLCD_Base::LCDType deviceType, std::string name = "LCD Display");
-  void Display(char *text);
+  MFLcdDisplay(char deviceAddress, int rows, int columns, std::string name = "LCD Display");
+  void Display(const char *text);
+  void PowerSavingMode(bool state);
   void Serialize(char *str, size_t len);
   void StartTest();
   void StopTest();
@@ -22,7 +20,11 @@ private:
   TextLCD_I2C *_display;
   I2C *_i2c_lcd;
 
+  int _columns;
   char _deviceAddress;
-  TextLCD_Base::LCDType _deviceType;
   std::string _name;
+  int _rows;
+
+  static std::optional<TextLCD_Base::LCDType> LookupDeviceType(int rows, int columns);
+  void PrintCentered(const char *text, int line);
 };

@@ -3,6 +3,7 @@
 #include <TextLCD.h>
 
 #include "Globals.hpp"
+#include "MFCommands.hpp"
 #include "MFConfiguration.hpp"
 
 #define MAX_BUFFER_SIZE 40
@@ -13,7 +14,7 @@ void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
   if (pinManager.IsPinRegistered(arduinoPinName))
   {
 #ifdef DEBUG
-    cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
+    cmdMessenger.sendCmd(MFCommands::kStatus, "Duplicate pin.");
 #endif
     return;
   }
@@ -22,19 +23,9 @@ void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
   pinManager.RegisterPin(arduinoPinName, MFModuleType::kButton);
 }
 
-void MFConfiguration::AddLcdDisplay(ARDUINO_PIN pin, char address, char const *name)
+void MFConfiguration::AddLcdDisplay(int address, int rows, int columns, char const *name)
 {
-  if (pinManager.IsPinRegistered(pin))
-  {
-#ifdef DEBUG
-    cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
-#endif
-    return;
-  }
-
-  lcdDisplays.insert({pin, new MFLcdDisplay(address, TextLCD_Base::LCDType::LCD20x4, "Sample LCD display")});
-
-  pinManager.RegisterPin(pin, MFModuleType::kLcdDisplayI2C);
+  lcdDisplays.insert({address, new MFLcdDisplay(address, rows, columns, name)});
 }
 
 void MFConfiguration::AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount, char const *name)
@@ -42,7 +33,7 @@ void MFConfiguration::AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_
   if (pinManager.IsPinRegistered(mosi) || pinManager.IsPinRegistered(sclk) || pinManager.IsPinRegistered(cs))
   {
 #ifdef DEBUG
-    cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
+    cmdMessenger.sendCmd(MFCommands::kStatus, "Duplicate pin.");
 #endif
     return;
   }
@@ -60,7 +51,7 @@ void MFConfiguration::AddOutput(ARDUINO_PIN arduinoPinName, char const *name)
   if (pinManager.IsPinRegistered(arduinoPinName))
   {
 #ifdef DEBUG
-    cmdMessenger.sendCmd(kStatus, "Duplicate pin.");
+    cmdMessenger.sendCmd(MFCommands::kStatus, "Duplicate pin.");
 #endif
     return;
   }

@@ -151,7 +151,7 @@ int main()
   config.AddButton(3, "Onboard button");
   config.AddOutput(4, "Onboard LED2");
   config.AddLedDisplay(7, 5, 10, 2, "LED display 1");
-  config.AddLcdDisplay(6, 0x27, "LCD display 1");
+  config.AddLcdDisplay(0x27, 4, 20, "LCD display 1");
 
   cmdMessenger.sendCmd(kStatus, "STM32 has started!");
 

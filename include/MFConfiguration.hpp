@@ -17,12 +17,12 @@ private:
 
 public:
   map<ARDUINO_PIN, MFButton *> buttons;
-  map<ARDUINO_PIN, MFLcdDisplay *> lcdDisplays;
+  map<int, MFLcdDisplay *> lcdDisplays;
   map<ARDUINO_PIN, MFMAX7219 *> ledDisplays;
   map<ARDUINO_PIN, MFOutput *> outputs;
 
   void AddButton(ARDUINO_PIN arduinoPinName, char const *name = "Button");
-  void AddLcdDisplay(ARDUINO_PIN pin, char address, char const *name = "LCD Display");
+  void AddLcdDisplay(int address, int rows, int columns, char const *name = "LCD Display");
   void AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount, char const *name = "LED Display");
   void AddOutput(ARDUINO_PIN arduinoPinName, char const *name = "Output");
 
