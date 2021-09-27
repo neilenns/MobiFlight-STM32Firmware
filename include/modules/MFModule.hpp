@@ -6,9 +6,18 @@
 
 #include <iostream>
 
+#include "MFModuleTypes.hpp"
+
 class MFModule
 {
 public:
+  /**
+   * @brief Get the type of the module.
+   * 
+   * @return MFModuleType The module type.
+   */
+  virtual MFModuleType GetModuleType() = 0;
+
   /**
  * @brief Enables or disables power saving mode.
  * 
@@ -23,4 +32,14 @@ public:
  * @param len Length of the buffer.
  */
   virtual void Serialize(std::string *buffer) = 0;
+
+  /**
+ * @brief Turns on test mode for the module.
+ */
+  virtual void StartTest() = 0;
+
+  /**
+ * @brief Turns off test mode for the module.
+ */
+  virtual void StopTest() = 0;
 };

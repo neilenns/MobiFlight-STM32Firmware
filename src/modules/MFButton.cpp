@@ -32,6 +32,11 @@ MFButton::MFButton(ARDUINO_PIN arduinoPinName, std::string name)
   _name = name;
 }
 
+MFModuleType MFButton::GetModuleType()
+{
+  return MFModuleType::kButton;
+}
+
 void MFButton::OnPress()
 {
   cmdMessenger.sendCmdStart(as_integer(MFCommand::kButtonChange));
@@ -57,3 +62,11 @@ void MFButton::Serialize(std::string *buffer)
   // MobiFlight expects a trailing : at the end of every serialized module.
   buffer->append(fmt::format("{}.{}.{}:", as_integer(MFModuleType::kButton), _arduinoPinName, _name));
 }
+
+void MFButton::StartTest(){
+
+};
+
+void MFButton::StopTest(){
+
+};

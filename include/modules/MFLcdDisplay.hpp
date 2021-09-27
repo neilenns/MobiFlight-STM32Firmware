@@ -32,19 +32,15 @@ public:
  */
   void Display(const std::string text);
 
+  MFModuleType GetModuleType() override;
+
   void PowerSavingMode(bool state) override;
 
   void Serialize(std::string *buffer) override;
 
-  /**
- * @brief Turns on test mode for the LCD display.
- */
-  void StartTest();
+  void StartTest() override;
 
-  /**
- * @brief Turns off test mode for the LCD display.
- */
-  void StopTest();
+  void StopTest() override;
 
 private:
   int _columns;

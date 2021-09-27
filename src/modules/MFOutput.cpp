@@ -32,9 +32,14 @@ uint8_t MFOutput::get()
   return _value;
 }
 
+MFModuleType MFOutput::GetModuleType()
+{
+  return MFModuleType::kOutput;
+}
+
 void MFOutput::PowerSavingMode(bool state)
 {
-  state ? set(0) : set(_value);
+  state ? _pin->write(0) : _pin->write(_value);
 }
 
 void MFOutput::set(uint8_t value)
@@ -47,4 +52,14 @@ void MFOutput::Serialize(std::string *buffer)
 {
   // MobiFlight expects a trailing : at the end of every serialized module.
   buffer->append(fmt::format("{}.{}.{}:", MFModuleType::kOutput, _arduinoPinName, _name));
+}
+
+void MFOutput::StartTest()
+{
+  _pin->write(1);
+}
+
+void MFOutput::StopTest()
+{
+  _pin->write(0);
 }

@@ -62,6 +62,11 @@ void MFLcdDisplay::Display(const std::string text)
   }
 }
 
+MFModuleType MFLcdDisplay::GetModuleType()
+{
+  return MFModuleType::kLcdDisplayI2C;
+}
+
 std::optional<TextLCD_Base::LCDType> MFLcdDisplay::LookupDeviceType(int rows, int columns)
 {
   // This is really dumb. There has to be a better way to do this.

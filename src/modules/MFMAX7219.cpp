@@ -65,6 +65,11 @@ void MFMAX7219::Display(uint8_t submodule, char *value, uint8_t points, uint8_t 
   }
 }
 
+MFModuleType MFMAX7219::GetModuleType()
+{
+  return MFModuleType::kLedSegment;
+}
+
 void MFMAX7219::PowerSavingMode(bool state)
 {
 }
@@ -75,9 +80,6 @@ void MFMAX7219::Serialize(std::string *buffer)
   buffer->append(fmt::format("{}.{}.{}.{}.{}:", MFModuleType::kLedSegment, _mosiArduino, _sclkArduino, _csArduino, _name));
 }
 
-/**
- * @brief Turns on test mode for all connected submodules.
- */
 void MFMAX7219::StartTest()
 {
   for (int i = 0; i < _submoduleCount; i++)
@@ -95,10 +97,6 @@ void MFMAX7219::StartTest(uint8_t submodule)
   _display->MAX7219_DisplayTestStart(submodule);
 }
 
-/**
- * @brief Turns off test mode for the specified submodule.
- * @param submodule The submodule to stop test mode on.
- */
 void MFMAX7219::StopTest()
 {
   for (int i = 0; i < _submoduleCount; i++)

@@ -19,9 +19,12 @@ public:
   // with MobiFlight desktop app.
   MFOutput(ARDUINO_PIN pin = 0, std::string name = "LED");
   uint8_t get();
+  MFModuleType GetModuleType() override;
   void PowerSavingMode(bool state) override;
   void Serialize(std::string *buffer) override;
   void set(uint8_t value);
+  void StartTest() override;
+  void StopTest() override;
 
 private:
   uint8_t _arduinoPinName;
