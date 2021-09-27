@@ -1,3 +1,7 @@
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Neil Enns. All rights reserved.
+ *  Licensed under the MIT License. See LICENSE in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
 #pragma once
 
 enum class MFModuleType
@@ -20,5 +24,5 @@ template <typename MFModuleType>
 auto as_integer(MFModuleType const value)
     -> typename std::underlying_type<MFModuleType>::type
 {
-    return static_cast<typename std::underlying_type<MFModuleType>::type>(value);
+  return static_cast<typename std::underlying_type<MFModuleType>::type>(value);
 }
