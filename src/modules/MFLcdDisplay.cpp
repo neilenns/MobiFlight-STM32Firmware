@@ -61,6 +61,15 @@ void MFLcdDisplay::Display(const std::string text)
     currentPosition += _columns;
   }
 }
+uint8_t MFLcdDisplay::GetId()
+{
+  return _deviceAddress;
+}
+
+MFModuleType MFLcdDisplay::GetModuleType()
+{
+  return MFModuleType::kLcdDisplayI2C;
+}
 
 std::optional<TextLCD_Base::LCDType> MFLcdDisplay::LookupDeviceType(int rows, int columns)
 {

@@ -32,12 +32,14 @@ MFButton::MFButton(ARDUINO_PIN arduinoPinName, std::string name)
   _name = name;
 }
 
-// Example of what good output looks like:
-// 1.14.Button:
-void MFButton::Serialize(std::string *buffer)
+uint8_t MFButton::GetId()
 {
-  // MobiFlight expects a trailing : at the end of every serialized module.
-  buffer->append(fmt::format("{}.{}.{}:", as_integer(MFModuleType::kButton), _arduinoPinName, _name));
+  return _arduinoPinName;
+}
+
+MFModuleType MFButton::GetModuleType()
+{
+  return MFModuleType::kButton;
 }
 
 void MFButton::OnPress()
@@ -55,3 +57,21 @@ void MFButton::OnRelease()
   cmdMessenger.sendCmdArg(0);
   cmdMessenger.sendCmdEnd();
 }
+
+void MFButton::PowerSavingMode(bool state)
+{
+}
+
+void MFButton::Serialize(std::string *buffer)
+{
+  // MobiFlight expects a trailing : at the end of every serialized module.
+  buffer->append(fmt::format("{}.{}.{}:", as_integer(MFModuleType::kButton), _arduinoPinName, _name));
+}
+
+void MFButton::StartTest(){
+
+};
+
+void MFButton::StopTest(){
+
+};
