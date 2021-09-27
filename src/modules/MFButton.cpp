@@ -32,6 +32,11 @@ MFButton::MFButton(ARDUINO_PIN arduinoPinName, std::string name)
   _name = name;
 }
 
+uint8_t MFButton::GetId()
+{
+  return _arduinoPinName;
+}
+
 MFModuleType MFButton::GetModuleType()
 {
   return MFModuleType::kButton;

@@ -61,6 +61,10 @@ void MFLcdDisplay::Display(const std::string text)
     currentPosition += _columns;
   }
 }
+uint8_t MFLcdDisplay::GetId()
+{
+  return _deviceAddress;
+}
 
 MFModuleType MFLcdDisplay::GetModuleType()
 {

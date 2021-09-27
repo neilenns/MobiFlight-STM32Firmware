@@ -19,13 +19,16 @@ public:
   // with MobiFlight desktop app.
   MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN, int submoduleCount = 1, std::string name = "7 Segment Display");
   void Display(uint8_t submodule, char *value, uint8_t points, uint8_t mask);
+  void StartTest(uint8_t submodule);
+  void StopTest(uint8_t submodule);
+
+  // Base class implementations
+  uint8_t GetId() override;
   MFModuleType GetModuleType() override;
   void PowerSavingMode(bool state) override;
   void Serialize(std::string *buffer) override;
   void StartTest() override;
-  void StartTest(uint8_t submodule);
   void StopTest() override;
-  void StopTest(uint8_t submodule);
 
 private:
   MAX7219 *_display;

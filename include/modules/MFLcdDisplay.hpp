@@ -32,14 +32,12 @@ public:
  */
   void Display(const std::string text);
 
+  // Base class implementations
+  uint8_t GetId() override;
   MFModuleType GetModuleType() override;
-
   void PowerSavingMode(bool state) override;
-
   void Serialize(std::string *buffer) override;
-
   void StartTest() override;
-
   void StopTest() override;
 
 private:

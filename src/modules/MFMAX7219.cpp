@@ -65,6 +65,11 @@ void MFMAX7219::Display(uint8_t submodule, char *value, uint8_t points, uint8_t 
   }
 }
 
+uint8_t MFMAX7219::GetId()
+{
+  return _mosiArduino;
+}
+
 MFModuleType MFMAX7219::GetModuleType()
 {
   return MFModuleType::kLedSegment;

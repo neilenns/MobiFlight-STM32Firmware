@@ -32,6 +32,11 @@ uint8_t MFOutput::get()
   return _value;
 }
 
+uint8_t MFOutput::GetId()
+{
+  return _arduinoPinName;
+}
+
 MFModuleType MFOutput::GetModuleType()
 {
   return MFModuleType::kOutput;

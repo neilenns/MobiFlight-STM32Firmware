@@ -12,6 +12,13 @@ class MFModule
 {
 public:
   /**
+   * @brief Get the identifier for the object.
+   * 
+   * @return int The object identifier.
+   */
+  virtual uint8_t GetId() = 0;
+
+  /**
    * @brief Get the type of the module.
    * 
    * @return MFModuleType The module type.
