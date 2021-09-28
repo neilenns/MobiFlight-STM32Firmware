@@ -21,7 +21,6 @@
 #pragma once
 
 #include <inttypes.h>
-#include <iostream>
 #include <mbed.h>
 
 #include "MFConfiguration.hpp"

@@ -5,7 +5,6 @@
 #pragma once
 
 #include <mbed.h>
-#include <iostream>
 
 #include "ArduinoTypes.hpp"
 #include "drivers/DebounceIn.hpp"

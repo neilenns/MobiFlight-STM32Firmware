@@ -4,8 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <iostream>
-
 #include "MFModuleTypes.hpp"
 
 class MFModule
