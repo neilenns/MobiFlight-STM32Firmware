@@ -9,7 +9,7 @@
 #include "modules/MFOutput.hpp"
 #include "PinManager.hpp"
 
-MFOutput::MFOutput(ARDUINO_PIN arduinoPinName, std::string name)
+MFOutput::MFOutput(ARDUINO_PIN arduinoPinName, const std::string &name)
 {
   _arduinoPinName = arduinoPinName;
 

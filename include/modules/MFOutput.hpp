@@ -18,7 +18,7 @@ public:
  * @param pin The Arduino pin the LED is connected to. This is also the device's ID.
  * @param name The name for this module.
  */
-  MFOutput(ARDUINO_PIN pin = 0, std::string name = "LED");
+  MFOutput(ARDUINO_PIN pin = 0, const std::string &name = "LED");
 
   /**
    * @brief Gets the current value for the LED.
