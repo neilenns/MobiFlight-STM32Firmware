@@ -50,5 +50,5 @@ public:
   static std::optional<PinName> MapArudinoPin(ARDUINO_PIN arduinoPin);
 
 private:
-  vector<bool> _registeredPins;
+  vector<ARDUINO_PIN> _registeredPins;
 };

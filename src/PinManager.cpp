@@ -20,12 +20,12 @@ void PinManager::ClearRegisteredPins()
 
 bool PinManager::IsPinRegistered(ARDUINO_PIN arduinoPinName)
 {
-  return _registeredPins[arduinoPinName];
+  return std::find(_registeredPins.begin(), _registeredPins.end(), arduinoPinName) != _registeredPins.end();
 }
 
 void PinManager::RegisterPin(ARDUINO_PIN arduinoPinName)
 {
-  _registeredPins[arduinoPinName] = 1;
+  _registeredPins.push_back(arduinoPinName);
 }
 
 std::optional<PinName> PinManager::MapArudinoPin(ARDUINO_PIN arduinoPin)
