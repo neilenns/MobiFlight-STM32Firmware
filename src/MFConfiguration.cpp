@@ -77,31 +77,27 @@ void MFConfiguration::Erase()
 {
 }
 
-void MFConfiguration::Serialize()
+void MFConfiguration::Serialize(std::string *buffer)
 {
-  std::string buffer;
-
   for (auto &[key, output] : outputs)
   {
-    output->Serialize(&buffer);
+    output->Serialize(buffer);
   }
 
   for (auto &[key, button] : buttons)
   {
-    button->Serialize(&buffer);
+    button->Serialize(buffer);
   }
 
   for (auto &[key, ledDisplay] : ledDisplays)
   {
-    ledDisplay->Serialize(&buffer);
+    ledDisplay->Serialize(buffer);
   }
 
   for (auto &[key, lcdDisplay] : lcdDisplays)
   {
-    lcdDisplay->Serialize(&buffer);
+    lcdDisplay->Serialize(buffer);
   }
-
-  printf(buffer.c_str());
 }
 
 void MFConfiguration::StartTest()

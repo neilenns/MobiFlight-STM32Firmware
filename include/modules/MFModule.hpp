@@ -33,8 +33,7 @@ public:
   /**
  * @brief Writes the configuraton to a string.
  * 
- * @param str Buffer to write the configuration to.
- * @param len Length of the buffer.
+ * @param buffer Pointer to the string buffer to write the configuration to.
  */
   virtual void Serialize(std::string *buffer) = 0;
 

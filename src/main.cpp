@@ -50,8 +50,11 @@ void OnConfigActivated()
 
 void OnGetConfig()
 {
+  std::string buffer;
+
+  config.Serialize(&buffer);
   cmdMessenger.sendCmdStart(kInfo);
-  cmdMessenger.sendCmdArg(config);
+  cmdMessenger.sendCmdArg(buffer);
   cmdMessenger.sendCmdEnd();
 }
 

@@ -235,13 +235,8 @@ public:
 
     void sendCmdArg(std::string str)
     {
-        sendCmdArg(str.c_str());
-    }
-
-    void sendCmdArg(MFConfiguration config)
-    {
         sendFieldSeparator();
-        config.Serialize();
+        printf("%s", str.c_str());
     }
 
     void sendCmdArg(bool arg)
