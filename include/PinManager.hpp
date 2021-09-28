@@ -17,9 +17,8 @@ public:
   /**
    * @brief Construct a new Pin Manager object
    * 
-   * @param numberOfPins The maximum number of supported pins.
    */
-  PinManager(uint8_t numberOfPins = 10);
+  PinManager();
 
   /**
    * @brief Clears all registered pins from the list.

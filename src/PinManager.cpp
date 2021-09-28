@@ -10,7 +10,7 @@
 #include "modules/MFModuleTypes.hpp"
 #include "PinManager.hpp"
 
-PinManager::PinManager(uint8_t numberOfPins)
+PinManager::PinManager()
 {
   _registeredPins = new map<uint8_t, MFModuleType>;
 }
