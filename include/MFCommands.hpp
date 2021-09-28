@@ -9,6 +9,10 @@
 //
 // If you increase this list, make sure to check that the MAXCALLBACKS value
 // in CmdMessenger.h is set apropriately
+/**
+ * @brief The list of commands recognized by MobiFlight.
+ * 
+ */
 enum MFCommand
 {
   kInitModule,           // 0

@@ -14,12 +14,44 @@
 class MFMAX7219 : MFModule
 {
 public:
-  // The provided pins should be an Arduino pin number. This will get mapped
-  // internally to STM32 pins when needed. This is to provide compatibility
-  // with MobiFlight desktop app.
-  MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN, int submoduleCount = 1, std::string name = "7 Segment Display");
+  // Even though this takes an Arduino pin value for mosi, sclk, and cs, the only one
+  // used interally is cs. mosi and sclk are always the SPI_MOSI and SPI_SCK
+  // pins on the STM32. All three are still accepted as parameters though as that's
+  // how MobiFlight saves/loads them. If all three weren't kept then the config wouldn't
+  // make sense when MobiFlight talks to the STM32.
+  /**
+ * @brief Construct a new MFMAX7219::MFMAX7219 object
+ * 
+ * @param mosi The Arduino pin number used for MOSI. Note that in this firmware the hardware SPI_MOSI pin will always be used.
+ * @param sclk The Arduino pin number used for SCLK. Note that in this firmware the hardware SPI_SCK pin will always be used.
+ * @param cs The Arduino pin number used for CS. This is also the device's unique ID.
+ * @param submoduleCount The number of connected submodules.
+ * @param name The name for this module.
+ */
+  MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount = 1, std::string name = "7 Segment Display");
+
+  /**
+ * @brief Displays the specified string on the connected display.
+ * 
+ * @param submodule The submodule to display the string on.
+ * @param value The value to display.
+ * @param points A bit array specifying which decimal positions should be illuminated.
+ * @param mask A bit array specifying which digits from the value should be displayed.
+ */
   void Display(uint8_t submodule, char *value, uint8_t points, uint8_t mask);
+
+  /**
+   * @brief Displays test data.
+   * 
+   * @param submodule The submodule to display the data on.
+   */
   void StartTest(uint8_t submodule);
+
+  /**
+   * @brief Stops displaying test data, returning the disply to blank values.
+   * 
+   * @param submodule The submodule to stop displaying test data on.
+   */
   void StopTest(uint8_t submodule);
 
   // Base class implementations

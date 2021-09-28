@@ -13,11 +13,26 @@
 class MFOutput : MFModule
 {
 public:
-  // The provided pin should be an Arduino pin number. This will get mapped
-  // internally to STM32 pins when needed. This is to provide compatibility
-  // with MobiFlight desktop app.
+  /**
+ * @brief Construct a new MFOutput::MFOutput object.
+ * 
+ * @param pin The Arduino pin the LED is connected to. This is also the device's ID.
+ * @param name The name for this module.
+ */
   MFOutput(ARDUINO_PIN pin = 0, std::string name = "LED");
+
+  /**
+   * @brief Gets the current value for the LED.
+   * 
+   * @return uint8_t The current value.
+   */
+  
   uint8_t get();
+  /**
+   * @brief Sets the current value for the LED.
+   * 
+   * @param value The current value.
+   */
   void set(uint8_t value);
 
   // Base class implementations
