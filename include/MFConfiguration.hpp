@@ -83,10 +83,10 @@ public:
   void AddOutput(ARDUINO_PIN arduinoPinName, char const *name = "Output");
 
   /**
-  * @brief Clears the list of stored modules. This does not write the updated
-  * (empty) lists to flash. To do that you must call Save().
-  * 
-  */
+   * @brief Clears the list of stored modules. This does not write the updated
+   * (empty) lists to flash. To do that you must call Save().
+   * 
+   */
   void Erase();
 
   /**
@@ -102,19 +102,21 @@ public:
   void Save();
 
   /**
-  * @brief Writes the configuration to standard output.
-  */
-  void Serialize();
+   * @brief Writes the configuration to standard output.
+   * 
+   * @param buffer A pointer to the string buffer to write to.
+   */
+  void Serialize(std::string *buffer);
 
   /**
-  * @brief Runs the StartTest() method on all connected modules.
-  * 
-  */
+   * @brief Runs the StartTest() method on all connected modules.
+   * 
+   */
   void StartTest();
 
   /**
-  * @brief Runs the StopTest() method on all connected modules.
-  * 
-  */
+   * @brief Runs the StopTest() method on all connected modules.
+   * 
+   */
   void StopTest();
 };
