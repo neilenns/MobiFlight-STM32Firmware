@@ -21,7 +21,7 @@ void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
   }
 
   buttons.insert({arduinoPinName, new MFButton(arduinoPinName, name)});
-  pinManager.RegisterPin(arduinoPinName, MFModuleType::kButton);
+  pinManager.RegisterPin(arduinoPinName);
 }
 
 void MFConfiguration::AddLcdDisplay(int address, int rows, int columns, char const *name)
@@ -50,9 +50,9 @@ void MFConfiguration::AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_
   // MOSI a.k.a. the data pin is used as the identifier for the connected module
   // by MobiFlight.
   ledDisplays.insert({mosi, new MFMAX7219(mosi, sclk, cs, submoduleCount, name)});
-  pinManager.RegisterPin(mosi, MFModuleType::kLedSegment);
-  pinManager.RegisterPin(sclk, MFModuleType::kLedSegment);
-  pinManager.RegisterPin(cs, MFModuleType::kLedSegment);
+  pinManager.RegisterPin(mosi);
+  pinManager.RegisterPin(sclk);
+  pinManager.RegisterPin(cs);
 }
 
 void MFConfiguration::AddOutput(ARDUINO_PIN arduinoPinName, char const *name)
@@ -66,7 +66,7 @@ void MFConfiguration::AddOutput(ARDUINO_PIN arduinoPinName, char const *name)
   }
 
   outputs.insert({arduinoPinName, new MFOutput(arduinoPinName, name)});
-  pinManager.RegisterPin(arduinoPinName, MFModuleType::kOutput);
+  pinManager.RegisterPin(arduinoPinName);
 }
 
 void MFConfiguration::Load()

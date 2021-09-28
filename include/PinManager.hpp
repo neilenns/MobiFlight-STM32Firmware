@@ -9,7 +9,6 @@
 #include <optional>
 
 #include "ArduinoTypes.hpp"
-#include "modules/MFModuleTypes.hpp"
 
 class PinManager
 {
@@ -17,9 +16,8 @@ public:
   /**
    * @brief Construct a new Pin Manager object
    * 
-   * @param numberOfPins The maximum number of supported pins.
    */
-  PinManager(uint8_t numberOfPins = 10);
+  PinManager();
 
   /**
    * @brief Clears all registered pins from the list.
@@ -40,9 +38,8 @@ public:
    * @brief Registers a new pin with the specified module type.
    * 
    * @param pin The Arduino pin to register.
-   * @param type The module type to associate with the pin.
    */
-  void RegisterPin(ARDUINO_PIN pin, MFModuleType type);
+  void RegisterPin(ARDUINO_PIN pin);
 
   /**
    * @brief Maps an Arduino pin number to an STM32 pin.
@@ -53,5 +50,5 @@ public:
   static std::optional<PinName> MapArudinoPin(ARDUINO_PIN arduinoPin);
 
 private:
-  map<ARDUINO_PIN, MFModuleType> *_registeredPins;
+  vector<ARDUINO_PIN> _registeredPins;
 };
