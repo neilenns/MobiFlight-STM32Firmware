@@ -5,7 +5,6 @@
 #include <fmt/core.h>
 #include <mbed.h>
 #include <PeripheralPins.h>
-#include <pinmap.h>
 
 #include "ArduinoTypes.hpp"
 #include "modules/MFOutput.hpp"
