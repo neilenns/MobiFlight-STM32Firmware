@@ -18,6 +18,7 @@
 MFOutput::MFOutput(ARDUINO_PIN arduinoPinName, const std::string &name)
 {
   _arduinoPinName = arduinoPinName;
+  _name = name;
 
   // TODO: Handle the case where an invalid pin is specified
   std::optional<PinName> stm32pin = PinManager::MapArudinoPin(arduinoPinName);
@@ -35,17 +36,18 @@ MFOutput::MFOutput(ARDUINO_PIN arduinoPinName, const std::string &name)
   // won't work. The function returns NC if the requested pin isn't in the pin map.
   auto function = (PinName)pinmap_find_function(*stm32pin, PinMap_PWM);
 
-  if (function == PinName::NC)
-  {
-    _digitalPin = std::make_unique<DigitalOut>(*stm32pin);
-  }
-  else
+  if (function != PinName::NC)
   {
     _pwmPin = std::make_unique<PwmOut>(*stm32pin);
   }
+  else
+  {
+    _digitalPin = std::make_unique<DigitalOut>(*stm32pin);
+  }
 
-  _name = name;
-  set(0); // Turn the LED off by default
+  // Turn the LED off by default
+  _value = 0;
+  set(_value);
 }
 
 uint8_t MFOutput::get()
