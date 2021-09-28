@@ -38,7 +38,6 @@ const uint8_t MEM_OFFSET_CONFIG = MEM_OFFSET_NAME + MEM_LEN_NAME + MEM_LEN_SERIA
 char type[20] = MOBIFLIGHT_TYPE;
 char serial[MEM_LEN_SERIAL] = MOBIFLIGHT_SERIAL;
 char name[MEM_LEN_NAME] = MEMLEN_NAME;
-const int MEM_LEN_CONFIG = MEMLEN_CONFIG;
 
 // *****************************************************************
 // MobiFlight event handlers
@@ -172,7 +171,7 @@ int main()
   attachCommandCallbacks();
 
   // Temporarily add outputs
-  config.AddOutput(2, "Onboard LED"); // Should NOT be PWM
+  config.AddOutput(13, "Onboard LED"); // Should NOT be PWM
   // config.AddButton(3, "Onboard button");
   config.AddOutput(6, "PWM LED"); // Should be PWM
   // config.AddLedDisplay(7, 5, 10, 2, "LED display 1");
