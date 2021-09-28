@@ -9,7 +9,7 @@
 #include "modules/MFMAX7219.hpp"
 #include "PinManager.hpp"
 
-MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount, std::string name)
+MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount, const std::string &name)
 {
   // TODO: Handle the case where an invalid pin is specified
   std::optional<PinName> stm32cs = PinManager::MapArudinoPin(cs);

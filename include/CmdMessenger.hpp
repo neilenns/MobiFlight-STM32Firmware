@@ -233,7 +233,7 @@ public:
         }
     }
 
-    void sendCmdArg(std::string str)
+    void sendCmdArg(const std::string &str)
     {
         sendFieldSeparator();
         printf("%s", str.c_str());
