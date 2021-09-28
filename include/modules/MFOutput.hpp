@@ -5,7 +5,6 @@
 #pragma once
 
 #include <mbed.h>
-#include <iostream>
 
 #include "ArduinoTypes.hpp"
 #include "MFModule.hpp"
@@ -26,7 +25,7 @@ public:
    * 
    * @return uint8_t The current value.
    */
-  
+
   uint8_t get();
   /**
    * @brief Sets the current value for the LED.

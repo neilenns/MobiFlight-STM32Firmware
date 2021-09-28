@@ -4,7 +4,6 @@
  *--------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <iostream>
 #include <TextLCD.h>
 #include <mbed.h>
 
