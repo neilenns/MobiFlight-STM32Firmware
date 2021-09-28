@@ -13,7 +13,7 @@
 
 extern BufferedSerial serial_port;
 
-MFButton::MFButton(ARDUINO_PIN arduinoPinName, std::string name)
+MFButton::MFButton(ARDUINO_PIN arduinoPinName, const std::string &name)
 {
   EventQueue *queue = mbed_event_queue();
   _arduinoPinName = arduinoPinName;

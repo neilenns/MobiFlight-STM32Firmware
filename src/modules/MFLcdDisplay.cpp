@@ -9,7 +9,7 @@
 #include "modules/MFLcdDisplay.hpp"
 #include "PinManager.hpp"
 
-MFLcdDisplay::MFLcdDisplay(char deviceAddress, int rows, int columns, std::string name)
+MFLcdDisplay::MFLcdDisplay(char deviceAddress, int rows, int columns, const std::string &name)
 {
   // TODO: Handle this bounds checking better better.
   if (rows != 1 && rows != 2 && rows != 4)
