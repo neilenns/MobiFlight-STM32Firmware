@@ -11,6 +11,11 @@
 #include "modules/MFOutput.hpp"
 #include "PinManager.hpp"
 
+// MobiFlight sends a value between 0 and 255 but mbed os
+// requires a value between 0 and 1 for PWM output. For the PWM
+// case divide by 255 to get the percentage to send out.
+#define CONVERT_TO_MBED_PWM_VALUE(value) ((float)value / (float)255)
+
 MFOutput::MFOutput(ARDUINO_PIN arduinoPinName, const std::string &name)
 {
   _arduinoPinName = arduinoPinName;
@@ -61,20 +66,20 @@ MFModuleType MFOutput::GetModuleType()
 
 void MFOutput::PowerSavingMode(bool state)
 {
-  if (_digitalPin)
+  if (_pwmPin)
   {
-    state ? _digitalPin->write(0) : _digitalPin->write(_value);
+    state ? _pwmPin->write(0) : _pwmPin->write(CONVERT_TO_MBED_PWM_VALUE(_value));
   }
   else
   {
-    state ? _pwmPin->write(0) : _pwmPin->write(_value);
+    state ? _digitalPin->write(0) : _digitalPin->write(_value);
   }
 }
 
 void MFOutput::set(uint8_t value)
 {
   _value = value;
-  _digitalPin ? _digitalPin->write(_value) : _pwmPin->write(_value);
+  _pwmPin ? _pwmPin->write(CONVERT_TO_MBED_PWM_VALUE(_value)) : _digitalPin->write(_value);
 }
 
 void MFOutput::Serialize(std::string *buffer)
@@ -85,10 +90,22 @@ void MFOutput::Serialize(std::string *buffer)
 
 void MFOutput::StartTest()
 {
-  _digitalPin ? _digitalPin->write(1) : _pwmPin->write(1);
+  // The PWM test starts at max brightness then ramps down to 0.
+  if (_pwmPin)
+  {
+    for (int i = 255; i >= 0; i--)
+    {
+      _pwmPin->write(CONVERT_TO_MBED_PWM_VALUE(i));
+      ThisThread::sleep_for(5ms);
+    }
+  }
+  else
+  {
+    _digitalPin->write(1);
+  }
 }
 
 void MFOutput::StopTest()
 {
-  _digitalPin ? _digitalPin->write(1) : _pwmPin->write(1);
+  _pwmPin ? _pwmPin->write(CONVERT_TO_MBED_PWM_VALUE(_value)) : _digitalPin->write(_value);
 }

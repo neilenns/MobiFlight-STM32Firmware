@@ -110,7 +110,7 @@ void OnSetModule()
 void OnSetPin()
 {
   auto arduinoPin = cmdMessenger.readInt16Arg();
-  auto state = cmdMessenger.readBoolArg();
+  auto state = cmdMessenger.readInt16Arg();
 
   auto LED = config.outputs[arduinoPin];
   LED->set(state);
@@ -172,9 +172,9 @@ int main()
   attachCommandCallbacks();
 
   // Temporarily add outputs
-  config.AddOutput(4, "Onboard LED1"); // Should NOT be PWM
+  config.AddOutput(2, "Onboard LED"); // Should NOT be PWM
   // config.AddButton(3, "Onboard button");
-  config.AddOutput(11, "Onboard LED2"); // Should be PWM
+  config.AddOutput(6, "PWM LED"); // Should be PWM
   // config.AddLedDisplay(7, 5, 10, 2, "LED display 1");
   // config.AddLcdDisplay(0x27, 4, 20, "LCD display 1");
 

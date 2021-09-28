@@ -32,7 +32,7 @@ const map<int, PinName> PinMappings = {
     {3, BUTTON1},
     {4, PA_4},
     {5, PA_5},
-    {6, PA_6},
+    {6, PB_10},
     {7, PA_7},
     {8, PA_8},
     {9, PA_9},
