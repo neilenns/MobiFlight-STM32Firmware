@@ -102,7 +102,7 @@ void MFConfiguration::Serialize(std::string *buffer)
 
 void MFConfiguration::StartTest()
 {
-  for (auto &[key, value] : lcdDisplays)
+  for (auto &[key, value] : outputs)
   {
     value->StartTest();
   }
@@ -110,7 +110,7 @@ void MFConfiguration::StartTest()
 
 void MFConfiguration::StopTest()
 {
-  for (auto &[key, value] : lcdDisplays)
+  for (auto &[key, value] : outputs)
   {
     value->StopTest();
   }

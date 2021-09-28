@@ -44,7 +44,8 @@ public:
 
 private:
   uint8_t _arduinoPinName;
-  DigitalOut *_pin;
-  uint8_t _value;
+  std::unique_ptr<DigitalOut> _digitalPin;
+  std::unique_ptr<PwmOut> _pwmPin;
   std::string _name;
+  uint8_t _value;
 };

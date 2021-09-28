@@ -44,7 +44,6 @@ public:
 private:
   uint8_t _arduinoPinName;
   DebounceIn *_pin;
-  DigitalOut *_led;
   std::string _name;
 };
 
