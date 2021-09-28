@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 #include "mbed.h"
-#include "DebounceIn.hpp"
+#include "drivers/DebounceIn.hpp"
 
 DebounceIn::DebounceIn(PinName pin, PinMode mode) : _interrupt(pin, mode)
 {
