@@ -36,4 +36,5 @@ const map<int, PinName> PinMappings = {
     {7, PA_7},
     {8, PA_8},
     {9, PA_9},
-    {10, PB_6}};
+    {10, PB_6},
+    {11, PA_0}};

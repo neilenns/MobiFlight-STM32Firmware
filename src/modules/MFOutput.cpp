@@ -4,6 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 #include <fmt/core.h>
 #include <mbed.h>
+#include <PeripheralPins.h>
+#include <pinmap.h>
 
 #include "ArduinoTypes.hpp"
 #include "modules/MFOutput.hpp"
@@ -20,11 +22,26 @@ MFOutput::MFOutput(ARDUINO_PIN arduinoPinName, const std::string &name)
     // This should do something smarter
     return;
   }
-  _pin = new DigitalOut(*stm32pin);
+
+  // If the pin is a PWM-enabled pin then create a PWM output for it.
+  // There is zero documentation for the pinmap_find_function() method.
+  // The only information I could find is the source code at
+  // https://github.dev/ARMmbed/mbed-os/blob/a3be10c976c36da222517abc0cb4f81e88ff8552/hal/source/mbed_pinmap_common.c#L82
+  // It's important to cast this to PinName otherwise the comparison to NC
+  // won't work. The function returns NC if the requested pin isn't in the pin map.
+  auto function = (PinName)pinmap_find_function(*stm32pin, PinMap_PWM);
+
+  if (function == PinName::NC)
+  {
+    _digitalPin = std::make_unique<DigitalOut>(*stm32pin);
+  }
+  else
+  {
+    _pwmPin = std::make_unique<PwmOut>(*stm32pin);
+  }
 
   _name = name;
-  _value = false;
-  set(_value);
+  set(0); // Turn the LED off by default
 }
 
 uint8_t MFOutput::get()
@@ -44,13 +61,20 @@ MFModuleType MFOutput::GetModuleType()
 
 void MFOutput::PowerSavingMode(bool state)
 {
-  state ? _pin->write(0) : _pin->write(_value);
+  if (_digitalPin)
+  {
+    state ? _digitalPin->write(0) : _digitalPin->write(_value);
+  }
+  else
+  {
+    state ? _pwmPin->write(0) : _pwmPin->write(_value);
+  }
 }
 
 void MFOutput::set(uint8_t value)
 {
   _value = value;
-  _pin->write(value);
+  _digitalPin ? _digitalPin->write(_value) : _pwmPin->write(_value);
 }
 
 void MFOutput::Serialize(std::string *buffer)
@@ -61,10 +85,10 @@ void MFOutput::Serialize(std::string *buffer)
 
 void MFOutput::StartTest()
 {
-  _pin->write(1);
+  _digitalPin ? _digitalPin->write(1) : _pwmPin->write(1);
 }
 
 void MFOutput::StopTest()
 {
-  _pin->write(0);
+  _digitalPin ? _digitalPin->write(1) : _pwmPin->write(1);
 }
