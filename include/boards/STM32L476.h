@@ -11,30 +11,23 @@
 #define MOBIFLIGHT_SERIAL "SN-eaa-42f"
 #define MEMLEN_NAME "MobiFlight Mega"
 
-#define EEPROM_SIZE 1024
-#define MEMLEN_CONFIG 256
-
-#define MODULE_MAX_PINS 69
-#define MAX_OUTPUTS 40
-#define MAX_BUTTONS 68
-#define MAX_LEDSEGMENTS 4
-#define MAX_ENCODERS 20
-#define MAX_STEPPERS 10
-#define MAX_MFSERVOS 10
-#define MAX_MFLCD_I2C 2
-#define MAX_ANALOG_INPUTS 5
-#define MAX_SHIFTERS 10
-
 // https://github.com/ARMmbed/mbed-os/blob/master/targets/TARGET_STM/TARGET_STM32L4/TARGET_STM32L476xG/TARGET_NUCLEO_L476RG/PinNames.h
-// Maps Arduino pin names to STM32 pins
+// Also see https://os.mbed.com/platforms/ST-Nucleo-L476RG/ for a diagram.
+// Maps Arduino pin names to STM32 pins.
 const map<int, PinName> PinMappings = {
-    {2, LED1},
-    {3, BUTTON1},
-    {4, PA_4},
-    {5, PA_5},
-    {6, PB_10},
-    {7, PA_7},
-    {8, PA_8},
-    {9, PA_9},
-    {10, PB_6},
-    {11, PA_0}};
+    {0, PA_3},
+    {1, PA_2},
+    {2, PA_10},
+    {3, PB_3}, // PWM
+    {4, PB_5},
+    {5, PB_4},  // PWM
+    {6, PB_10}, // PWM
+    {7, PA_8},
+    {8, PA_9},
+    {9, PC_7},  // PWM
+    {10, PB_6}, // PWM
+    {11, PA_7}, // PWM
+    {12, PA_6},
+    {13, PA_5}, // PWM, onboard LED
+    {14, PB_9},
+    {15, PB_8}};
