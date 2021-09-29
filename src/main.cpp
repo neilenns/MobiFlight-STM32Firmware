@@ -160,7 +160,7 @@ void attachCommandCallbacks()
 
 int main()
 {
-  auto *queue = mbed_event_queue();
+  auto queue = std::shared_ptr<EventQueue>(mbed_event_queue());
 
   // Adds newline to every command
   cmdMessenger.printLfCr();
