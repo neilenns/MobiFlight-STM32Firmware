@@ -38,11 +38,11 @@ MFOutput::MFOutput(ARDUINO_PIN arduinoPinName, const std::string &name)
 
   if (function != PinName::NC)
   {
-    _pwmPin = std::make_unique<PwmOut>(*stm32pin);
+    _pwmPin = std::make_shared<PwmOut>(*stm32pin);
   }
   else
   {
-    _digitalPin = std::make_unique<DigitalOut>(*stm32pin);
+    _digitalPin = std::make_shared<DigitalOut>(*stm32pin);
   }
 
   // Turn the LED off by default

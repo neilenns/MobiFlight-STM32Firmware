@@ -43,7 +43,7 @@ public:
 
 private:
   uint8_t _arduinoPinName;
-  DebounceIn *_pin;
+  std::shared_ptr<DebounceIn> _pin;
   std::string _name;
 };
 

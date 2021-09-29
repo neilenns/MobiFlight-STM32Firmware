@@ -35,10 +35,10 @@ MFLcdDisplay::MFLcdDisplay(char deviceAddress, int rows, int columns, const std:
   _name = name;
   _rows = rows;
 
-  _i2c_lcd = new I2C(I2C_SDA, I2C_SCL);
+  _i2c_lcd = std::make_shared<I2C>(I2C_SDA, I2C_SCL);
   // mbed os uses 8-bit addressing, but MobiFlight uses 7-bit.
   // Shift left once to convert the MobiFlight address to mbed os address.
-  _display = new TextLCD_I2C(_i2c_lcd, _deviceAddress << 1, *displayType);
+  _display = std::make_shared<TextLCD_I2C>(_i2c_lcd.get(), _deviceAddress << 1, *displayType);
   _display->setMode(TextLCD_Base::LCDMode::DispOn);
   _display->setBacklight(TextLCD_Base::LCDBacklight::LightOn);
   _display->setCursor(TextLCD::CurOff_BlkOff);

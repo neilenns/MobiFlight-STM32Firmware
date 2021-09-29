@@ -15,7 +15,7 @@ extern BufferedSerial serial_port;
 
 MFButton::MFButton(ARDUINO_PIN arduinoPinName, const std::string &name)
 {
-  EventQueue *queue = mbed_event_queue();
+  auto queue = std::shared_ptr<EventQueue>(mbed_event_queue());
   _arduinoPinName = arduinoPinName;
 
   // TODO: Handle the case where an invalid pin is specified
@@ -26,7 +26,7 @@ MFButton::MFButton(ARDUINO_PIN arduinoPinName, const std::string &name)
     return;
   }
 
-  _pin = new DebounceIn(*stm32pin);
+  _pin = std::make_shared<DebounceIn>(*stm32pin);
   _pin->fall(queue->event(callback(this, &MFButton::OnPress)));
   _pin->rise(queue->event(callback(this, &MFButton::OnRelease)));
   _name = name;
