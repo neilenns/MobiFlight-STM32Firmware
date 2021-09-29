@@ -60,7 +60,7 @@ void MFMAX7219::PowerSavingMode(bool state)
 void MFMAX7219::Serialize(std::string &buffer)
 {
   // MobiFlight expects a trailing : at the end of every serialized module.
-  buffer.append(fmt::format("{}.{}.{}.{}:", MFModuleType::kLedSegment, _mosiArduino, _sclkArduino, _csArduino));
+  buffer.append(fmt::format("{}.{}.{}.{}.{}:", MFModuleType::kLedSegment, _mosiArduino, _sclkArduino, _csArduino, _name));
 }
 
 void MFMAX7219::StartTest()

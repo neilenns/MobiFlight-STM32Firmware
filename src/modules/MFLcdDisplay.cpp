@@ -165,7 +165,7 @@ void MFLcdDisplay::Serialize(std::string &buffer)
 {
   // MobiFlight expects a trailing : at the end of every serialized module.
   // MobiFlight expects the number of columns before the number of rows.
-  buffer.append(fmt::format("{}.{:d}.{}.{}:", MFModuleType::kLcdDisplayI2C, _deviceAddress, _columns, _rows));
+  buffer.append(fmt::format("{}.{:d}.{}.{}.{}:", MFModuleType::kLcdDisplayI2C, _deviceAddress, _columns, _rows, _name));
 }
 
 void MFLcdDisplay::StartTest()

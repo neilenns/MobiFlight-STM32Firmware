@@ -86,7 +86,7 @@ void MFOutput::set(uint8_t value)
 void MFOutput::Serialize(std::string &buffer)
 {
   // MobiFlight expects a trailing : at the end of every serialized module.
-  buffer.append(fmt::format("{}.{}:", MFModuleType::kOutput, _arduinoPinName));
+  buffer.append(fmt::format("{}.{}.{}:", MFModuleType::kOutput, _arduinoPinName, _name));
 }
 
 void MFOutput::StartTest()
