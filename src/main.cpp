@@ -26,17 +26,11 @@ MFConfiguration config;
 // Board configuration
 #define STRINGIZER(arg) #arg
 #define STR_VALUE(arg) STRINGIZER(arg)
-#define VERSION STR_VALUE(BUILD_VERSION)
 
-const uint8_t MEM_OFFSET_NAME = 0;
-const uint8_t MEM_LEN_NAME = 48;
-const uint8_t MEM_OFFSET_SERIAL = MEM_OFFSET_NAME + MEM_LEN_NAME;
-const uint8_t MEM_LEN_SERIAL = 11;
-const uint8_t MEM_OFFSET_CONFIG = MEM_OFFSET_NAME + MEM_LEN_NAME + MEM_LEN_SERIAL;
-
-char type[20] = MOBIFLIGHT_TYPE;
-char serial[MEM_LEN_SERIAL] = MOBIFLIGHT_SERIAL;
-char name[MEM_LEN_NAME] = MEMLEN_NAME;
+constexpr inline auto type = MOBIFLIGHT_TYPE;
+constexpr inline auto serial = MOBIFLIGHT_SERIAL;
+constexpr inline auto name = MOBIFLIGHT_NAME;
+constexpr inline auto version = STR_VALUE(BUILD_VERSION);
 
 // *****************************************************************
 // MobiFlight event handlers
@@ -62,7 +56,7 @@ void OnGetInfo()
   cmdMessenger.sendCmdArg(type);
   cmdMessenger.sendCmdArg(name);
   cmdMessenger.sendCmdArg(serial);
-  cmdMessenger.sendCmdArg(VERSION);
+  cmdMessenger.sendCmdArg(version);
   cmdMessenger.sendCmdEnd();
 }
 
