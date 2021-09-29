@@ -12,6 +12,7 @@
 #include "modules/MFLcdDisplay.hpp"
 #include "modules/MFMAX7219.hpp"
 #include "modules/MFOutput.hpp"
+#include "modules/MFServo.hpp"
 #include "PinManager.hpp"
 
 /**
@@ -44,6 +45,11 @@ public:
    * 
    */
   map<ARDUINO_PIN, std::shared_ptr<MFOutput>> outputs;
+  /**
+   * @brief List of connected servos.
+   * 
+   */
+  map<ARDUINO_PIN, std::shared_ptr<MFServo>> servos;
 
   /**
  * @brief Adds a new button to the configuration.
@@ -81,6 +87,14 @@ public:
    * @param name The name for this module.
    */
   void AddOutput(ARDUINO_PIN arduinoPinName, char const *name = "Output");
+
+  /**
+   * @brief Adds a new servo to the configuration.
+   * 
+   * @param pin The Arduino pin the servo is connected to. This is also the device's ID.
+   * @param name The name for this module.
+   */
+  void AddServo(ARDUINO_PIN arduinoPinName, char const *name = "Servo");
 
   /**
    * @brief Clears the list of stored modules. This does not write the updated
