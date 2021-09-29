@@ -44,7 +44,7 @@ void OnGetConfig()
 {
   std::string buffer;
 
-  config.Serialize(&buffer);
+  config.Serialize(buffer);
   cmdMessenger.sendCmdStart(kInfo);
   cmdMessenger.sendCmdArg(buffer);
   cmdMessenger.sendCmdEnd();
@@ -165,9 +165,9 @@ int main()
   // Temporarily add outputs
   config.AddOutput(13, "Onboard LED (PWM)");
   // config.AddButton(3, "Onboard button");
-  config.AddOutput(6, "External LED (PWM)");
-  config.AddLedDisplay(7, 5, 10, 2, "LED display 1");
-  config.AddLcdDisplay(0x27, 4, 20, "LCD display 1");
+  // config.AddOutput(6, "External LED (PWM)");
+  // config.AddLedDisplay(7, 5, 10, 2, "LED display 1");
+  // config.AddLcdDisplay(0x27, 4, 20, "LCD display 1");
 
   cmdMessenger.sendCmd(MFCommand::kStatus, "STM32 has started!");
 

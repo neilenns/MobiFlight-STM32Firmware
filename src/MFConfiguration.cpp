@@ -77,7 +77,7 @@ void MFConfiguration::Erase()
 {
 }
 
-void MFConfiguration::Serialize(std::string *buffer)
+void MFConfiguration::Serialize(std::string &buffer)
 {
   for (auto &[key, output] : outputs)
   {

@@ -7,7 +7,7 @@
 // This is the list of recognized commands. These can be commands that can either be sent or received.
 // In order to receive, attach a callback function to these events
 //
-// If you increase this list, make sure to check that the MAXCALLBACKS value
+// If y6,255; increase this list, make sure to check that the MAXCALLBACKS value
 // in CmdMessenger.h is set apropriately
 /**
  * @brief The list of commands recognized by MobiFlight.

@@ -9,7 +9,7 @@
 #include "modules/MFMAX7219.hpp"
 #include "PinManager.hpp"
 
-MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount, const std::string &name)
+MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount, std::string name)
 {
   // TODO: Handle the case where an invalid pin is specified
   std::optional<PinName> stm32cs = PinManager::MapArudinoPin(cs);
@@ -57,10 +57,10 @@ void MFMAX7219::PowerSavingMode(bool state)
 {
 }
 
-void MFMAX7219::Serialize(std::string *buffer)
+void MFMAX7219::Serialize(std::string &buffer)
 {
   // MobiFlight expects a trailing : at the end of every serialized module.
-  buffer->append(fmt::format("{}.{}.{}.{}.{}:", MFModuleType::kLedSegment, _mosiArduino, _sclkArduino, _csArduino, _name));
+  buffer.append(fmt::format("{}.{}.{}.{}:", MFModuleType::kLedSegment, _mosiArduino, _sclkArduino, _csArduino));
 }
 
 void MFMAX7219::StartTest()

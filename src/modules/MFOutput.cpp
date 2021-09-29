@@ -15,7 +15,7 @@
 // case divide by 255 to get the percentage to send out.
 #define CONVERT_TO_MBED_PWM_VALUE(value) ((float)value / (float)255)
 
-MFOutput::MFOutput(ARDUINO_PIN arduinoPinName, const std::string &name)
+MFOutput::MFOutput(ARDUINO_PIN arduinoPinName, std::string name)
 {
   _arduinoPinName = arduinoPinName;
   _name = name;
@@ -83,10 +83,10 @@ void MFOutput::set(uint8_t value)
   _pwmPin ? _pwmPin->write(CONVERT_TO_MBED_PWM_VALUE(_value)) : _digitalPin->write(_value);
 }
 
-void MFOutput::Serialize(std::string *buffer)
+void MFOutput::Serialize(std::string &buffer)
 {
   // MobiFlight expects a trailing : at the end of every serialized module.
-  buffer->append(fmt::format("{}.{}.{}:", MFModuleType::kOutput, _arduinoPinName, _name));
+  buffer.append(fmt::format("{}.{}:", MFModuleType::kOutput, _arduinoPinName));
 }
 
 void MFOutput::StartTest()

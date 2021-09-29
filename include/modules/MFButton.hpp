@@ -19,7 +19,7 @@ public:
  * @param pin The Arduino pin the button is connected to. This is also the device's ID.
  * @param name The name for this module.
  */
-  MFButton(ARDUINO_PIN pin = 0, const std::string &name = "Button");
+  MFButton(ARDUINO_PIN pin = 0, std::string name = "Button");
 
   /**
    * @brief Event handler called when the button is pressed.
@@ -37,7 +37,7 @@ public:
   uint8_t GetId() override;
   MFModuleType GetModuleType() override;
   void PowerSavingMode(bool state) override;
-  void Serialize(std::string *buffer) override;
+  void Serialize(std::string &buffer) override;
   void StartTest() override;
   void StopTest() override;
 

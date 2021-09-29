@@ -104,9 +104,9 @@ public:
   /**
    * @brief Writes the configuration to standard output.
    * 
-   * @param buffer A pointer to the string buffer to write to.
+   * @param buffer A string buffer to write to.
    */
-  void Serialize(std::string *buffer);
+  void Serialize(std::string &buffer);
 
   /**
    * @brief Runs the StartTest() method on all connected modules.
