@@ -26,7 +26,7 @@ MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int sub
   _submoduleCount = submoduleCount;
   _name = name;
 
-  _display = new MAX7219(SPI_MOSI, SPI_SCK, *stm32cs, _submoduleCount);
+  _display = std::make_shared<MAX7219>(SPI_MOSI, SPI_SCK, *stm32cs, _submoduleCount);
 }
 
 void MFMAX7219::Display(uint8_t submodule, char *value, uint8_t points, uint8_t mask)

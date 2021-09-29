@@ -62,7 +62,7 @@ public:
   void StopTest() override;
 
 private:
-  MAX7219 *_display;
+  std::shared_ptr<MAX7219> _display;
   std::string _name;
   int _submoduleCount;
 
