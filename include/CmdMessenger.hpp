@@ -22,6 +22,7 @@
 
 #include <inttypes.h>
 #include <mbed.h>
+#include <string_view>
 
 #include "MFConfiguration.hpp"
 
@@ -233,10 +234,15 @@ public:
         }
     }
 
+    void sendCmdArg(std::string_view str)
+    {
+        sendCmdArg(std::string(str));
+    }
+
     void sendCmdArg(const std::string &str)
     {
         sendFieldSeparator();
-        printf("%s", str.c_str());
+        printf(str.c_str());
     }
 
     void sendCmdArg(bool arg)
