@@ -42,8 +42,8 @@ public:
 private:
   int _columns;
   char _deviceAddress;
-  TextLCD_I2C *_display;
-  I2C *_i2c_lcd;
+  std::shared_ptr<TextLCD_I2C> _display;
+  std::shared_ptr<I2C> _i2c_lcd;
   std::string _name;
   int _rows;
 
