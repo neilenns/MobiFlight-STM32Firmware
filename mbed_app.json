@@ -1,6 +1,8 @@
 {
+  "requires": ["bare-metal", "events"],
   "target_overrides": {
     "*": {
+      "target.c_lib": "small",
       "platform.callback-nontrivial": true,
       "events.shared-dispatch-from-application": true
     }

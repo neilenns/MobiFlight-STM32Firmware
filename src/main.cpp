@@ -18,7 +18,6 @@
 #include "modules/MFOutput.hpp"
 
 BufferedSerial serial_port(USBTX, USBRX, 115200);
-Thread t;
 
 // Globals
 CmdMessenger cmdMessenger = CmdMessenger(serial_port);
@@ -162,7 +161,6 @@ void attachCommandCallbacks()
 int main()
 {
   auto *queue = mbed_event_queue();
-  t.start(callback(queue, &EventQueue::dispatch_forever));
 
   // Adds newline to every command
   cmdMessenger.printLfCr();
@@ -180,4 +178,5 @@ int main()
   cmdMessenger.sendCmd(MFCommand::kStatus, "STM32 has started!");
 
   serial_port.sigio(queue->event(callback(&cmdMessenger, &CmdMessenger::feedinSerialData)));
+  queue->dispatch_forever();
 }
