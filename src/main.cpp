@@ -18,6 +18,7 @@
 #include "modules/MFOutput.hpp"
 
 BufferedSerial serial_port(USBTX, USBRX, 115200);
+std::shared_ptr<EventQueue> queue;
 
 // Globals
 CmdMessenger cmdMessenger = CmdMessenger(serial_port);
@@ -154,7 +155,7 @@ void attachCommandCallbacks()
 
 int main()
 {
-  auto queue = std::shared_ptr<EventQueue>(mbed_event_queue());
+  queue = std::shared_ptr<EventQueue>(mbed_event_queue());
 
   // Adds newline to every command
   cmdMessenger.printLfCr();
@@ -164,7 +165,7 @@ int main()
 
   // Temporarily add outputs
   config.AddOutput(13, "Onboard LED (PWM)");
-  // config.AddButton(3, "Onboard button");
+  config.AddButton(3, "Onboard button");
   config.AddOutput(6, "External LED (PWM)");
   config.AddLedDisplay(7, 5, 10, 2, "LED display 1");
   config.AddLcdDisplay(0x27, 4, 20, "LCD display 1");

@@ -7,3 +7,4 @@
 #include "CmdMessenger.hpp"
 
 extern CmdMessenger cmdMessenger;
+extern std::shared_ptr<EventQueue> queue;
