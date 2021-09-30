@@ -5,8 +5,9 @@
 #pragma once
 
 #include <mbed.h>
+#include <Servo.h>
+
 #include "ArduinoTypes.hpp"
-#include "drivers/Servo.h"
 #include "MFModule.hpp"
 
 class MFServo : MFModule
