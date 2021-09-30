@@ -21,7 +21,7 @@ public:
  * @param columns The number of columns on the display. Valid values are 16 and 20.
  * @param name The name of the display.
  */
-  MFLcdDisplay(char deviceAddress, int rows, int columns, const std::string &name = "LCD Display");
+  MFLcdDisplay(char deviceAddress, int rows, int columns, std::string name = "LCD Display");
 
   /**
  * @brief Displays a string of text on the display, wrapping it to the number
@@ -35,7 +35,7 @@ public:
   uint8_t GetId() override;
   MFModuleType GetModuleType() override;
   void PowerSavingMode(bool state) override;
-  void Serialize(std::string *buffer) override;
+  void Serialize(std::string &buffer) override;
   void StartTest() override;
   void StopTest() override;
 

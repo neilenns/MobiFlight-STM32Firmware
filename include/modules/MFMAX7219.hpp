@@ -27,7 +27,7 @@ public:
  * @param submoduleCount The number of connected submodules.
  * @param name The name for this module.
  */
-  MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount = 1, const std::string &name = "7 Segment Display");
+  MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount = 1, std::string name = "7 Segment Display");
 
   /**
  * @brief Displays the specified string on the connected display.
@@ -57,7 +57,7 @@ public:
   uint8_t GetId() override;
   MFModuleType GetModuleType() override;
   void PowerSavingMode(bool state) override;
-  void Serialize(std::string *buffer) override;
+  void Serialize(std::string &buffer) override;
   void StartTest() override;
   void StopTest() override;
 

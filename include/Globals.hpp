@@ -5,5 +5,10 @@
 #pragma once
 
 #include "CmdMessenger.hpp"
+#include "MFConfiguration.hpp"
 
-extern CmdMessenger cmdMessenger;
+inline BufferedSerial serial_port(USBTX, USBRX, 115200);
+inline CmdMessenger cmdMessenger = CmdMessenger(serial_port);
+
+inline std::shared_ptr<EventQueue> queue;
+inline MFConfiguration config;

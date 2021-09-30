@@ -13,9 +13,8 @@
 
 extern BufferedSerial serial_port;
 
-MFButton::MFButton(ARDUINO_PIN arduinoPinName, const std::string &name)
+MFButton::MFButton(ARDUINO_PIN arduinoPinName, std::string name)
 {
-  auto queue = std::shared_ptr<EventQueue>(mbed_event_queue());
   _arduinoPinName = arduinoPinName;
 
   // TODO: Handle the case where an invalid pin is specified
@@ -62,10 +61,10 @@ void MFButton::PowerSavingMode(bool state)
 {
 }
 
-void MFButton::Serialize(std::string *buffer)
+void MFButton::Serialize(std::string &buffer)
 {
   // MobiFlight expects a trailing : at the end of every serialized module.
-  buffer->append(fmt::format("{}.{}.{}:", as_integer(MFModuleType::kButton), _arduinoPinName, _name));
+  buffer.append(fmt::format("{}.{}.{}:", as_integer(MFModuleType::kButton), _arduinoPinName, _name));
 }
 
 void MFButton::StartTest(){

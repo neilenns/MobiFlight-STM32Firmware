@@ -9,7 +9,7 @@
 #include "modules/MFLcdDisplay.hpp"
 #include "PinManager.hpp"
 
-MFLcdDisplay::MFLcdDisplay(char deviceAddress, int rows, int columns, const std::string &name)
+MFLcdDisplay::MFLcdDisplay(char deviceAddress, int rows, int columns, std::string name)
 {
   // TODO: Handle this bounds checking better better.
   if (rows != 1 && rows != 2 && rows != 4)
@@ -161,11 +161,11 @@ void MFLcdDisplay::PrintCentered(const char *text, int row)
   }
 }
 
-void MFLcdDisplay::Serialize(std::string *buffer)
+void MFLcdDisplay::Serialize(std::string &buffer)
 {
   // MobiFlight expects a trailing : at the end of every serialized module.
   // MobiFlight expects the number of columns before the number of rows.
-  buffer->append(fmt::format("{}.{:d}.{}.{}.{}:", MFModuleType::kLcdDisplayI2C, _deviceAddress, _columns, _rows, _name));
+  buffer.append(fmt::format("{}.{:d}.{}.{}.{}:", MFModuleType::kLcdDisplayI2C, _deviceAddress, _columns, _rows, _name));
 }
 
 void MFLcdDisplay::StartTest()

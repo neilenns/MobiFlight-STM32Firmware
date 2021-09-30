@@ -33,9 +33,9 @@ public:
   /**
  * @brief Writes the configuraton to a string.
  * 
- * @param buffer Pointer to the string buffer to write the configuration to.
+ * @param buffer The string buffer to write the configuration to.
  */
-  virtual void Serialize(std::string *buffer) = 0;
+  virtual void Serialize(std::string &buffer) = 0;
 
   /**
  * @brief Turns on test mode for the module.

@@ -27,7 +27,7 @@ const map<int, PinName> PinMappings = {
     {9, PC_7},  // PWM
     {10, PB_6}, // PWM
     {11, PA_7}, // PWM
-    {12, PA_6},
+    {12, BUTTON1},
     {13, PA_5}, // PWM, onboard LED
     {14, PB_9},
     {15, PB_8}};

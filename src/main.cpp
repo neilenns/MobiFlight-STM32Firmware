@@ -7,21 +7,11 @@
 
 #include "ArduinoTypes.hpp"
 #include "boards/STM32L476.h"
-#include "CmdMessenger.hpp"
+#include "Globals.hpp"
 #include "MFCommands.hpp"
 #include "MFConfiguration.hpp"
 #include "mobiflight.hpp"
 #include "PinManager.hpp"
-
-// Modules
-#include "modules/MFModuleTypes.hpp"
-#include "modules/MFOutput.hpp"
-
-BufferedSerial serial_port(USBTX, USBRX, 115200);
-
-// Globals
-CmdMessenger cmdMessenger = CmdMessenger(serial_port);
-MFConfiguration config;
 
 // Board configuration
 #define STRINGIZER(arg) #arg
@@ -44,7 +34,7 @@ void OnGetConfig()
 {
   std::string buffer;
 
-  config.Serialize(&buffer);
+  config.Serialize(buffer);
   cmdMessenger.sendCmdStart(kInfo);
   cmdMessenger.sendCmdArg(buffer);
   cmdMessenger.sendCmdEnd();
@@ -154,7 +144,7 @@ void attachCommandCallbacks()
 
 int main()
 {
-  auto queue = std::shared_ptr<EventQueue>(mbed_event_queue());
+  queue = std::shared_ptr<EventQueue>(mbed_event_queue());
 
   // Adds newline to every command
   cmdMessenger.printLfCr();
@@ -164,7 +154,7 @@ int main()
 
   // Temporarily add outputs
   config.AddOutput(13, "Onboard LED (PWM)");
-  // config.AddButton(3, "Onboard button");
+  config.AddButton(12, "Onboard button");
   config.AddOutput(6, "External LED (PWM)");
   config.AddLedDisplay(7, 5, 10, 2, "LED display 1");
   config.AddLcdDisplay(0x27, 4, 20, "LCD display 1");
