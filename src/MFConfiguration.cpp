@@ -88,8 +88,24 @@ void MFConfiguration::AddServo(ARDUINO_PIN arduinoPinName, char const *name)
   pinManager.RegisterPin(arduinoPinName);
 }
 
-void MFConfiguration::Erase()
+void MFConfiguration::Save()
 {
+  auto flash = new FlashIAP();
+
+  buffer[0] = 'H';
+  buffer[1] = 'e';
+  buffer[2] = 'l';
+  buffer[3] = 'l';
+  buffer[4] = 'o';
+  buffer[5] = '\0';
+
+  flash->init();
+  // volatile auto sectorSize = flash->get_sector_size(FLASH_USER_DATA_START);
+  auto status = flash->erase(FLASH_USER_DATA_START, MAX_BUFFER_SIZE);
+  flash->program(buffer, FLASH_USER_DATA_START, MAX_BUFFER_SIZE);
+  flash->deinit();
+
+  cmdMessenger.sendCmd(kStatus, "Configuration saved");
 }
 
 void MFConfiguration::Load()
