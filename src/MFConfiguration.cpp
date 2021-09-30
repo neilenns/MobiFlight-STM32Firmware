@@ -113,10 +113,10 @@ void MFConfiguration::Serialize(std::string &buffer)
     lcdDisplay->Serialize(buffer);
   }
 
-  // for (auto &[key, servo] : servos)
-  // {
-  //   servo->Serialize(buffer);
-  // }
+  for (auto &[key, servo] : servos)
+  {
+    servo->Serialize(buffer);
+  }
 }
 
 void MFConfiguration::StartTest()

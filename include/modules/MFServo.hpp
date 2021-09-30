@@ -19,7 +19,7 @@ public:
  * @param pin The Arduino pin the LED is connected to. This is also the device's ID.
  * @param name The name for this module.
  */
-  MFServo(ARDUINO_PIN pin = 0, std::string name = "LED");
+  MFServo(ARDUINO_PIN pin = 0, std::string name = "Servo");
 
   /**
    * @brief Gets the current value for the servo.
