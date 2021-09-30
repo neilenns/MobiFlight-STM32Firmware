@@ -13,7 +13,7 @@
 
 extern BufferedSerial serial_port;
 
-MFButton::MFButton(EventQueue &queue, ARDUINO_PIN arduinoPinName, std::string name)
+MFButton::MFButton(ARDUINO_PIN arduinoPinName, std::string name)
 {
   _arduinoPinName = arduinoPinName;
 
@@ -26,8 +26,8 @@ MFButton::MFButton(EventQueue &queue, ARDUINO_PIN arduinoPinName, std::string na
   }
 
   _pin = std::make_shared<DebounceIn>(*stm32pin);
-  _pin->fall(queue.event(callback(this, &MFButton::OnPress)));
-  _pin->rise(queue.event(callback(this, &MFButton::OnRelease)));
+  _pin->fall(queue->event(callback(this, &MFButton::OnPress)));
+  _pin->rise(queue->event(callback(this, &MFButton::OnRelease)));
   _name = name;
 }
 

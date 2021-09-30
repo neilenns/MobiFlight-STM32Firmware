@@ -20,7 +20,7 @@ void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
     return;
   }
 
-  buttons.insert({arduinoPinName, std::make_shared<MFButton>(*queue, arduinoPinName, name)});
+  buttons.insert({arduinoPinName, std::make_shared<MFButton>(arduinoPinName, name)});
   pinManager.RegisterPin(arduinoPinName);
 }
 
