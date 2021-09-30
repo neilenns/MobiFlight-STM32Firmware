@@ -2,6 +2,7 @@
  *  Copyright (c) Neil Enns. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
+#include <FlashIAP.h>
 #include <map>
 #include <mbed.h>
 #include <TextLCD.h>
@@ -9,6 +10,11 @@
 #include "Globals.hpp"
 #include "MFCommands.hpp"
 #include "MFConfiguration.hpp"
+
+#define FLASH_USER_DATA_START 0x080E0000
+#define MAX_BUFFER_SIZE 2048
+
+static char userConfig[MAX_BUFFER_SIZE] __attribute__((__section__(".user_data")));
 
 void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
 {
@@ -89,6 +95,26 @@ void MFConfiguration::Load()
 
 void MFConfiguration::Erase()
 {
+}
+
+void MFConfiguration::Save()
+{
+  auto flash = new FlashIAP();
+  std::string buffer;
+
+  Serialize(buffer);
+
+  flash->init();
+  auto sectorSize = flash->get_sector_size(FLASH_USER_DATA_START);
+  auto padAmount = buffer.length() % sectorSize;
+
+  // Pad the string out to a multiple of the sector size
+  buffer.append(padAmount, '\0');
+  auto status = flash->erase(FLASH_USER_DATA_START, MAX_BUFFER_SIZE);
+  flash->program(buffer.c_str(), FLASH_USER_DATA_START, MAX_BUFFER_SIZE);
+  flash->deinit();
+
+  cmdMessenger.sendCmd(kStatus, "Configuration saved");
 }
 
 void MFConfiguration::Serialize(std::string &buffer)

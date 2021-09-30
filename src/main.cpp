@@ -50,6 +50,11 @@ void OnGetInfo()
   cmdMessenger.sendCmdEnd();
 }
 
+void OnSaveConfig()
+{
+  config.Save();
+}
+
 // Displays text on the connected LCD display
 void OnSetLcdText()
 {
@@ -158,6 +163,7 @@ void attachCommandCallbacks()
   cmdMessenger.attach(MFCommand::kConfigActivated, OnConfigActivated);
   cmdMessenger.attach(MFCommand::kGetConfig, OnGetConfig);
   cmdMessenger.attach(MFCommand::kGetInfo, OnGetInfo);
+  cmdMessenger.attach(MFCommand::kSaveConfig, OnSaveConfig);
   cmdMessenger.attach(MFCommand::kSetLcdDisplayI2C, OnSetLcdText);
   cmdMessenger.attach(MFCommand::kSetModule, OnSetModule);
   cmdMessenger.attach(MFCommand::kSetPin, OnSetPin);
