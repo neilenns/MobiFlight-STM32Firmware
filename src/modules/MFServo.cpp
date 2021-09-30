@@ -10,7 +10,7 @@
 #include "modules/MFServo.hpp"
 #include "PinManager.hpp"
 
-MFServo::MFServo(ARDUINO_PIN arduinoPinName, const std::string &name)
+MFServo::MFServo(ARDUINO_PIN arduinoPinName, std::string name)
 {
   _arduinoPinName = arduinoPinName;
   _name = name;
@@ -25,9 +25,8 @@ MFServo::MFServo(ARDUINO_PIN arduinoPinName, const std::string &name)
 
   _servo = std::make_shared<Servo>(*stm32pin);
 
-  // Turn the LED off by default
-  _value = 0;
-  set(_value);
+  // Set the servo to 0 position by default.
+  set(0);
 }
 
 uint8_t MFServo::get()
@@ -51,26 +50,26 @@ void MFServo::PowerSavingMode(bool state)
 
 void MFServo::set(uint8_t value)
 {
-  _servo->write(value);
+  _servo->write(CONVERT_TO_MBED_PWM_VALUE(value));
 }
 
-void MFServo::Serialize(std::string *buffer)
+void MFServo::Serialize(std::string &buffer)
 {
   // MobiFlight expects a trailing : at the end of every serialized module.
-  buffer->append(fmt::format("{}.{}.{}:", MFModuleType::kServo, _arduinoPinName, _name));
+  buffer.append(fmt::format("{}.{}.{}:", MFModuleType::kServo, _arduinoPinName, _name));
 }
 
 void MFServo::StartTest()
 {
-  for (int i = 0; i < 100; i++)
+  for (int i = 0; i < 255; i++)
   {
-    _servo->write(i / 100.0);
-    ThisThread::sleep_for(1ms);
+    _servo->write(CONVERT_TO_MBED_PWM_VALUE(i));
+    ThisThread::sleep_for(5ms);
   }
-  for (int i = 100; i > 0; i--)
+  for (int i = 255; i > 0; i--)
   {
-    _servo->write(i / 100.0);
-    ThisThread::sleep_for(1ms);
+    _servo->write(CONVERT_TO_MBED_PWM_VALUE(i));
+    ThisThread::sleep_for(5ms);
   }
 }
 

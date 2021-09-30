@@ -30,7 +30,7 @@ public:
   /**
    * @brief Sets the current value for the LED.
    * 
-   * @param value The current value.
+   * @param value The current value. Must be between 0 and 255.
    */
   void set(uint8_t value);
 

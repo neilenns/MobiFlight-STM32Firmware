@@ -18,7 +18,7 @@ public:
  * @param pin The Arduino pin the LED is connected to. This is also the device's ID.
  * @param name The name for this module.
  */
-  MFServo(ARDUINO_PIN pin = 0, const std::string &name = "LED");
+  MFServo(ARDUINO_PIN pin = 0, std::string name = "LED");
 
   /**
    * @brief Gets the current value for the servo.
@@ -28,9 +28,9 @@ public:
 
   uint8_t get();
   /**
-   * @brief Sets the current value for the servo.
+   * @brief Sets the current position for the servo.
    * 
-   * @param value The current value.
+   * @param value The current position. Must be between 0 and 255.
    */
   void set(uint8_t value);
 
@@ -38,7 +38,7 @@ public:
   uint8_t GetId() override;
   MFModuleType GetModuleType() override;
   void PowerSavingMode(bool state) override;
-  void Serialize(std::string *buffer) override;
+  void Serialize(std::string &buffer) override;
   void StartTest() override;
   void StopTest() override;
 
