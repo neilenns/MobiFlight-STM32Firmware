@@ -57,7 +57,6 @@ void OnSetLcdText()
   auto text = cmdMessenger.readStringArg();
 
   auto display = config.lcdDisplays[address];
-
   if (!display)
   {
     cmdMessenger.sendCmd(MFCommand::kStatus, "Not a valid module.");
@@ -94,11 +93,17 @@ void OnSetPin()
   auto arduinoPin = cmdMessenger.readInt16Arg();
   auto state = cmdMessenger.readInt16Arg();
 
-  auto LED = config.outputs[arduinoPin];
-  LED->set(state);
+  auto output = config.outputs[arduinoPin];
+  if (!output)
+  {
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Not a valid module.");
+    return;
+  }
+
+  output->set(state);
 
   // Send back status that describes the led state
-  cmdMessenger.sendCmd(MFCommand::kStatus, std::to_string(LED->get()).c_str());
+  cmdMessenger.sendCmd(MFCommand::kStatus, std::to_string(output->get()).c_str());
 }
 
 // Callback function that sets led on or off
