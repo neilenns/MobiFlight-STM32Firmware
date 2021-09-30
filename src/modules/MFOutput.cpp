@@ -10,11 +10,6 @@
 #include "modules/MFOutput.hpp"
 #include "PinManager.hpp"
 
-// MobiFlight sends a value between 0 and 255 but mbed os
-// requires a value between 0 and 1 for PWM output. For the PWM
-// case divide by 255 to get the percentage to send out.
-#define CONVERT_TO_MBED_PWM_VALUE(value) ((float)value / (float)255)
-
 MFOutput::MFOutput(ARDUINO_PIN arduinoPinName, std::string name)
 {
   _arduinoPinName = arduinoPinName;
@@ -46,8 +41,7 @@ MFOutput::MFOutput(ARDUINO_PIN arduinoPinName, std::string name)
   }
 
   // Turn the LED off by default
-  _value = 0;
-  set(_value);
+  set(0);
 }
 
 uint8_t MFOutput::get()

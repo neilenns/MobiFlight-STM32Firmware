@@ -69,6 +69,20 @@ void MFConfiguration::AddOutput(ARDUINO_PIN arduinoPinName, char const *name)
   pinManager.RegisterPin(arduinoPinName);
 }
 
+void MFConfiguration::AddServo(ARDUINO_PIN arduinoPinName, char const *name)
+{
+  if (pinManager.IsPinRegistered(arduinoPinName))
+  {
+#ifdef DEBUG
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Duplicate pin.");
+#endif
+    return;
+  }
+
+  servos.insert({arduinoPinName, std::make_shared<MFServo>(arduinoPinName, name)});
+  pinManager.RegisterPin(arduinoPinName);
+}
+
 void MFConfiguration::Load()
 {
 }
@@ -98,23 +112,33 @@ void MFConfiguration::Serialize(std::string &buffer)
   {
     lcdDisplay->Serialize(buffer);
   }
+
+  for (auto &[key, servo] : servos)
+  {
+    servo->Serialize(buffer);
+  }
 }
 
 void MFConfiguration::StartTest()
 {
-  for (auto &[key, value] : ledDisplays)
+  for (auto &[key, value] : servos)
   {
     value->StartTest();
   }
 
-  for (auto &[key, value] : lcdDisplays)
-  {
-    value->StartTest();
-  }
-  for (auto &[key, value] : outputs)
-  {
-    value->StartTest();
-  }
+  // for (auto &[key, value] : ledDisplays)
+  // {
+  //   value->StartTest();
+  // }
+
+  // for (auto &[key, value] : lcdDisplays)
+  // {
+  //   value->StartTest();
+  // }
+  // for (auto &[key, value] : outputs)
+  // {
+  //   value->StartTest();
+  // }
 }
 
 void MFConfiguration::StopTest()

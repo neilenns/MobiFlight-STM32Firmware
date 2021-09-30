@@ -101,6 +101,24 @@ void OnSetPin()
   cmdMessenger.sendCmd(MFCommand::kStatus, std::to_string(LED->get()).c_str());
 }
 
+// Callback function that sets led on or off
+void OnSetServo()
+{
+  auto arduinoPin = cmdMessenger.readInt16Arg();
+  auto state = cmdMessenger.readInt16Arg();
+
+  auto module = config.servos[arduinoPin];
+  if (!module)
+  {
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Not a valid module");
+    return;
+  }
+  module->set(state);
+
+  // Send back status that describes the led state
+  cmdMessenger.sendCmd(MFCommand::kStatus, std::to_string(module->get()).c_str());
+}
+
 // Starts/stops a test of all attached output displays
 void OnTest()
 {
@@ -138,6 +156,7 @@ void attachCommandCallbacks()
   cmdMessenger.attach(MFCommand::kSetLcdDisplayI2C, OnSetLcdText);
   cmdMessenger.attach(MFCommand::kSetModule, OnSetModule);
   cmdMessenger.attach(MFCommand::kSetPin, OnSetPin);
+  cmdMessenger.attach(MFCommand::kSetServo, OnSetServo);
   cmdMessenger.attach(MFCommand::kTest, OnTest);
   cmdMessenger.attach(OnUnknownCommand);
 }
@@ -155,7 +174,7 @@ int main()
   // Temporarily add outputs
   config.AddOutput(13, "Onboard LED (PWM)");
   config.AddButton(12, "Onboard button");
-  config.AddOutput(6, "External LED (PWM)");
+  config.AddServo(6, "Servo test");
   config.AddLedDisplay(7, 5, 10, 2, "LED display 1");
   config.AddLcdDisplay(0x27, 4, 20, "LCD display 1");
 

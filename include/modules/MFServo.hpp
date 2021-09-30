@@ -5,11 +5,12 @@
 #pragma once
 
 #include <mbed.h>
+#include <Servo.h>
 
 #include "ArduinoTypes.hpp"
 #include "MFModule.hpp"
 
-class MFOutput : MFModule
+class MFServo : MFModule
 {
 public:
   /**
@@ -18,19 +19,19 @@ public:
  * @param pin The Arduino pin the LED is connected to. This is also the device's ID.
  * @param name The name for this module.
  */
-  MFOutput(ARDUINO_PIN pin = 0, std::string name = "LED");
+  MFServo(ARDUINO_PIN pin = 0, std::string name = "Servo");
 
   /**
-   * @brief Gets the current value for the LED.
+   * @brief Gets the current value for the servo.
    * 
    * @return uint8_t The current value.
    */
 
   uint8_t get();
   /**
-   * @brief Sets the current value for the LED.
+   * @brief Sets the current position for the servo.
    * 
-   * @param value The current value. Must be between 0 and 255.
+   * @param value The current position. Must be between 0 and 255.
    */
   void set(uint8_t value);
 
@@ -44,8 +45,7 @@ public:
 
 private:
   uint8_t _arduinoPinName;
-  std::shared_ptr<DigitalOut> _digitalPin;
-  std::shared_ptr<PwmOut> _pwmPin;
+  std::shared_ptr<Servo> _servo;
   std::string _name;
   uint8_t _value;
 };
