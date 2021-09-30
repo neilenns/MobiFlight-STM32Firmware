@@ -7,22 +7,11 @@
 
 #include "ArduinoTypes.hpp"
 #include "boards/STM32L476.h"
-#include "CmdMessenger.hpp"
+#include "Globals.hpp"
 #include "MFCommands.hpp"
 #include "MFConfiguration.hpp"
 #include "mobiflight.hpp"
 #include "PinManager.hpp"
-
-// Modules
-#include "modules/MFModuleTypes.hpp"
-#include "modules/MFOutput.hpp"
-
-BufferedSerial serial_port(USBTX, USBRX, 115200);
-std::shared_ptr<EventQueue> queue;
-
-// Globals
-CmdMessenger cmdMessenger = CmdMessenger(serial_port);
-MFConfiguration config;
 
 // Board configuration
 #define STRINGIZER(arg) #arg
