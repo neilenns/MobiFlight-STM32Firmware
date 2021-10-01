@@ -50,6 +50,11 @@ void OnGetInfo()
   cmdMessenger.sendCmdEnd();
 }
 
+void OnActivateConfig()
+{
+  config.Load();
+}
+
 void OnSaveConfig()
 {
   config.Save();
@@ -163,6 +168,7 @@ void attachCommandCallbacks()
   cmdMessenger.attach(MFCommand::kConfigActivated, OnConfigActivated);
   cmdMessenger.attach(MFCommand::kGetConfig, OnGetConfig);
   cmdMessenger.attach(MFCommand::kGetInfo, OnGetInfo);
+  cmdMessenger.attach(MFCommand::kActivateConfig, OnActivateConfig);
   cmdMessenger.attach(MFCommand::kSaveConfig, OnSaveConfig);
   cmdMessenger.attach(MFCommand::kSetLcdDisplayI2C, OnSetLcdText);
   cmdMessenger.attach(MFCommand::kSetModule, OnSetModule);

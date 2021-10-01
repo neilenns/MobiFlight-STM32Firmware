@@ -3,6 +3,7 @@
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 #include <FlashIAP.h>
+#include <fmt/core.h>
 #include <map>
 #include <mbed.h>
 #include <TextLCD.h>
@@ -12,9 +13,11 @@
 #include "MFConfiguration.hpp"
 
 #define FLASH_USER_DATA_START 0x080E0000
-#define MAX_BUFFER_SIZE 2048
+#define FLASH_USER_DATA_SIZE 2048
 
-static char userConfig[MAX_BUFFER_SIZE] __attribute__((__section__(".user_data")));
+inline constexpr auto flashStorageVersion = "1.0.0"sv;
+
+static char userConfig[FLASH_USER_DATA_SIZE] __attribute__((__section__(".user_data")));
 
 void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
 {
@@ -91,6 +94,16 @@ void MFConfiguration::AddServo(ARDUINO_PIN arduinoPinName, char const *name)
 
 void MFConfiguration::Load()
 {
+  // The first test of a valid configuration is to check for MF; stored
+  // at the appropriate location in flash. If it's not there
+  if (strncmp(userConfig, flashIdentifier.data(), 2) != 0)
+  {
+    cmdMessenger.sendCmd(MFCommand::kStatus, "No configuration saved in flash.");
+    return;
+  }
+
+  const std::string_view storedConfiguration(userConfig);
+  cmdMessenger.sendCmd(MFCommand::kGetConfig, userConfig);
 }
 
 void MFConfiguration::Erase()
@@ -102,16 +115,17 @@ void MFConfiguration::Save()
   auto flash = new FlashIAP();
   std::string buffer;
 
+  buffer.append(fmt::format("{}:{}:", flashIdentifier, flashStorageVersion));
   Serialize(buffer);
 
   flash->init();
-  auto sectorSize = flash->get_sector_size(FLASH_USER_DATA_START);
-  auto padAmount = buffer.length() % sectorSize;
+  volatile auto sectorSize = flash->get_sector_size(FLASH_USER_DATA_START);
+  volatile auto padAmount = sectorSize - (sectorSize % buffer.length());
 
   // Pad the string out to a multiple of the sector size
   buffer.append(padAmount, '\0');
-  auto status = flash->erase(FLASH_USER_DATA_START, MAX_BUFFER_SIZE);
-  flash->program(buffer.c_str(), FLASH_USER_DATA_START, MAX_BUFFER_SIZE);
+  auto status = flash->erase(FLASH_USER_DATA_START, FLASH_USER_DATA_SIZE);
+  flash->program(buffer.c_str(), FLASH_USER_DATA_START, buffer.length());
   flash->deinit();
 
   cmdMessenger.sendCmd(kStatus, "Configuration saved");

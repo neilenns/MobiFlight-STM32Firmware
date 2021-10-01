@@ -12,3 +12,4 @@ inline CmdMessenger cmdMessenger = CmdMessenger(serial_port);
 
 inline std::shared_ptr<EventQueue> queue;
 inline MFConfiguration config;
+inline constexpr auto flashIdentifier = "MF"sv;
