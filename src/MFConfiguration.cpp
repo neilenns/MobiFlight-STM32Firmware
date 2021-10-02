@@ -112,21 +112,51 @@ void MFConfiguration::Erase()
 
 void MFConfiguration::Save()
 {
+  int result;
   auto flash = new FlashIAP();
   std::string buffer;
 
   buffer.append(fmt::format("{}:{}:", flashIdentifier, flashStorageVersion));
   Serialize(buffer);
 
-  flash->init();
+  result = flash->init();
+  if (result != 0)
+  {
+    cmdMessenger.sendCmd(kStatus, fmt::format("Error initializing flash: {0}", result));
+    return;
+  }
+
   auto sectorSize = flash->get_sector_size(FLASH_USER_DATA_START);
-  auto padAmount = sectorSize - (buffer.length() % sectorSize);
+  if (sectorSize == MBED_FLASH_INVALID_SIZE)
+  {
+    cmdMessenger.sendCmd(kStatus, "Error getting flash sector size.");
+    return;
+  }
 
   // Pad the string out to a multiple of the sector size
+  auto padAmount = sectorSize - (buffer.length() % sectorSize);
   buffer.append(padAmount, '\0');
-  flash->erase(FLASH_USER_DATA_START, FLASH_USER_DATA_SIZE);
-  flash->program(buffer.c_str(), FLASH_USER_DATA_START, buffer.length());
-  flash->deinit();
+
+  result = flash->erase(FLASH_USER_DATA_START, FLASH_USER_DATA_SIZE);
+  if (result != 0)
+  {
+    cmdMessenger.sendCmd(kStatus, fmt::format("Error erasing flash: {0}", result));
+    return;
+  }
+
+  result = flash->program(buffer.c_str(), FLASH_USER_DATA_START, buffer.length());
+  if (result != 0)
+  {
+    cmdMessenger.sendCmd(kStatus, fmt::format("Error programming flash: {0}", result));
+    return;
+  }
+
+  result = flash->deinit();
+  if (result != 0)
+  {
+    cmdMessenger.sendCmd(kStatus, fmt::format("Error closing flash: {0}", result));
+    return;
+  }
 
   cmdMessenger.sendCmd(kStatus, "Configuration saved");
 }
