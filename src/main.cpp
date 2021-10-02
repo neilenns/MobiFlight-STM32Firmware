@@ -25,6 +25,11 @@ constexpr inline auto version = STR_VALUE(BUILD_VERSION);
 // *****************************************************************
 // MobiFlight event handlers
 // *****************************************************************
+void OnActivateConfig()
+{
+  config.Load();
+}
+
 void OnConfigActivated()
 {
   cmdMessenger.sendCmd(MFCommand::kConfigActivated, "OK");
@@ -48,6 +53,11 @@ void OnGetInfo()
   cmdMessenger.sendCmdArg(serial);
   cmdMessenger.sendCmdArg(version);
   cmdMessenger.sendCmdEnd();
+}
+
+void OnSaveConfig()
+{
+  config.Save();
 }
 
 // Displays text on the connected LCD display
@@ -155,9 +165,11 @@ void OnUnknownCommand()
 void attachCommandCallbacks()
 {
   // Attach callback methods
+  cmdMessenger.attach(MFCommand::kActivateConfig, OnActivateConfig);
   cmdMessenger.attach(MFCommand::kConfigActivated, OnConfigActivated);
   cmdMessenger.attach(MFCommand::kGetConfig, OnGetConfig);
   cmdMessenger.attach(MFCommand::kGetInfo, OnGetInfo);
+  cmdMessenger.attach(MFCommand::kSaveConfig, OnSaveConfig);
   cmdMessenger.attach(MFCommand::kSetLcdDisplayI2C, OnSetLcdText);
   cmdMessenger.attach(MFCommand::kSetModule, OnSetModule);
   cmdMessenger.attach(MFCommand::kSetPin, OnSetPin);

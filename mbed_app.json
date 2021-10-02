@@ -3,7 +3,9 @@
     "*": {
       "target.c_lib": "small",
       "platform.callback-nontrivial": true,
-      "events.shared-dispatch-from-application": true
+      "events.shared-dispatch-from-application": true,
+      "target.features_add": ["STORAGE"],
+      "target.components_add": ["FLASH", "FLASHIAP"]
     }
   }
 }
