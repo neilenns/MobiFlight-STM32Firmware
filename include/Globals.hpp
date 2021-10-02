@@ -13,3 +13,4 @@ inline CmdMessenger cmdMessenger = CmdMessenger(serial_port);
 inline std::shared_ptr<EventQueue> queue;
 inline MFConfiguration config;
 inline constexpr auto flashIdentifier = "MF"sv;
+inline constexpr auto flashStorageVersion = "1.0.0"sv;

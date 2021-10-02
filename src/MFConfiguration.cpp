@@ -15,8 +15,6 @@
 #define FLASH_USER_DATA_START 0x080FF800
 #define FLASH_USER_DATA_SIZE 2048
 
-inline constexpr auto flashStorageVersion = "1.0.0"sv;
-
 static char userConfig[FLASH_USER_DATA_SIZE] __attribute__((__section__(".user_data")));
 
 void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
