@@ -12,7 +12,7 @@
 #include "MFCommands.hpp"
 #include "MFConfiguration.hpp"
 
-#define FLASH_USER_DATA_START 0x080E0000
+#define FLASH_USER_DATA_START 0x080FF800
 #define FLASH_USER_DATA_SIZE 2048
 
 inline constexpr auto flashStorageVersion = "1.0.0"sv;
@@ -119,12 +119,12 @@ void MFConfiguration::Save()
   Serialize(buffer);
 
   flash->init();
-  volatile auto sectorSize = flash->get_sector_size(FLASH_USER_DATA_START);
-  volatile auto padAmount = sectorSize - (sectorSize % buffer.length());
+  auto sectorSize = flash->get_sector_size(FLASH_USER_DATA_START);
+  auto padAmount = sectorSize - (buffer.length() % sectorSize);
 
   // Pad the string out to a multiple of the sector size
   buffer.append(padAmount, '\0');
-  auto status = flash->erase(FLASH_USER_DATA_START, FLASH_USER_DATA_SIZE);
+  flash->erase(FLASH_USER_DATA_START, FLASH_USER_DATA_SIZE);
   flash->program(buffer.c_str(), FLASH_USER_DATA_START, buffer.length());
   flash->deinit();
 
