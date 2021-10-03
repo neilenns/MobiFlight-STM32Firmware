@@ -5,9 +5,9 @@
 #pragma once
 
 #include <mbed.h>
-#include <ULN2003.h>
 
 #include "ArduinoTypes.hpp"
+#include "drivers/ULN2003.h"
 #include "MFModule.hpp"
 
 class MFStepper : MFModule
