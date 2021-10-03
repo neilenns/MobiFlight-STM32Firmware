@@ -228,7 +228,7 @@ void MFConfiguration::Serialize(std::string &buffer)
 
 void MFConfiguration::StartTest()
 {
-  for (auto &[key, value] : servos)
+  for (auto &[key, value] : steppers)
   {
     value->StartTest();
   }

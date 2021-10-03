@@ -192,7 +192,7 @@ int main()
   // config.AddOutput(13, "Onboard LED (PWM)");
   // config.AddButton(12, "Onboard button");
   // config.AddServo(6, "Servo test");
-  config.AddStepper(4, 5, 6, 7, "Stepper test");
+  config.AddStepper(2, 3, 4, 5, "Stepper test");
   // config.AddLedDisplay(7, 5, 10, 2, "LED display 1");
   // config.AddLcdDisplay(0x27, 4, 20, "LCD display 1");
 

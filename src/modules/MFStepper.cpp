@@ -71,6 +71,7 @@ void MFStepper::Serialize(std::string &buffer)
 
 void MFStepper::StartTest()
 {
+  _stepper->turnForward(1);
 }
 
 void MFStepper::StopTest()
