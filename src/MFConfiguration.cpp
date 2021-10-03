@@ -90,6 +90,26 @@ void MFConfiguration::AddServo(ARDUINO_PIN arduinoPinName, char const *name)
   pinManager.RegisterPin(arduinoPinName);
 }
 
+void MFConfiguration::AddStepper(ARDUINO_PIN arduinoPin1, ARDUINO_PIN arduinoPin2, ARDUINO_PIN arduinoPin3, ARDUINO_PIN arduinoPin4, char const *name)
+{
+  if (pinManager.IsPinRegistered(arduinoPin1) ||
+      pinManager.IsPinRegistered(arduinoPin2) ||
+      pinManager.IsPinRegistered(arduinoPin3) ||
+      pinManager.IsPinRegistered(arduinoPin4))
+  {
+#ifdef DEBUG
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Duplicate pin.");
+#endif
+    return;
+  }
+
+  steppers.insert({arduinoPin1, std::make_shared<MFStepper>(arduinoPin1, arduinoPin2, arduinoPin3, arduinoPin4, name)});
+  pinManager.RegisterPin(arduinoPin1);
+  pinManager.RegisterPin(arduinoPin2);
+  pinManager.RegisterPin(arduinoPin3);
+  pinManager.RegisterPin(arduinoPin4);
+}
+
 void MFConfiguration::Load()
 {
   // The first test of a valid configuration is to check for MF; stored
@@ -198,6 +218,11 @@ void MFConfiguration::Serialize(std::string &buffer)
   for (auto &[key, servo] : servos)
   {
     servo->Serialize(buffer);
+  }
+
+  for (auto &[key, stepper] : steppers)
+  {
+    stepper->Serialize(buffer);
   }
 }
 

@@ -13,6 +13,7 @@
 #include "modules/MFMAX7219.hpp"
 #include "modules/MFOutput.hpp"
 #include "modules/MFServo.hpp"
+#include "modules/MFStepper.hpp"
 #include "PinManager.hpp"
 
 /**
@@ -50,6 +51,11 @@ public:
    * 
    */
   map<ARDUINO_PIN, std::shared_ptr<MFServo>> servos;
+  /**
+   * @brief List of connected stepper motors.
+   * 
+   */
+  map<ARDUINO_PIN, std::shared_ptr<MFStepper>> steppers;
 
   /**
  * @brief Adds a new button to the configuration.
@@ -95,6 +101,16 @@ public:
    * @param name The name for this module.
    */
   void AddServo(ARDUINO_PIN arduinoPinName, char const *name = "Servo");
+  /**
+   * @brief Adds a new servo to the configuration.
+   * 
+   * @param arduinoPin1 The Arduino pin for stepper driver pin 1. This is also the device's ID.
+   * @param arduinoPin2 The Arduino pin for stepper driver pin 2.
+   * @param arduinoPin3 The Arduino pin for stepper driver pin 3.
+   * @param arduinoPin4 The Arduino pin for stepper driver pin 4.
+   * @param name The name for this module.
+   */
+  void AddStepper(ARDUINO_PIN arduinoPin1, ARDUINO_PIN arduinoPin2, ARDUINO_PIN arduinoPin3, ARDUINO_PIN arduinoPin4, char const *name = "Stepper");
 
   /**
    * @brief Clears the list of stored modules. This does not write the updated
