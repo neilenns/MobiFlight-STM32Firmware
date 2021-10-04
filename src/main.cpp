@@ -189,6 +189,7 @@ int main()
   attachCommandCallbacks();
 
   // Temporarily add outputs
+  config.AddAnalogInput(54, 5, "Analog input");
   config.AddOutput(13, "Onboard LED (PWM)");
   config.AddButton(12, "Onboard button");
   config.AddServo(6, "Servo test");

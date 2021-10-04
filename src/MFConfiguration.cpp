@@ -17,6 +17,20 @@
 
 static char userConfig[FLASH_USER_DATA_SIZE] __attribute__((__section__(".user_data")));
 
+void MFConfiguration::AddAnalogInput(ARDUINO_PIN arduinoPinName, int sensitivity, char const *name)
+{
+  if (pinManager.IsPinRegistered(arduinoPinName))
+  {
+#ifdef DEBUG
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Duplicate pin.");
+#endif
+    return;
+  }
+
+  analogInputs.insert({arduinoPinName, std::make_shared<MFAnalog>(arduinoPinName, sensitivity, name)});
+  pinManager.RegisterPin(arduinoPinName);
+}
+
 void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
 {
   if (pinManager.IsPinRegistered(arduinoPinName))
@@ -175,9 +189,9 @@ void MFConfiguration::Save()
 
 void MFConfiguration::Serialize(std::string &buffer)
 {
-  for (auto &[key, output] : outputs)
+  for (auto &[key, analogInput] : analogInputs)
   {
-    output->Serialize(buffer);
+    analogInput->Serialize(buffer);
   }
 
   for (auto &[key, button] : buttons)
@@ -193,6 +207,11 @@ void MFConfiguration::Serialize(std::string &buffer)
   for (auto &[key, lcdDisplay] : lcdDisplays)
   {
     lcdDisplay->Serialize(buffer);
+  }
+
+  for (auto &[key, output] : outputs)
+  {
+    output->Serialize(buffer);
   }
 
   for (auto &[key, servo] : servos)

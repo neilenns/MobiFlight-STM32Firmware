@@ -11,8 +11,6 @@
 #include "modules/MFButton.hpp"
 #include "PinManager.hpp"
 
-extern BufferedSerial serial_port;
-
 MFButton::MFButton(ARDUINO_PIN arduinoPinName, std::string name)
 {
   _arduinoPinName = arduinoPinName;
@@ -67,10 +65,10 @@ void MFButton::Serialize(std::string &buffer)
   buffer.append(fmt::format("{}.{}.{}:", as_integer(MFModuleType::kButton), _arduinoPinName, _name));
 }
 
-void MFButton::StartTest(){
+void MFButton::StartTest()
+{
+}
 
-};
-
-void MFButton::StopTest(){
-
-};
+void MFButton::StopTest()
+{
+}

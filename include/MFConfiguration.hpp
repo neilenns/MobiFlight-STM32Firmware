@@ -8,6 +8,7 @@
 #include <mbed.h>
 
 #include "ArduinoTypes.hpp"
+#include "modules/MFAnalog.hpp"
 #include "modules/MFButton.hpp"
 #include "modules/MFLcdDisplay.hpp"
 #include "modules/MFMAX7219.hpp"
@@ -25,6 +26,11 @@ private:
   PinManager pinManager;
 
 public:
+  /**
+ * @brief List of connected analog inputs.
+ * 
+ */
+  map<ARDUINO_PIN, std::shared_ptr<MFAnalog>> analogInputs;
   /**
  * @brief List of connected buttons.
  * 
@@ -50,6 +56,15 @@ public:
    * 
    */
   map<ARDUINO_PIN, std::shared_ptr<MFServo>> servos;
+
+  /**
+ * @brief Adds a new analog input to the configuration.
+ * 
+ * @param arduinoPinName The Arduino pin the analog input is connected to. This is also the device's ID.
+ * @param sensitivity The amount the input has to change before it triggers an update message.
+ * @param name The name for this module.
+ */
+  void AddAnalogInput(ARDUINO_PIN arduinoPinName, int sensitivity, char const *name = "Button");
 
   /**
  * @brief Adds a new button to the configuration.
