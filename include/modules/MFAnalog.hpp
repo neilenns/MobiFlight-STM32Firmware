@@ -16,12 +16,14 @@ public:
  * @brief Construct a new MFAnalog::MFModule object.
  * 
  * @param pin The Arduino pin the analog input is connected to. This is also the device's ID.
+ * @param sensitivity The change in analog input value required to send an update event.
  * @param name The name for this module.
  */
-  MFAnalog(ARDUINO_PIN pin = 0, int sensitivity = 20, std::string name = "Analog");
+  MFAnalog(ARDUINO_PIN pin = 0, int sensitivity = 5, std::string name = "Analog");
 
   /**
-   * @brief Reads the current analog value.
+   * @brief Reads the current analog value and sends an update via serial
+   * if the change in value is greater than or equal to the configured sensitivity.
    * 
    */
   void ReadCurrentValue();
