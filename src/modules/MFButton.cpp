@@ -11,8 +11,6 @@
 #include "modules/MFButton.hpp"
 #include "PinManager.hpp"
 
-extern BufferedSerial serial_port;
-
 MFButton::MFButton(ARDUINO_PIN arduinoPinName, std::string name)
 {
   _arduinoPinName = arduinoPinName;

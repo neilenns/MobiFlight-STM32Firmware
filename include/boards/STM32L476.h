@@ -30,4 +30,10 @@ const map<int, PinName> PinMappings = {
     {12, BUTTON1},
     {13, PA_5}, // PWM, onboard LED
     {14, PB_9},
-    {15, PB_8}};
+    {15, PB_8},
+    {54, PA_0},  // Analog A0
+    {55, PA_1},  // Analog A1
+    {56, PA_4},  // Analog A2
+    {57, PB_0},  // Analog A3
+    {58, PC_1},  // Analog A4
+    {59, PC_0}}; // Analog A5
