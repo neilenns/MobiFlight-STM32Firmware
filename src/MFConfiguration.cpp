@@ -17,7 +17,6 @@
 
 static char userConfig[FLASH_USER_DATA_SIZE] __attribute__((__section__(".user_data")));
 
-// 1.IDENT1_SW:11.54.1.Analog Input:
 void MFConfiguration::AddAnalogInput(ARDUINO_PIN arduinoPinName, int sensitivity, char const *name)
 {
   if (pinManager.IsPinRegistered(arduinoPinName))
