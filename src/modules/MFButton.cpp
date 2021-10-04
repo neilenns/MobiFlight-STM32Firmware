@@ -65,10 +65,10 @@ void MFButton::Serialize(std::string &buffer)
   buffer.append(fmt::format("{}.{}.{}:", as_integer(MFModuleType::kButton), _arduinoPinName, _name));
 }
 
-void MFButton::StartTest(){
+void MFButton::StartTest()
+{
+}
 
-};
-
-void MFButton::StopTest(){
-
-};
+void MFButton::StopTest()
+{
+}

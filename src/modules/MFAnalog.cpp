@@ -94,10 +94,10 @@ void MFAnalog::Serialize(std::string &buffer)
   buffer.append(fmt::format("{}.{}.{}.{}:", as_integer(MFModuleType::kAnalogInput), _arduinoPinName, _sensitivity, _name));
 }
 
-void MFAnalog::StartTest(){
+void MFAnalog::StartTest()
+{
+}
 
-};
-
-void MFAnalog::StopTest(){
-
-};
+void MFAnalog::StopTest()
+{
+}
