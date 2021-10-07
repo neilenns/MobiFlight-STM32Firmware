@@ -22,7 +22,9 @@ jobs:
       - name: Cache PlatformIO
         uses: actions/cache@v2
         with:
-          path: ~/.platformio
+          path: |
+            ~/.platformio
+            .pio/build
           key: ${{ runner.os }}-${{ hashFiles('platformio.ini') }}
 
       - name: Set up Python
