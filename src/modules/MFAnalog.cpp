@@ -91,7 +91,7 @@ void MFAnalog::ReadCurrentValue()
 void MFAnalog::Serialize(std::string &buffer)
 {
   // MobiFlight expects a trailing : at the end of every serialized module.
-  buffer.append(fmt::format("{}.{}.{}.{}:", as_integer(MFModuleType::kAnalogInput), _arduinoPinName, _sensitivity, _name));
+  buffer.append(fmt::format("{}.{}.{}.{}:", MFModuleType::kAnalogInput, _arduinoPinName, _sensitivity, _name));
 }
 
 void MFAnalog::StartTest()
