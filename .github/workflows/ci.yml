@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
         name: Checkout code
 
-      - name: Cache pip
+      - name: Retrieve pip from cache
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
@@ -20,7 +20,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      - name: Cache PlatformIO
+      - name: Retrieve PlatformIO from cache
         uses: actions/cache@v2
         with:
           path: |
@@ -28,7 +28,7 @@ jobs:
             .pio/build
             .pio/libdeps
             !.pio/build/**/src
-          key: ${{ runner.os }}-${{ hashFiles('platformio.ini') }}
+          key: ${{ runner.os }}-${{ hashFiles('platformio.ini', '.github/workflow/**') }}
 
       - name: Set up Python
         uses: actions/setup-python@v2
