@@ -28,6 +28,7 @@ jobs:
             .pio/build
             .pio/libdeps
             !.pio/build/**/src
+            !.pio/**/firmware.elf
           key: ${{ runner.os }}-${{ hashFiles('platformio.ini', '.github/workflow/**') }}
 
       - name: Set up Python
