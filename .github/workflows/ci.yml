@@ -26,6 +26,8 @@ jobs:
           path: |
             ~/.platformio
             .pio/build
+            .pio/libdeps
+            !.pio/build/**/src
           key: ${{ runner.os }}-${{ hashFiles('platformio.ini') }}
 
       - name: Set up Python
