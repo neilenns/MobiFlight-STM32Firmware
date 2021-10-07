@@ -41,7 +41,7 @@ MFModuleType MFButton::GetModuleType()
 
 void MFButton::OnPress()
 {
-  cmdMessenger.sendCmdStart(as_integer(MFCommand::kButtonChange));
+  cmdMessenger.sendCmdStart(static_cast<char>(MFCommand::kButtonChange));
   cmdMessenger.sendCmdArg(_name);
   cmdMessenger.sendCmdArg(1);
   cmdMessenger.sendCmdEnd();
@@ -49,7 +49,7 @@ void MFButton::OnPress()
 
 void MFButton::OnRelease()
 {
-  cmdMessenger.sendCmdStart(as_integer(MFCommand::kButtonChange));
+  cmdMessenger.sendCmdStart(static_cast<char>(MFCommand::kButtonChange));
   cmdMessenger.sendCmdArg(_name);
   cmdMessenger.sendCmdArg(0);
   cmdMessenger.sendCmdEnd();
@@ -62,7 +62,7 @@ void MFButton::PowerSavingMode(bool state)
 void MFButton::Serialize(std::string &buffer)
 {
   // MobiFlight expects a trailing : at the end of every serialized module.
-  buffer.append(fmt::format("{}.{}.{}:", as_integer(MFModuleType::kButton), _arduinoPinName, _name));
+  buffer.append(fmt::format("{}.{}.{}:", MFModuleType::kButton, _arduinoPinName, _name));
 }
 
 void MFButton::StartTest()
