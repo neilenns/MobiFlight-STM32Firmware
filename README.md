@@ -22,5 +22,5 @@ Currently supported STM32 boards:
 
 ## About the code
 
-This project is an exploration in using C++17, mbed OS and PlatformIO to write code for an embedded device. It supports various forms of VSCode development
+This project is an exploration of C++17, mbed OS and PlatformIO to write code for an embedded device. It supports various forms of VSCode development
 including remote containers and GitHub Codespaces, and uses GitHub actions for CI/CD.
