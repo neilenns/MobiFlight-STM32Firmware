@@ -90,10 +90,11 @@ public:
    * @param mosi The Arduino pin number used for MOSI. Note that in this firmware the hardware SPI_MOSI pin will always be used.
    * @param sclk The Arduino pin number used for SCLK. Note that in this firmware the hardware SPI_SCK pin will always be used.
    * @param cs The Arduino pin number used for CS. This is also the device's unique ID.
+   * @param brightness The initial display brightness.
    * @param submoduleCount The number of connected submodules.
    * @param name The name for this module.
    */
-  void AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount, char const *name = "LED Display");
+  void AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int brightness, int submoduleCount, char const *name = "LED Display");
 
   /**
    * @brief Adds a new LED to the configuration.

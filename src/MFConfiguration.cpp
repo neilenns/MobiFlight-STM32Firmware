@@ -58,7 +58,7 @@ void MFConfiguration::AddLcdDisplay(int address, int rows, int columns, char con
   lcdDisplays.insert({address, std::make_shared<MFLcdDisplay>(address, rows, columns, name)});
 }
 
-void MFConfiguration::AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount, char const *name)
+void MFConfiguration::AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int brightness, int submoduleCount, char const *name)
 {
   if (pinManager.IsPinRegistered(mosi) || pinManager.IsPinRegistered(sclk) || pinManager.IsPinRegistered(cs))
   {
@@ -70,7 +70,7 @@ void MFConfiguration::AddLedDisplay(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_
 
   // MOSI a.k.a. the data pin is used as the identifier for the connected module
   // by MobiFlight.
-  ledDisplays.insert({mosi, std::make_shared<MFMAX7219>(mosi, sclk, cs, submoduleCount, name)});
+  ledDisplays.insert({mosi, std::make_shared<MFMAX7219>(mosi, sclk, cs, brightness, submoduleCount, name)});
   pinManager.RegisterPin(mosi);
   pinManager.RegisterPin(sclk);
   pinManager.RegisterPin(cs);
@@ -222,20 +222,20 @@ void MFConfiguration::Serialize(std::string &buffer)
 
 void MFConfiguration::StartTest()
 {
-  for (auto &[key, value] : servos)
+  // for (auto &[key, value] : servos)
+  // {
+  //   value->StartTest();
+  // }
+
+  for (auto &[key, value] : ledDisplays)
   {
     value->StartTest();
   }
 
-  // for (auto &[key, value] : ledDisplays)
-  // {
-  //   value->StartTest();
-  // }
-
-  // for (auto &[key, value] : lcdDisplays)
-  // {
-  //   value->StartTest();
-  // }
+  for (auto &[key, value] : lcdDisplays)
+  {
+    value->StartTest();
+  }
   // for (auto &[key, value] : outputs)
   // {
   //   value->StartTest();

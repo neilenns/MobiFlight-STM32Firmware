@@ -24,10 +24,11 @@ public:
  * @param mosi The Arduino pin number used for MOSI. Note that in this firmware the hardware SPI_MOSI pin will always be used.
  * @param sclk The Arduino pin number used for SCLK. Note that in this firmware the hardware SPI_SCK pin will always be used.
  * @param cs The Arduino pin number used for CS. This is also the device's unique ID.
+ * @param brightness The initial brightness for the display.
  * @param submoduleCount The number of connected submodules.
  * @param name The name for this module.
  */
-  MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount = 1, std::string name = "7 Segment Display");
+  MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int brightness = 15, int submoduleCount = 1, std::string name = "7 Segment Display");
 
   /**
  * @brief Displays the specified string on the connected display.
@@ -38,6 +39,13 @@ public:
  * @param mask A bit array specifying which digits from the value should be displayed.
  */
   void Display(uint8_t submodule, char *value, uint8_t points, uint8_t mask);
+
+  /**
+   * @brief Set the brightness for all connected submodules.
+   * 
+   * @param brightness The brightness level.
+   */
+  void SetBrightness(int brightness);
 
   /**
    * @brief Displays test data.
@@ -62,9 +70,10 @@ public:
   void StopTest() override;
 
 private:
+  int _brightness = 0;
   std::shared_ptr<MAX7219> _display;
   std::string _name;
-  int _submoduleCount;
+  int _submoduleCount = 0;
 
   ARDUINO_PIN _mosiArduino;
   ARDUINO_PIN _sclkArduino;
