@@ -9,7 +9,7 @@
 #include "modules/MFMAX7219.hpp"
 #include "PinManager.hpp"
 
-MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int submoduleCount, std::string name)
+MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int brightness, int submoduleCount, std::string name)
 {
   // TODO: Handle the case where an invalid pin is specified
   std::optional<PinName> stm32cs = PinManager::MapArudinoPin(cs);
@@ -20,13 +20,14 @@ MFMAX7219::MFMAX7219(ARDUINO_PIN mosi, ARDUINO_PIN sclk, ARDUINO_PIN cs, int sub
     return;
   }
 
-  _mosiArduino = mosi;
-  _sclkArduino = sclk;
   _csArduino = cs;
-  _submoduleCount = submoduleCount;
+  _mosiArduino = mosi;
   _name = name;
+  _sclkArduino = sclk;
+  _submoduleCount = submoduleCount;
 
   _display = std::make_shared<MAX7219>(SPI_MOSI, SPI_SCK, *stm32cs, _submoduleCount);
+  SetBrightness(brightness);
 }
 
 void MFMAX7219::Display(uint8_t submodule, char *value, uint8_t points, uint8_t mask)
@@ -60,7 +61,17 @@ void MFMAX7219::PowerSavingMode(bool state)
 void MFMAX7219::Serialize(std::string &buffer)
 {
   // MobiFlight expects a trailing : at the end of every serialized module.
-  buffer.append(fmt::format("{}.{}.{}.{}.{}:", MFModuleType::kLedSegment, _mosiArduino, _sclkArduino, _csArduino, _name));
+  buffer.append(fmt::format("{}.{}.{}.{}.{}.{}.{}:", MFModuleType::kLedSegment, _mosiArduino, _sclkArduino, _csArduino, _brightness, _submoduleCount, _name));
+}
+
+void MFMAX7219::SetBrightness(int brightness)
+{
+  _brightness = brightness;
+
+  for (int i = 0; i < _submoduleCount; i++)
+  {
+    _display->MAX7219_SetBrightness(_brightness, i);
+  }
 }
 
 void MFMAX7219::StartTest()

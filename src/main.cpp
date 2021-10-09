@@ -193,7 +193,7 @@ int main()
   config.AddOutput(13, "Onboard LED (PWM)");
   config.AddButton(12, "Onboard button");
   config.AddServo(6, "Servo test");
-  config.AddLedDisplay(7, 5, 10, 2, "LED display 1");
+  config.AddLedDisplay(7, 5, 10, 1, 2, "LED display 1");
   config.AddLcdDisplay(0x27, 4, 20, "LCD display 1");
 
   cmdMessenger.sendCmd(MFCommand::kStatus, "STM32 has started!");
