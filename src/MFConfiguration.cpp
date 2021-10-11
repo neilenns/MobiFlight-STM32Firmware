@@ -11,6 +11,7 @@
 #include "Globals.hpp"
 #include "MFCommands.hpp"
 #include "MFConfiguration.hpp"
+#include "stringutils.hpp"
 
 #define FLASH_USER_DATA_START 0x080FF800
 #define FLASH_USER_DATA_SIZE 2048
@@ -43,6 +44,38 @@ void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
 
   buttons.insert({arduinoPinName, std::make_shared<MFButton>(arduinoPinName, name)});
   pinManager.RegisterPin(arduinoPinName);
+}
+
+void MFConfiguration::AddFromConfigurationString(const std::string &configuration)
+{
+  std::vector<std::string> modules;
+
+  // The configuration string consists of multiple module configs separated by a semicolon
+  stringutils::split(configuration, ";", modules);
+
+  for (auto module : modules)
+  {
+    std::vector<std::string> moduleConfig;
+
+    // The module configuration is split by periods
+    stringutils::split(module, ".", moduleConfig);
+
+    // There should always be at least three parts to a module configuration
+    if (moduleConfig.size() < 3)
+    {
+      cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid module configuration received");
+      continue;
+    }
+
+    // Figure out what kind of module it is then add it
+    switch (static_cast<MFModuleType>(atoi(moduleConfig[0].c_str())))
+    {
+    // 3.4.Onboard LED (PWM)
+    case MFModuleType::kOutput:
+      AddOutput(atoi(moduleConfig[1].c_str()), moduleConfig[2].c_str());
+      break;
+    }
+  }
 }
 
 void MFConfiguration::AddLcdDisplay(int address, int rows, int columns, char const *name)

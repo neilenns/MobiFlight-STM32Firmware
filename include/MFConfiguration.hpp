@@ -75,6 +75,13 @@ public:
   void AddButton(ARDUINO_PIN arduinoPinName, char const *name = "Button");
 
   /**
+ * @brief Adds modules from a cmdmessenger-style configuration string
+ * 
+ * @param configuration The string containing the configuration
+ */
+  void AddFromConfigurationString(const std::string &configuration);
+
+  /**
    * @brief Adds a new LCD display to the configuration.
    * 
    * @param deviceAddress The 7-bit I2C address of the display

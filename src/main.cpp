@@ -7,6 +7,7 @@
 
 #include "ArduinoTypes.hpp"
 #include "boards/STM32L476.h"
+#include "fmt/core.h"
 #include "Globals.hpp"
 #include "MFCommands.hpp"
 #include "MFConfiguration.hpp"
@@ -58,6 +59,13 @@ void OnGetInfo()
 void OnSaveConfig()
 {
   config.Save();
+}
+
+void OnSetConfig()
+{
+  auto cfg = std::string(cmdMessenger.readStringArg());
+  config.AddFromConfigurationString(cfg);
+  cmdMessenger.sendCmd(MFCommand::kStatus, fmt::format("{}", FLASH_USER_DATA_SIZE - cfg.length()));
 }
 
 // Displays text on the connected LCD display
@@ -170,6 +178,7 @@ void attachCommandCallbacks()
   cmdMessenger.attach(MFCommand::kGetConfig, OnGetConfig);
   cmdMessenger.attach(MFCommand::kGetInfo, OnGetInfo);
   cmdMessenger.attach(MFCommand::kSaveConfig, OnSaveConfig);
+  cmdMessenger.attach(MFCommand::kSetConfig, OnSetConfig);
   cmdMessenger.attach(MFCommand::kSetLcdDisplayI2C, OnSetLcdText);
   cmdMessenger.attach(MFCommand::kSetModule, OnSetModule);
   cmdMessenger.attach(MFCommand::kSetPin, OnSetPin);
@@ -189,12 +198,12 @@ int main()
   attachCommandCallbacks();
 
   // Temporarily add outputs
-  config.AddAnalogInput(54, 5, "Analog input");
-  config.AddOutput(13, "Onboard LED (PWM)");
-  config.AddButton(12, "Onboard button");
-  config.AddServo(6, "Servo test");
-  config.AddLedDisplay(7, 5, 10, 1, 2, "LED display 1");
-  config.AddLcdDisplay(0x27, 4, 20, "LCD display 1");
+  // config.AddAnalogInput(54, 5, "Analog input");
+  // config.AddOutput(4, "Onboard LED (PWM)");
+  // config.AddButton(12, "Onboard button");
+  // config.AddServo(6, "Servo test");
+  // config.AddLedDisplay(7, 5, 10, 1, 2, "LED display 1");
+  // config.AddLcdDisplay(0x27, 4, 20, "LCD display 1");
 
   cmdMessenger.sendCmd(MFCommand::kStatus, "STM32 has started!");
 
