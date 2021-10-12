@@ -75,7 +75,7 @@ void OnSaveConfig()
 void OnSetConfig()
 {
   auto cfg = std::string(cmdMessenger.readStringArg());
-  config.AddFromConfigurationString(cfg);
+  config.AddModulesFromConfigurationString(cfg);
   cmdMessenger.sendCmd(MFCommand::kStatus, fmt::format("{}", FLASH_USER_DATA_SIZE - cfg.length()));
 }
 

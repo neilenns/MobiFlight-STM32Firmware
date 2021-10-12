@@ -52,7 +52,103 @@ void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
   pinManager.RegisterPin(arduinoPinName);
 }
 
-void MFConfiguration::AddFromConfigurationString(const std::string &configuration)
+void MFConfiguration::AddModuleFromConfigurationString(const std::string &configuration)
+{
+  std::vector<std::string> moduleConfig;
+
+  // The module configuration is split by periods
+  stringutils::split(configuration, ".", moduleConfig);
+
+  // There is always an empty module config at the end of the configuration string
+  if (moduleConfig.size() == 1)
+  {
+    return;
+  }
+
+  // There should always be at least three parts to a module configuration
+  if (moduleConfig.size() < 3)
+  {
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid module configuration received");
+    return;
+  }
+
+  // Sample configuration string
+  // 11.54.5.Analog input:1.12.Onboard button:4.7.5.10.1.2.LED display 1:7.39.20.4.LCD display 1:3.4.Onboard LED (PWM):6.6.Servo test:;
+  // Figure out what kind of module it is then add it
+  switch (static_cast<MFModuleType>(atoi(moduleConfig[0].c_str())))
+  {
+  case MFModuleType::kButton:
+  {
+    auto pin = atoi(moduleConfig[1].c_str());
+    auto name = moduleConfig[2].c_str();
+
+    AddButton(pin, name);
+    break;
+  }
+
+  case MFModuleType::kOutput:
+  {
+    auto pin = atoi(moduleConfig[1].c_str());
+    auto name = moduleConfig[2].c_str();
+
+    AddOutput(pin, name);
+    break;
+  }
+
+  case MFModuleType::kLedSegment:
+  {
+
+    auto data = atoi(moduleConfig[1].c_str());
+    auto cs = atoi(moduleConfig[2].c_str());
+    auto clk = atoi(moduleConfig[3].c_str());
+    auto brightness = atoi(moduleConfig[4].c_str());
+    auto submodules = atoi(moduleConfig[5].c_str());
+    auto name = moduleConfig[6].c_str();
+
+    AddLedDisplay(data, clk, cs, brightness, submodules, name);
+    break;
+  }
+
+  case MFModuleType::kServo:
+  {
+    auto pin = atoi(moduleConfig[1].c_str());
+    auto name = moduleConfig[2].c_str();
+
+    AddServo(pin, name);
+    break;
+  }
+
+  case MFModuleType::kLcdDisplayI2C:
+  {
+
+    auto address = atoi(moduleConfig[1].c_str());
+    auto columns = atoi(moduleConfig[2].c_str());
+    auto rows = atoi(moduleConfig[3].c_str());
+    auto name = moduleConfig[4].c_str();
+
+    AddLcdDisplay(address, rows, columns, name);
+    break;
+  }
+
+  case MFModuleType::kAnalogInput:
+  {
+    auto pin = atoi(moduleConfig[1].c_str());
+    auto sensitivity = atoi(moduleConfig[2].c_str());
+    auto name = moduleConfig[3].c_str();
+
+    AddAnalogInput(pin, sensitivity, name);
+    break;
+  }
+
+  default:
+  {
+    cmdMessenger.sendCmd(MFCommand::kStatus, fmt::format("Unsupported module type {}", moduleConfig[0]));
+    break;
+  }
+  }
+}
+
+void MFConfiguration::AddModulesFromConfigurationString(const std::string &configuration)
 {
   std::vector<std::string> modules;
 
@@ -61,98 +157,7 @@ void MFConfiguration::AddFromConfigurationString(const std::string &configuratio
 
   for (auto module : modules)
   {
-    std::vector<std::string> moduleConfig;
-
-    // The module configuration is split by periods
-    stringutils::split(module, ".", moduleConfig);
-
-    // There is always an empty module config at the end of the configuration string
-    if (moduleConfig.size() == 1)
-    {
-      continue;
-    }
-
-    // There should always be at least three parts to a module configuration
-    if (moduleConfig.size() < 3)
-    {
-      cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid module configuration received");
-      continue;
-    }
-
-    // Sample configuration string
-    // 11.54.5.Analog input:1.12.Onboard button:4.7.5.10.1.2.LED display 1:7.39.20.4.LCD display 1:3.4.Onboard LED (PWM):6.6.Servo test:;
-    // Figure out what kind of module it is then add it
-    switch (static_cast<MFModuleType>(atoi(moduleConfig[0].c_str())))
-    {
-    case MFModuleType::kButton:
-    {
-      auto pin = atoi(moduleConfig[1].c_str());
-      auto name = moduleConfig[2].c_str();
-
-      AddButton(pin, name);
-      break;
-    }
-
-    case MFModuleType::kOutput:
-    {
-      auto pin = atoi(moduleConfig[1].c_str());
-      auto name = moduleConfig[2].c_str();
-
-      AddOutput(pin, name);
-      break;
-    }
-
-    case MFModuleType::kLedSegment:
-    {
-
-      auto data = atoi(moduleConfig[1].c_str());
-      auto cs = atoi(moduleConfig[2].c_str());
-      auto clk = atoi(moduleConfig[3].c_str());
-      auto brightness = atoi(moduleConfig[4].c_str());
-      auto submodules = atoi(moduleConfig[5].c_str());
-      auto name = moduleConfig[6].c_str();
-
-      AddLedDisplay(data, clk, cs, brightness, submodules, name);
-      break;
-    }
-
-    case MFModuleType::kServo:
-    {
-      auto pin = atoi(moduleConfig[1].c_str());
-      auto name = moduleConfig[2].c_str();
-
-      AddServo(pin, name);
-      break;
-    }
-
-    case MFModuleType::kLcdDisplayI2C:
-    {
-
-      auto address = atoi(moduleConfig[1].c_str());
-      auto columns = atoi(moduleConfig[2].c_str());
-      auto rows = atoi(moduleConfig[3].c_str());
-      auto name = moduleConfig[4].c_str();
-
-      AddLcdDisplay(address, rows, columns, name);
-      break;
-    }
-
-    case MFModuleType::kAnalogInput:
-    {
-      auto pin = atoi(moduleConfig[1].c_str());
-      auto sensitivity = atoi(moduleConfig[2].c_str());
-      auto name = moduleConfig[3].c_str();
-
-      AddAnalogInput(pin, sensitivity, name);
-      break;
-    }
-
-    default:
-    {
-      cmdMessenger.sendCmd(MFCommand::kStatus, fmt::format("Unsupported module type {}", moduleConfig[0]));
-      break;
-    }
-    }
+    AddModuleFromConfigurationString(module);
   }
 }
 
@@ -217,12 +222,44 @@ void MFConfiguration::AddServo(ARDUINO_PIN arduinoPinName, char const *name)
 
 void MFConfiguration::Load()
 {
-  // The first test of a valid configuration is to check for MF; stored
-  // at the appropriate location in flash. If it's not there
+  // The first test of a valid configuration is to check for MF stored
+  // at the appropriate location in flash. If it's not there then don't load
+  // anything.
   if (strncmp(userConfig, flashIdentifier.data(), 2) != 0)
   {
     cmdMessenger.sendCmd(MFCommand::kStatus, "No configuration saved in flash.");
     return;
+  }
+
+  std::vector<std::string> configParts;
+  stringutils::split(userConfig, ":", configParts);
+
+  // At a minimum the configuration should have three items in it, the MF identifier,
+  // the storage version format, and the board name. If not something is wrong and bail.
+  if (configParts.size() < 3)
+  {
+    cmdMessenger.sendCmd(MFCommand::kStatus, "No configuration saved in flash.");
+    return;
+  }
+
+  // Save the version for future use and make sure it's a known version
+  auto version = configParts[1];
+  if (version != flashStorageVersion)
+  {
+    cmdMessenger.sendCmd(MFCommand::kStatus, fmt::format("Unrecognized configration version {}", version));
+    return;
+  }
+
+  // Save the board name
+  BoardName = configParts[2];
+
+  // Get rid of the three header elements in the vector so all that's left is
+  // the module configs.
+  configParts.erase(configParts.begin(), configParts.begin() + 2);
+
+  for (auto moduleConfig : configParts)
+  {
+    AddModuleFromConfigurationString(moduleConfig);
   }
 }
 

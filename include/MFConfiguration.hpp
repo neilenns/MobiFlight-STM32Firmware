@@ -87,11 +87,18 @@ public:
   void AddButton(ARDUINO_PIN arduinoPinName, char const *name = "Button");
 
   /**
- * @brief Adds modules from a cmdmessenger-style configuration string
+ * @brief Adds a single module from a cmdmessenger-style configuration string
+ * 
+ * @param moduleConfig The string containing the configuration
+ */
+  void AddModuleFromConfigurationString(const std::string &configuration);
+
+  /**
+ * @brief Adds multiple modules from a cmdmessenger-style configuration string
  * 
  * @param configuration The string containing the configuration
  */
-  void AddFromConfigurationString(const std::string &configuration);
+  void AddModulesFromConfigurationString(const std::string &configuration);
 
   /**
    * @brief Adds a new LCD display to the configuration.
