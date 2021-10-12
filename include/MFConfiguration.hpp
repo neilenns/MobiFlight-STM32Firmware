@@ -27,6 +27,12 @@ private:
 
 public:
   /**
+   * @brief The name for the board.
+   * 
+   */
+  std::string BoardName;
+
+  /**
  * @brief List of connected analog inputs.
  * 
  */
@@ -58,6 +64,12 @@ public:
   map<ARDUINO_PIN, std::shared_ptr<MFServo>> servos;
 
   /**
+ * @brief Construct a new MFConfiguration object
+ * 
+ */
+  MFConfiguration();
+
+  /**
  * @brief Adds a new analog input to the configuration.
  * 
  * @param arduinoPinName The Arduino pin the analog input is connected to. This is also the device's ID.
@@ -73,6 +85,13 @@ public:
  * @param name The name for this module.
  */
   void AddButton(ARDUINO_PIN arduinoPinName, char const *name = "Button");
+
+  /**
+ * @brief Adds modules from a cmdmessenger-style configuration string
+ * 
+ * @param configuration The string containing the configuration
+ */
+  void AddFromConfigurationString(const std::string &configuration);
 
   /**
    * @brief Adds a new LCD display to the configuration.

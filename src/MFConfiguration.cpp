@@ -11,11 +11,18 @@
 #include "Globals.hpp"
 #include "MFCommands.hpp"
 #include "MFConfiguration.hpp"
+#include "boards/STM32L476.h"
+#include "stringutils.hpp"
 
 #define FLASH_USER_DATA_START 0x080FF800
 #define FLASH_USER_DATA_SIZE 2048
 
 static char userConfig[FLASH_USER_DATA_SIZE] __attribute__((__section__(".user_data")));
+
+MFConfiguration::MFConfiguration()
+{
+  BoardName = MOBIFLIGHT_NAME;
+}
 
 void MFConfiguration::AddAnalogInput(ARDUINO_PIN arduinoPinName, int sensitivity, char const *name)
 {
@@ -43,6 +50,110 @@ void MFConfiguration::AddButton(ARDUINO_PIN arduinoPinName, char const *name)
 
   buttons.insert({arduinoPinName, std::make_shared<MFButton>(arduinoPinName, name)});
   pinManager.RegisterPin(arduinoPinName);
+}
+
+void MFConfiguration::AddFromConfigurationString(const std::string &configuration)
+{
+  std::vector<std::string> modules;
+
+  // The configuration string consists of multiple module configs separated by a colon
+  stringutils::split(configuration, ":", modules);
+
+  for (auto module : modules)
+  {
+    std::vector<std::string> moduleConfig;
+
+    // The module configuration is split by periods
+    stringutils::split(module, ".", moduleConfig);
+
+    // There is always an empty module config at the end of the configuration string
+    if (moduleConfig.size() == 1)
+    {
+      continue;
+    }
+
+    // There should always be at least three parts to a module configuration
+    if (moduleConfig.size() < 3)
+    {
+      cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid module configuration received");
+      continue;
+    }
+
+    // Sample configuration string
+    // 11.54.5.Analog input:1.12.Onboard button:4.7.5.10.1.2.LED display 1:7.39.20.4.LCD display 1:3.4.Onboard LED (PWM):6.6.Servo test:;
+    // Figure out what kind of module it is then add it
+    switch (static_cast<MFModuleType>(atoi(moduleConfig[0].c_str())))
+    {
+    case MFModuleType::kButton:
+    {
+      auto pin = atoi(moduleConfig[1].c_str());
+      auto name = moduleConfig[2].c_str();
+
+      AddButton(pin, name);
+      break;
+    }
+
+    case MFModuleType::kOutput:
+    {
+      auto pin = atoi(moduleConfig[1].c_str());
+      auto name = moduleConfig[2].c_str();
+
+      AddOutput(pin, name);
+      break;
+    }
+
+    case MFModuleType::kLedSegment:
+    {
+
+      auto data = atoi(moduleConfig[1].c_str());
+      auto cs = atoi(moduleConfig[2].c_str());
+      auto clk = atoi(moduleConfig[3].c_str());
+      auto brightness = atoi(moduleConfig[4].c_str());
+      auto submodules = atoi(moduleConfig[5].c_str());
+      auto name = moduleConfig[6].c_str();
+
+      AddLedDisplay(data, clk, cs, brightness, submodules, name);
+      break;
+    }
+
+    case MFModuleType::kServo:
+    {
+      auto pin = atoi(moduleConfig[1].c_str());
+      auto name = moduleConfig[2].c_str();
+
+      AddServo(pin, name);
+      break;
+    }
+
+    case MFModuleType::kLcdDisplayI2C:
+    {
+
+      auto address = atoi(moduleConfig[1].c_str());
+      auto columns = atoi(moduleConfig[2].c_str());
+      auto rows = atoi(moduleConfig[3].c_str());
+      auto name = moduleConfig[4].c_str();
+
+      AddLcdDisplay(address, rows, columns, name);
+      break;
+    }
+
+    case MFModuleType::kAnalogInput:
+    {
+      auto pin = atoi(moduleConfig[1].c_str());
+      auto sensitivity = atoi(moduleConfig[2].c_str());
+      auto name = moduleConfig[3].c_str();
+
+      AddAnalogInput(pin, sensitivity, name);
+      break;
+    }
+
+    default:
+    {
+      cmdMessenger.sendCmd(MFCommand::kStatus, fmt::format("Unsupported module type {}", moduleConfig[0]));
+      break;
+    }
+    }
+  }
 }
 
 void MFConfiguration::AddLcdDisplay(int address, int rows, int columns, char const *name)
@@ -113,13 +224,19 @@ void MFConfiguration::Load()
     cmdMessenger.sendCmd(MFCommand::kStatus, "No configuration saved in flash.");
     return;
   }
-
-  const std::string_view storedConfiguration(userConfig);
-  cmdMessenger.sendCmd(MFCommand::kGetConfig, userConfig);
 }
 
 void MFConfiguration::Erase()
 {
+  analogInputs.clear();
+  buttons.clear();
+  ledDisplays.clear();
+  lcdDisplays.clear();
+  outputs.clear();
+  servos.clear();
+  pinManager.ClearRegisteredPins();
+
+  cmdMessenger.sendCmd(kStatus, "OK");
 }
 
 void MFConfiguration::Save()
@@ -184,11 +301,13 @@ void MFConfiguration::Save()
     return;
   }
 
-  cmdMessenger.sendCmd(kStatus, "Configuration saved");
+  cmdMessenger.sendCmd(kConfigSaved, "OK");
 }
 
 void MFConfiguration::Serialize(std::string &buffer)
 {
+  buffer.append(fmt::format("{}:", BoardName));
+
   for (auto &[key, analogInput] : analogInputs)
   {
     analogInput->Serialize(buffer);
