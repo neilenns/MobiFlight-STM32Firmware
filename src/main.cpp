@@ -20,7 +20,6 @@
 
 constexpr inline auto type = MOBIFLIGHT_TYPE;
 constexpr inline auto serial = MOBIFLIGHT_SERIAL;
-constexpr inline auto name = MOBIFLIGHT_NAME;
 constexpr inline auto version = STR_VALUE(BUILD_VERSION);
 
 // *****************************************************************
@@ -51,7 +50,7 @@ void OnGetInfo()
 {
   cmdMessenger.sendCmdStart(MFCommand::kInfo);
   cmdMessenger.sendCmdArg(type);
-  cmdMessenger.sendCmdArg(name);
+  cmdMessenger.sendCmdArg(config.BoardName);
   cmdMessenger.sendCmdArg(serial);
   cmdMessenger.sendCmdArg(version);
   cmdMessenger.sendCmdEnd();

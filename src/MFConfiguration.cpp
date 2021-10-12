@@ -11,12 +11,18 @@
 #include "Globals.hpp"
 #include "MFCommands.hpp"
 #include "MFConfiguration.hpp"
+#include "boards/STM32L476.h"
 #include "stringutils.hpp"
 
 #define FLASH_USER_DATA_START 0x080FF800
 #define FLASH_USER_DATA_SIZE 2048
 
 static char userConfig[FLASH_USER_DATA_SIZE] __attribute__((__section__(".user_data")));
+
+MFConfiguration::MFConfiguration()
+{
+  BoardName = MOBIFLIGHT_NAME;
+}
 
 void MFConfiguration::AddAnalogInput(ARDUINO_PIN arduinoPinName, int sensitivity, char const *name)
 {
@@ -300,6 +306,8 @@ void MFConfiguration::Save()
 
 void MFConfiguration::Serialize(std::string &buffer)
 {
+  buffer.append(fmt::format("{}:", BoardName));
+
   for (auto &[key, analogInput] : analogInputs)
   {
     analogInput->Serialize(buffer);

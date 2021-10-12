@@ -64,6 +64,12 @@ public:
   map<ARDUINO_PIN, std::shared_ptr<MFServo>> servos;
 
   /**
+ * @brief Construct a new MFConfiguration object
+ * 
+ */
+  MFConfiguration();
+
+  /**
  * @brief Adds a new analog input to the configuration.
  * 
  * @param arduinoPinName The Arduino pin the analog input is connected to. This is also the device's ID.
