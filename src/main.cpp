@@ -29,6 +29,7 @@ constexpr inline auto version = STR_VALUE(BUILD_VERSION);
 void OnActivateConfig()
 {
   config.Load();
+  cmdMessenger.sendCmd(MFCommand::kConfigActivated, "OK");
 }
 
 void OnConfigActivated()
@@ -54,6 +55,17 @@ void OnGetInfo()
   cmdMessenger.sendCmdArg(serial);
   cmdMessenger.sendCmdArg(version);
   cmdMessenger.sendCmdEnd();
+}
+
+void OnResetBoard()
+{
+  // For now this just says it did something but actually doesn't
+  cmdMessenger.sendCmd(kConfigActivated, "OK");
+}
+
+void OnResetConfig()
+{
+  config.Erase();
 }
 
 void OnSaveConfig()
@@ -103,6 +115,17 @@ void OnSetModule()
   }
 
   display->Display(subModule, value, points, mask);
+}
+
+void OnSetName()
+{
+  auto name = std::string(cmdMessenger.readStringArg());
+
+  config.BoardName = name;
+
+  cmdMessenger.sendCmdStart(MFCommand::kStatus);
+  cmdMessenger.sendCmdArg(config.BoardName);
+  cmdMessenger.sendCmdEnd();
 }
 
 // Callback function that sets led on or off
@@ -177,10 +200,13 @@ void attachCommandCallbacks()
   cmdMessenger.attach(MFCommand::kConfigActivated, OnConfigActivated);
   cmdMessenger.attach(MFCommand::kGetConfig, OnGetConfig);
   cmdMessenger.attach(MFCommand::kGetInfo, OnGetInfo);
+  cmdMessenger.attach(MFCommand::kResetBoard, OnResetBoard);
+  cmdMessenger.attach(MFCommand::kResetConfig, OnResetConfig);
   cmdMessenger.attach(MFCommand::kSaveConfig, OnSaveConfig);
   cmdMessenger.attach(MFCommand::kSetConfig, OnSetConfig);
   cmdMessenger.attach(MFCommand::kSetLcdDisplayI2C, OnSetLcdText);
   cmdMessenger.attach(MFCommand::kSetModule, OnSetModule);
+  cmdMessenger.attach(MFCommand::kSetName, OnSetName);
   cmdMessenger.attach(MFCommand::kSetPin, OnSetPin);
   cmdMessenger.attach(MFCommand::kSetServo, OnSetServo);
   cmdMessenger.attach(MFCommand::kTest, OnTest);

@@ -27,6 +27,12 @@ private:
 
 public:
   /**
+   * @brief The name for the board.
+   * 
+   */
+  std::string BoardName;
+
+  /**
  * @brief List of connected analog inputs.
  * 
  */
