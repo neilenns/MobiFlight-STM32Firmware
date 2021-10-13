@@ -79,6 +79,11 @@ void MFConfiguration::AddModuleFromConfigurationString(const std::string &config
   {
   case MFModuleType::kButton:
   {
+    if (moduleConfig.size() != 3)
+    {
+      cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid button configuration received");
+      return;
+    }
     auto pin = atoi(moduleConfig[1].c_str());
     auto name = moduleConfig[2].c_str();
 
@@ -88,6 +93,11 @@ void MFConfiguration::AddModuleFromConfigurationString(const std::string &config
 
   case MFModuleType::kOutput:
   {
+    if (moduleConfig.size() != 3)
+    {
+      cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid output configuration received");
+      return;
+    }
     auto pin = atoi(moduleConfig[1].c_str());
     auto name = moduleConfig[2].c_str();
 
@@ -97,7 +107,11 @@ void MFConfiguration::AddModuleFromConfigurationString(const std::string &config
 
   case MFModuleType::kLedSegment:
   {
-
+    if (moduleConfig.size() != 7)
+    {
+      cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid segment configuration received");
+      return;
+    }
     auto data = atoi(moduleConfig[1].c_str());
     auto cs = atoi(moduleConfig[2].c_str());
     auto clk = atoi(moduleConfig[3].c_str());
@@ -111,6 +125,11 @@ void MFConfiguration::AddModuleFromConfigurationString(const std::string &config
 
   case MFModuleType::kServo:
   {
+    if (moduleConfig.size() != 3)
+    {
+      cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid servo configuration received");
+      return;
+    }
     auto pin = atoi(moduleConfig[1].c_str());
     auto name = moduleConfig[2].c_str();
 
@@ -120,6 +139,11 @@ void MFConfiguration::AddModuleFromConfigurationString(const std::string &config
 
   case MFModuleType::kLcdDisplayI2C:
   {
+    if (moduleConfig.size() != 5)
+    {
+      cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid LCD configuration received");
+      return;
+    }
 
     auto address = atoi(moduleConfig[1].c_str());
     auto columns = atoi(moduleConfig[2].c_str());
@@ -132,6 +156,12 @@ void MFConfiguration::AddModuleFromConfigurationString(const std::string &config
 
   case MFModuleType::kAnalogInput:
   {
+    if (moduleConfig.size() != 4)
+    {
+      cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid analog configuration received");
+      return;
+    }
+
     auto pin = atoi(moduleConfig[1].c_str());
     auto sensitivity = atoi(moduleConfig[2].c_str());
     auto name = moduleConfig[3].c_str();
