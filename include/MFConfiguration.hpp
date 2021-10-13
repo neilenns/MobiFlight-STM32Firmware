@@ -158,11 +158,18 @@ public:
   void Save();
 
   /**
-   * @brief Writes the configuration to standard output.
+   * @brief Writes the entire configuration to a buffer, including board name and all modules.
    * 
    * @param buffer A string buffer to write to.
    */
-  void Serialize(std::string &buffer);
+  void SerializeConfiguration(std::string &buffer);
+
+  /**
+   * @brief Writes the module confugrations to a buffer.
+   * 
+   * @param buffer A string buffer to write to.
+   */
+  void SerializeModules(std::string &buffer);
 
   /**
    * @brief Runs the StartTest() method on all connected modules.

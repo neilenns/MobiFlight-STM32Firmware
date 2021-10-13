@@ -288,7 +288,7 @@ void MFConfiguration::Save()
   // version number just in case something has to change in the future and
   // support for upgrading from a prior stored format is required.
   buffer.append(fmt::format("{}:{}:", flashIdentifier, flashStorageVersion));
-  Serialize(buffer);
+  SerializeConfiguration(buffer);
 
   result = flash->init();
   if (result != 0)
@@ -341,9 +341,14 @@ void MFConfiguration::Save()
   cmdMessenger.sendCmd(kConfigSaved, "OK");
 }
 
-void MFConfiguration::Serialize(std::string &buffer)
+void MFConfiguration::SerializeConfiguration(std::string &buffer)
 {
   buffer.append(fmt::format("{}:", BoardName));
+  SerializeModules(buffer);
+}
+
+void MFConfiguration::SerializeModules(std::string &buffer)
+{
 
   for (auto &[key, analogInput] : analogInputs)
   {

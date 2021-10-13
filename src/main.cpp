@@ -40,7 +40,7 @@ void OnGetConfig()
 {
   std::string buffer;
 
-  config.Serialize(buffer);
+  config.SerializeModules(buffer);
   cmdMessenger.sendCmdStart(kInfo);
   cmdMessenger.sendCmdArg(buffer);
   cmdMessenger.sendCmdEnd();
