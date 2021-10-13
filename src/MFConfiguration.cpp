@@ -291,6 +291,8 @@ void MFConfiguration::Load()
   {
     AddModuleFromConfigurationString(moduleConfig);
   }
+
+  cmdMessenger.sendCmd(kConfigActivated, "OK");
 }
 
 void MFConfiguration::Erase()
