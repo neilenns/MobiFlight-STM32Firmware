@@ -5,7 +5,7 @@
 #include <optional>
 #include <mbed.h>
 
-#include "boards/STM32L476.h"
+#include "Board.h"
 #include "Globals.hpp"
 #include "MFCommands.hpp"
 #include "PinManager.hpp"

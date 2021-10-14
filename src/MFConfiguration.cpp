@@ -8,14 +8,12 @@
 #include <mbed.h>
 #include <TextLCD.h>
 
+#include "Board.hpp"
 #include "Globals.hpp"
 #include "MFCommands.hpp"
 #include "MFConfiguration.hpp"
 #include "boards/STM32L476.h"
 #include "stringutils.hpp"
-
-#define FLASH_USER_DATA_START 0x080FF800
-#define FLASH_USER_DATA_SIZE 2048
 
 static char userConfig[FLASH_USER_DATA_SIZE] __attribute__((__section__(".user_data")));
 
