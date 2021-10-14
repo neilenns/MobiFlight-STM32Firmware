@@ -4,11 +4,12 @@
  *--------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <map>
+#include <bitset>
 #include <mbed.h>
 #include <optional>
 
 #include "ArduinoTypes.hpp"
+#include "boards/STM32L476.h"
 
 class PinManager
 {
@@ -50,5 +51,7 @@ public:
   static std::optional<PinName> MapArudinoPin(ARDUINO_PIN arduinoPin);
 
 private:
-  vector<ARDUINO_PIN> _registeredPins;
+  // MAX_PIN_NUMBER is the highest number for a pin on the device, not the count
+  // of number of pins. Add +1 when creating the bitset since it is origin zero.
+  std::bitset<MAX_PIN_NUMBER + 1> _registeredPins{0};
 };

@@ -28,9 +28,7 @@ void MFConfiguration::AddAnalogInput(ARDUINO_PIN arduinoPinName, int sensitivity
 {
   if (pinManager.IsPinRegistered(arduinoPinName))
   {
-#ifdef DEBUG
     cmdMessenger.sendCmd(MFCommand::kStatus, "Duplicate pin.");
-#endif
     return;
   }
 
@@ -81,7 +79,9 @@ void MFConfiguration::AddModuleFromConfigurationString(const std::string &config
   {
     if (moduleConfig.size() != 3)
     {
-      cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid button configuration received");
+#ifdef DEBUG
+      cmdMessenger.sendCmd(MFCommand::kStatus, "Duplicate pin.");
+#endif
       return;
     }
     auto pin = atoi(moduleConfig[1].c_str());

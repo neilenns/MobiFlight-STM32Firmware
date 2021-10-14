@@ -2,11 +2,12 @@
  *  Copyright (c) Neil Enns. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-#include <map>
 #include <optional>
 #include <mbed.h>
 
 #include "boards/STM32L476.h"
+#include "Globals.hpp"
+#include "MFCommands.hpp"
 #include "PinManager.hpp"
 
 PinManager::PinManager()
@@ -15,17 +16,28 @@ PinManager::PinManager()
 
 void PinManager::ClearRegisteredPins()
 {
-  _registeredPins.clear();
+  _registeredPins.reset();
 }
 
 bool PinManager::IsPinRegistered(ARDUINO_PIN arduinoPinName)
 {
-  return std::find(_registeredPins.begin(), _registeredPins.end(), arduinoPinName) != _registeredPins.end();
+  if (arduinoPinName > MAX_PIN_NUMBER)
+  {
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid pin number.");
+    return false;
+  }
+
+  return _registeredPins[arduinoPinName];
 }
 
 void PinManager::RegisterPin(ARDUINO_PIN arduinoPinName)
 {
-  _registeredPins.push_back(arduinoPinName);
+  if (arduinoPinName > MAX_PIN_NUMBER)
+  {
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid pin number.");
+    return;
+  }
+  _registeredPins[arduinoPinName] = true;
 }
 
 std::optional<PinName> PinManager::MapArudinoPin(ARDUINO_PIN arduinoPin)
