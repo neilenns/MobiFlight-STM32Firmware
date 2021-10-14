@@ -2,7 +2,6 @@
  *  Copyright (c) Neil Enns. All rights reserved.
  *  Licensed under the MIT License. See LICENSE in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-#include <map>
 #include <optional>
 #include <mbed.h>
 
@@ -15,17 +14,17 @@ PinManager::PinManager()
 
 void PinManager::ClearRegisteredPins()
 {
-  _registeredPins.clear();
+  _registeredPins.reset();
 }
 
 bool PinManager::IsPinRegistered(ARDUINO_PIN arduinoPinName)
 {
-  return std::find(_registeredPins.begin(), _registeredPins.end(), arduinoPinName) != _registeredPins.end();
+  return _registeredPins[arduinoPinName];
 }
 
 void PinManager::RegisterPin(ARDUINO_PIN arduinoPinName)
 {
-  _registeredPins.push_back(arduinoPinName);
+  _registeredPins[arduinoPinName] = true;
 }
 
 std::optional<PinName> PinManager::MapArudinoPin(ARDUINO_PIN arduinoPin)

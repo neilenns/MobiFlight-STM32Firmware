@@ -225,6 +225,9 @@ int main()
   // Attach all the callbacks for command messenger
   attachCommandCallbacks();
 
+  // Reset everything and load the configuration
+  OnResetBoard();
+
   // Temporarily add outputs
   // config.AddAnalogInput(54, 5, "Analog input");
   // config.AddOutput(4, "Onboard LED (PWM)");
@@ -232,9 +235,6 @@ int main()
   // config.AddServo(6, "Servo test");
   // config.AddLedDisplay(7, 5, 10, 1, 2, "LED display 1");
   // config.AddLcdDisplay(0x27, 4, 20, "LCD display 1");
-
-  // Reset everything and load the configuration
-  OnResetBoard();
 
   cmdMessenger.sendCmd(MFCommand::kStatus, "STM32 has started!");
 

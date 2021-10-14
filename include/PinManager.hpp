@@ -4,7 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 #pragma once
 
-#include <map>
+#include <bitset>
 #include <mbed.h>
 #include <optional>
 
@@ -50,5 +50,5 @@ public:
   static std::optional<PinName> MapArudinoPin(ARDUINO_PIN arduinoPin);
 
 private:
-  vector<ARDUINO_PIN> _registeredPins;
+  std::bitset<128> _registeredPins{0};
 };
