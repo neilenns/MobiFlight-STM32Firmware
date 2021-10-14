@@ -87,11 +87,18 @@ public:
   void AddButton(ARDUINO_PIN arduinoPinName, char const *name = "Button");
 
   /**
- * @brief Adds modules from a cmdmessenger-style configuration string
+ * @brief Adds a single module from a cmdmessenger-style configuration string
+ * 
+ * @param moduleConfig The string containing the configuration
+ */
+  void AddModuleFromConfigurationString(const std::string &configuration);
+
+  /**
+ * @brief Adds multiple modules from a cmdmessenger-style configuration string
  * 
  * @param configuration The string containing the configuration
  */
-  void AddFromConfigurationString(const std::string &configuration);
+  void AddModulesFromConfigurationString(const std::string &configuration);
 
   /**
    * @brief Adds a new LCD display to the configuration.
@@ -151,11 +158,18 @@ public:
   void Save();
 
   /**
-   * @brief Writes the configuration to standard output.
+   * @brief Writes the entire configuration to a buffer, including board name and all modules.
    * 
    * @param buffer A string buffer to write to.
    */
-  void Serialize(std::string &buffer);
+  void SerializeConfiguration(std::string &buffer);
+
+  /**
+   * @brief Writes the module confugrations to a buffer.
+   * 
+   * @param buffer A string buffer to write to.
+   */
+  void SerializeModules(std::string &buffer);
 
   /**
    * @brief Runs the StartTest() method on all connected modules.
