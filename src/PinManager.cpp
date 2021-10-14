@@ -6,6 +6,8 @@
 #include <mbed.h>
 
 #include "boards/STM32L476.h"
+#include "Globals.hpp"
+#include "MFCommands.hpp"
 #include "PinManager.hpp"
 
 PinManager::PinManager()
@@ -19,11 +21,22 @@ void PinManager::ClearRegisteredPins()
 
 bool PinManager::IsPinRegistered(ARDUINO_PIN arduinoPinName)
 {
+  if (arduinoPinName > MAX_PIN_NUMBER)
+  {
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid pin number.");
+    return false;
+  }
+
   return _registeredPins[arduinoPinName];
 }
 
 void PinManager::RegisterPin(ARDUINO_PIN arduinoPinName)
 {
+  if (arduinoPinName > MAX_PIN_NUMBER)
+  {
+    cmdMessenger.sendCmd(MFCommand::kStatus, "Invalid pin number.");
+    return;
+  }
   _registeredPins[arduinoPinName] = true;
 }
 

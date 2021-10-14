@@ -14,6 +14,9 @@
 // This is still duplicated in MFConfiguration.hpp and should get cleaned up
 #define FLASH_USER_DATA_SIZE 2048
 
+// The highest pin number available on the device.
+#define MAX_PIN_NUMBER 59
+
 // https://github.com/ARMmbed/mbed-os/blob/master/targets/TARGET_STM/TARGET_STM32L4/TARGET_STM32L476xG/TARGET_NUCLEO_L476RG/PinNames.h
 // Also see https://os.mbed.com/platforms/ST-Nucleo-L476RG/ for a diagram.
 // Maps Arduino pin names to STM32 pins.
