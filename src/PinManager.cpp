@@ -6,7 +6,7 @@
 #include <optional>
 #include <mbed.h>
 
-#include "boards/STM32L476.h"
+#include "Board.h"
 #include "PinManager.hpp"
 
 PinManager::PinManager()

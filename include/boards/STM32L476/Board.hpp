@@ -11,6 +11,9 @@
 #define MOBIFLIGHT_SERIAL "SN-eaa-42f"sv
 #define MOBIFLIGHT_NAME "MobiFlight Mega"sv
 
+#define FLASH_USER_DATA_START 0x080FF800
+#define FLASH_USER_DATA_SIZE 2048
+
 // https://github.com/ARMmbed/mbed-os/blob/master/targets/TARGET_STM/TARGET_STM32L4/TARGET_STM32L476xG/TARGET_NUCLEO_L476RG/PinNames.h
 // Also see https://os.mbed.com/platforms/ST-Nucleo-L476RG/ for a diagram.
 // Maps Arduino pin names to STM32 pins.
