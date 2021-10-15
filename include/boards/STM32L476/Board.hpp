@@ -8,7 +8,6 @@
 #include <mbed.h>
 
 #define MOBIFLIGHT_TYPE "MobiFlight Mega"sv
-#define MOBIFLIGHT_SERIAL "SN-eaa-42f"sv
 #define MOBIFLIGHT_NAME "MobiFlight Mega"sv
 
 // The highest pin number available on the device.

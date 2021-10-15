@@ -19,7 +19,6 @@
 #define STR_VALUE(arg) STRINGIZER(arg)
 
 constexpr inline auto type = MOBIFLIGHT_TYPE;
-constexpr inline auto serial = MOBIFLIGHT_SERIAL;
 constexpr inline auto version = STR_VALUE(BUILD_VERSION);
 
 // *****************************************************************
@@ -50,8 +49,16 @@ void OnGetInfo()
   cmdMessenger.sendCmdStart(MFCommand::kInfo);
   cmdMessenger.sendCmdArg(type);
   cmdMessenger.sendCmdArg(config.BoardName);
-  cmdMessenger.sendCmdArg(serial);
+  cmdMessenger.sendCmdArg(config.BoardSerial);
   cmdMessenger.sendCmdArg(version);
+  cmdMessenger.sendCmdEnd();
+}
+
+void OnGenNewSerial()
+{
+  config.GenerateSerial(true);
+  cmdMessenger.sendCmdStart(kInfo);
+  cmdMessenger.sendCmdArg(config.BoardSerial);
   cmdMessenger.sendCmdEnd();
 }
 
@@ -63,6 +70,7 @@ void OnResetBoard()
 {
   config.Erase();
   config.Load();
+  config.GenerateSerial(false);
 }
 
 void OnResetConfig()
@@ -202,6 +210,7 @@ void attachCommandCallbacks()
   cmdMessenger.attach(MFCommand::kConfigActivated, OnConfigActivated);
   cmdMessenger.attach(MFCommand::kGetConfig, OnGetConfig);
   cmdMessenger.attach(MFCommand::kGetInfo, OnGetInfo);
+  cmdMessenger.attach(MFCommand::kGenNewSerial, OnGenNewSerial);
   cmdMessenger.attach(MFCommand::kResetBoard, OnResetBoard);
   cmdMessenger.attach(MFCommand::kResetConfig, OnResetConfig);
   cmdMessenger.attach(MFCommand::kSaveConfig, OnSaveConfig);

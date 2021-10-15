@@ -6,6 +6,8 @@
 #include <fmt/core.h>
 #include <map>
 #include <mbed.h>
+#include <PeripheralPins.h> // Used to find an analog pin for random number generation
+#include <random>
 #include <TextLCD.h>
 
 #include "Board.hpp"
@@ -262,8 +264,9 @@ void MFConfiguration::Load()
   stringutils::split(userConfig, ":", configParts);
 
   // At a minimum the configuration should have three items in it, the MF identifier,
-  // the storage version format, and the board name. If not something is wrong and bail.
-  if (configParts.size() < 3)
+  // the storage version format, the board name, and the board serial number.
+  // If not something is wrong and bail.
+  if (configParts.size() < 4)
   {
     cmdMessenger.sendCmd(MFCommand::kStatus, "No configuration saved in flash.");
     return;
@@ -277,12 +280,13 @@ void MFConfiguration::Load()
     return;
   }
 
-  // Save the board name
+  // Save the board name and serial
   BoardName = configParts[2];
+  BoardSerial = configParts[3];
 
-  // Get rid of the three header elements in the vector so all that's left is
+  // Get rid of the four header elements in the vector so all that's left is
   // the module configs.
-  configParts.erase(configParts.begin(), configParts.begin() + 2);
+  configParts.erase(configParts.begin(), configParts.begin() + 3);
 
   for (auto moduleConfig : configParts)
   {
@@ -303,6 +307,34 @@ void MFConfiguration::Erase()
   pinManager.ClearRegisteredPins();
 
   cmdMessenger.sendCmd(kStatus, "OK");
+}
+
+void MFConfiguration::GenerateSerial(bool force)
+{
+  std::mt19937 gen32; // Random number generator
+
+  // Don't generate a serial number if one already exists and force is false
+  if (BoardSerial != "" && !force)
+  {
+    return;
+  }
+
+  // Generate a seed by reading analog data
+  AnalogIn analog(PinMap_ADC[0]);
+
+  // unsigned int seed = 0;
+  // for (int i = 0; i <= 32; i += 2)
+  // {
+  //   seed += ((analog.read_u16() % 3) << i);
+  //   ThisThread::sleep_for(10ms);
+  // }
+
+  // gen32.seed(seed);
+
+  // Set the serial number using the random numbers
+  BoardSerial = fmt::format("SN-{:03x}-{:03x}", gen32() & 0xFFF, gen32() & 0xFFF);
+
+  analog.~AnalogIn();
 }
 
 void MFConfiguration::Save()
@@ -372,7 +404,7 @@ void MFConfiguration::Save()
 
 void MFConfiguration::SerializeConfiguration(std::string &buffer)
 {
-  buffer.append(fmt::format("{}:", BoardName));
+  buffer.append(fmt::format("{}:{}:", BoardName, BoardSerial));
   SerializeModules(buffer);
 }
 

@@ -30,7 +30,13 @@ public:
    * @brief The name for the board.
    * 
    */
-  std::string BoardName;
+  std::string BoardName = "";
+
+  /**
+   * @brief The unique serial number for the board.
+   * 
+   */
+  std::string BoardSerial = "";
 
   /**
  * @brief List of connected analog inputs.
@@ -144,6 +150,13 @@ public:
    * 
    */
   void Erase();
+
+  /**
+   * @brief Generates a new board serial number.
+   * 
+   * @param force True if the serial should be re-generated even if one already exists.
+   */
+  void GenerateSerial(bool force);
 
   /**
    * @brief Loads the list of modules stored in flash.
