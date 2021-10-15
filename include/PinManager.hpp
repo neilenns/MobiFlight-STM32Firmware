@@ -9,7 +9,7 @@
 #include <optional>
 
 #include "ArduinoTypes.hpp"
-#include "boards/STM32L476.h"
+#include "Boards.h"
 
 class PinManager
 {
