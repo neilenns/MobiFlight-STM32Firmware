@@ -8,13 +8,11 @@ Currently supported modules:
 
 - Analog input (potentiometers)
 - Buttons
-- LCD displays based on the HD44780 controller (e.g. [20x4 LCD module for Arduino](https://www.amazon.com/gp/product/B01GPUMP9C/))
-- 7-segment displays based on the MAX7219 controller (e.g. [8-digit 7-segment tubes](https://www.amazon.com/gp/product/B086GKV958/))
-- LEDs
+- LCD displays based on the HD44780 controller (e.g. [20x4 LCD module for Arduino](https://www.amazon.com/gp/product/B01GPUMP9C/)). Displays must be 1, 2 or 4 rows high and 16
+  or 20 columns wide.
+- 7-segment displays based on the MAX7219 controller (e.g. [8-digit 7-segment tubes](https://www.amazon.com/gp/product/B086GKV958/)). The DATA and CLK pins specified in MobiFlight are ignored, you must use your board's hardware SPI pins for MOSI (DATA) and SCK (CLK).
+- Output (LEDs). PWM pins are supported.
 - Servos (e.g. [basic servo motors](https://www.amazon.com/Smraza-Helicopter-Airplane-Control-Arduino/dp/B07L2SF3R4/))
-
-Note currently you must hard-code the list of attached modules, build the firmware, then upload it to your board in order for
-MobiFlight to recognize it. [Support for dynamically adding and removing modules is coming soon](https://github.com/neilenns/MobiFlight-STM32Firmware/issues/61)!
 
 Currently supported STM32 boards:
 
