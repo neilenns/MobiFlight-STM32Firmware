@@ -5,7 +5,7 @@
 #include <optional>
 #include <mbed.h>
 
-#include "Board.h"
+#include "Board.hpp"
 #include "Globals.hpp"
 #include "MFCommands.hpp"
 #include "PinManager.hpp"
