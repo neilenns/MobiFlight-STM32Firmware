@@ -6,7 +6,7 @@
 #include <optional>
 
 #include "ArduinoTypes.hpp"
-#include "boards/STM32L476.h"
+#include "Board.hpp"
 #include "fmt/core.h"
 #include "Globals.hpp"
 #include "MFCommands.hpp"

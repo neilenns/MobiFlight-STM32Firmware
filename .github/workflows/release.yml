@@ -1,8 +1,8 @@
-name: PlatformIO CI
+name: Firmware release
 
 on:
-  pull_request:
-  workflow_dispatch:
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -10,8 +10,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        name: Checkout code
-
       - name: Cache pip
         uses: actions/cache@v2
         with:
@@ -19,6 +17,12 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
+
+      - name: Cache PlatformIO
+        uses: actions/cache@v2
+        with:
+          path: ~/.platformio
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -31,7 +35,6 @@ jobs:
       - name: Extract build version
         id: get_version
         uses: battila7/get-version-action@v2
-        if: startsWith(github.ref, 'refs/tags/')
 
       - name: Run PlatformIO
         env:
@@ -43,3 +46,10 @@ jobs:
         with:
           name: firmware
           path: .pio/build/**/mobiflight*.hex
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: .pio/build/**/mobiflight*.hex
