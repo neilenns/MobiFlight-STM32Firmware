@@ -331,7 +331,9 @@ void MFConfiguration::GenerateSerial(bool force)
 
   gen32.seed(seed);
 
-  // Set the serial number using the random numbers
+  // Set the serial number using the random numbers. gen32() produces a larger
+  // number than MobiFlight expects so mask it with 0xFFF to match
+  // what MobiFlight wants.
   BoardSerial = fmt::format("SN-{:03x}-{:03x}", gen32() & 0xFFF, gen32() & 0xFFF);
 
   analog.release();
