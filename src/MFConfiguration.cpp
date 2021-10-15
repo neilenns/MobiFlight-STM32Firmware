@@ -12,7 +12,6 @@
 #include "Globals.hpp"
 #include "MFCommands.hpp"
 #include "MFConfiguration.hpp"
-#include "boards/STM32L476.h"
 #include "stringutils.hpp"
 
 static char userConfig[FLASH_USER_DATA_SIZE] __attribute__((__section__(".user_data")));
