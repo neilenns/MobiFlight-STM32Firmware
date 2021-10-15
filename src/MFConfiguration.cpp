@@ -320,21 +320,21 @@ void MFConfiguration::GenerateSerial(bool force)
   }
 
   // Generate a seed by reading analog data
-  AnalogIn analog(PinMap_ADC[0]);
+  std::unique_ptr<AnalogIn> analog = std::make_unique<AnalogIn>(PinMap_ADC[0]);
 
-  // unsigned int seed = 0;
-  // for (int i = 0; i <= 32; i += 2)
-  // {
-  //   seed += ((analog.read_u16() % 3) << i);
-  //   ThisThread::sleep_for(10ms);
-  // }
+  unsigned int seed = 0;
+  for (int i = 0; i <= 32; i += 2)
+  {
+    seed += ((analog->read_u16() % 3) << i);
+    ThisThread::sleep_for(10ms);
+  }
 
-  // gen32.seed(seed);
+  gen32.seed(seed);
 
   // Set the serial number using the random numbers
   BoardSerial = fmt::format("SN-{:03x}-{:03x}", gen32() & 0xFFF, gen32() & 0xFFF);
 
-  analog.~AnalogIn();
+  analog.release();
 }
 
 void MFConfiguration::Save()
