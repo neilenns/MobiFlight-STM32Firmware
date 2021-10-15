@@ -9,7 +9,7 @@
 #include <optional>
 
 #include "ArduinoTypes.hpp"
-#include "Board.h"
+#include "Board.hpp"
 
 class PinManager
 {
